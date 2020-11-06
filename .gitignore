@@ -7,6 +7,6 @@ bin/
 .cache-main
 .cache-tests
 .idea/
-project/
+project/target
+project/project
 /.idea/
-/project/

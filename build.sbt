@@ -5,17 +5,19 @@ version := sys.props.getOrElse("tag", default = "0.0.0")
 
 organization := "com.github.rehei"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.12"
+crossScalaVersions := Seq("2.12.12", "2.11.11")
 
 resolvers += "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 resolvers += "staging" at "https://oss.sonatype.org/content/repositories/staging"
 resolvers += "releases" at "https://oss.sonatype.org/content/repositories/releases"
 resolvers += Resolver.bintrayRepo("rehei", "maven")
 
+licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 
 libraryDependencies ++= {
   Seq(
-    "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
+    "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
     "commons-io" % "commons-io" % "2.6",
     "org.reflections" % "reflections" % "0.9.12",
     "com.github.rehei" %% "scala-macros" % "0.9.3",
