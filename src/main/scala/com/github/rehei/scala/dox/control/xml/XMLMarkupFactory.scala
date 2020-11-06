@@ -1,7 +1,7 @@
 package com.github.rehei.scala.dox.control.xml
 
 import scala.xml.NodeSeq
-import com.github.rehei.scala.dox.util.DoxReferenceFactory
+import com.github.rehei.scala.dox.control.DoxReferenceFactory
 import com.github.rehei.scala.dox.model.DoxReference
 
 trait XMLMarkupFactory {

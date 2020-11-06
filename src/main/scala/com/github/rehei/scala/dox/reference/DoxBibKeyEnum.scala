@@ -1,9 +1,9 @@
 package com.github.rehei.scala.dox.reference
 
-trait ReferenceKeyEnum extends Enumeration {
+trait DoxBibKeyEnum extends Enumeration {
 
-  abstract class KeyBase extends Val with ReferenceKey {
-    protected val clazz = ReferenceKeyEnum.this.getClass().getCanonicalName.replace("$", "").replace(".", "-")
+  abstract class KeyBase extends Val with DoxBibKey {
+    protected val clazz = DoxBibKeyEnum.this.getClass().getCanonicalName.replace("$", "").replace(".", "-")
 
     def name() = {
       val keyName = super.toString()
@@ -13,7 +13,7 @@ trait ReferenceKeyEnum extends Enumeration {
           if (character.isUpper) {
             "U"
           } else {
-            if(character.isLower) {
+            if (character.isLower) {
               "L"
             } else {
               "-"
@@ -28,18 +28,26 @@ trait ReferenceKeyEnum extends Enumeration {
 
   class KeyDOI(_doi: String) extends KeyBase {
     def lookup() = {
-      new ReferenceLookupDoi(this.name(), _doi)
+      new DoxBibKeyLookupDoi(this.name(), _doi)
     }
   }
 
   class KeyRAW(_raw: String) extends KeyBase {
     def lookup() = {
-      new ReferenceLookupRaw(this.name(), _raw)
+      new DoxBibKeyLookupRaw(this.name(), _raw)
     }
   }
 
   protected def fromDOI(doi: String) = {
-    new KeyDOI(doi)
+    new {
+      def year(year: Long) = new {
+        def by(description: String) = new {
+          def title(title: String) = {
+            new KeyDOI(doi)
+          }
+        }
+      }
+    }
   }
 
   protected def fromRAW(content: String) = {

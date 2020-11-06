@@ -5,15 +5,15 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Map
-import com.github.rehei.scala.dox.reference.ReferenceKey
+import com.github.rehei.scala.dox.reference.DoxBibKey
 
 class DoxHandleBibliography(cache: DoxCacheBibliography) {
 
-  protected val keys = HashSet[ReferenceKey]()
+  protected val keys = HashSet[DoxBibKey]()
 
   protected val inverseKeyLookup = Map[String, String]()
 
-  def append(key: ReferenceKey) {
+  def append(key: DoxBibKey) {
 
     inverseKeyLookup.get(key.lookup().lookupKey()).map {
       referenceKey =>

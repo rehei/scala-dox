@@ -1,7 +1,6 @@
 package com.github.rehei.scala.dox.control
 
 import com.github.rehei.scala.dox.model.DoxItem
-import com.github.rehei.scala.dox.DoxRenderingBase
 
 case class DoxListBuilder(base: DoxRenderingBase, args: Seq[DoxItem]) {
   

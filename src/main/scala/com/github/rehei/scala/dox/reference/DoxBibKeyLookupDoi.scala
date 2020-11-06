@@ -4,7 +4,7 @@ import scalaj.http.Http
 import java.io.StringWriter
 import scalaj.http.HttpOptions
 
-class ReferenceLookupDoi(name: String, doi: String) extends ReferenceLookupBase {
+class DoxBibKeyLookupDoi(name: String, doi: String) extends DoxBibKeyLookupBase {
 
   def lookupKey(): String = {
     doi
@@ -21,9 +21,9 @@ class ReferenceLookupDoi(name: String, doi: String) extends ReferenceLookupBase 
     if (!content.isSuccess) {
       throw new RuntimeException("Could not resolve DOI")
     }
-    val database = BibtexParse().parse(content.body)
+    val database = DoxBibtexParse().parse(content.body)
 
-    BibtexFormat(name).format(database)
+    DoxBibtexFormat(name).format(database)
   }
 
 }

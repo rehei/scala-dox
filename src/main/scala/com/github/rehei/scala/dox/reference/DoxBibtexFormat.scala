@@ -10,7 +10,7 @@ import scala.collection.JavaConversions._
 import org.jbibtex.BibTeXDatabase
 import java.io.StringWriter
 
-case class BibtexFormat(keyOverride: String) {
+case class DoxBibtexFormat(keyOverride: String) {
 
   case class Format() extends BibTeXFormatter() {
 

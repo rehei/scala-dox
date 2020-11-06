@@ -4,13 +4,13 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
 import org.apache.commons.io.FileUtils
-import com.github.rehei.scala.dox.reference.ReferenceKey
+import com.github.rehei.scala.dox.reference.DoxBibKey
 
 class DoxCacheBibliography(target: Path) {
 
-  protected val map = scala.collection.mutable.Map[ReferenceKey, String]()
+  protected val map = scala.collection.mutable.Map[DoxBibKey, String]()
 
-  def getOrUpdate(key: ReferenceKey) = {
+  def getOrUpdate(key: DoxBibKey) = {
     lookupMemoryCache(key).getOrElse {
       lookupPersistentCache(key).getOrElse {
         val content = lookupDelegate(key)
@@ -20,11 +20,11 @@ class DoxCacheBibliography(target: Path) {
     }
   }
 
-  protected def lookupMemoryCache(key: ReferenceKey) = {
+  protected def lookupMemoryCache(key: DoxBibKey) = {
     map.get(key)
   }
 
-  protected def lookupPersistentCache(key: ReferenceKey) = {
+  protected def lookupPersistentCache(key: DoxBibKey) = {
     val cacheFile = file(key)
     if (cacheFile.exists()) {
       Some(FileUtils.readFileToString(cacheFile, StandardCharsets.UTF_8))
@@ -33,16 +33,16 @@ class DoxCacheBibliography(target: Path) {
     }
   }
 
-  protected def lookupDelegate(key: ReferenceKey) = {
+  protected def lookupDelegate(key: DoxBibKey) = {
     key.lookup().resolve()
   }
 
-  protected def updateCache(key: ReferenceKey, content: String) {
+  protected def updateCache(key: DoxBibKey, content: String) {
     map.put(key, content)
     FileUtils.writeStringToFile(file(key), content, StandardCharsets.UTF_8, true)
   }
 
-  protected def file(key: ReferenceKey) = {
+  protected def file(key: DoxBibKey) = {
     val filename = friendlyFilename(key.name())
     target.resolve(filename + ".bib").toFile()
   }

@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.util
+package com.github.rehei.scala.dox.control
 
 import com.github.rehei.scala.dox.model.DoxReference
 

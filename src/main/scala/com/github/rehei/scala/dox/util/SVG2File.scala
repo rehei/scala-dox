@@ -6,6 +6,7 @@ import java.nio.file.Path
 import org.apache.commons.io.FileUtils
 import com.github.rehei.scala.dox.model.DoxLikeSVG
 import scala.xml.Xhtml
+import com.github.rehei.scala.dox.control.DoxReferenceFactory
 
 class SVG2File(protected val baseDirectory: Path) {
 

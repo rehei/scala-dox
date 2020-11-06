@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.control.DoxHandleBibliography
-import com.github.rehei.scala.dox.DoxRenderingBase
+import com.github.rehei.scala.dox.control.DoxRenderingBase
 
 class RenderingNull(handle: DoxHandleBibliography) extends DoxRenderingBase(handle) {
 

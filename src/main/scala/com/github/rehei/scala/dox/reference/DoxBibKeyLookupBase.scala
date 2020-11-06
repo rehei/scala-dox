@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.reference
 
-abstract class ReferenceLookupBase {
+abstract class DoxBibKeyLookupBase {
   
   def lookupKey(): String
   

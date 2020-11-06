@@ -1,13 +1,10 @@
-package com.github.rehei.scala.dox
+package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.control.DoxListBuilder
-import com.github.rehei.scala.dox.control.DoxSVGBuilder
-import com.github.rehei.scala.dox.control.DoxTextBuilder
 import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.reference.ReferenceKey
-import com.github.rehei.scala.dox.control.DoxHandleBibliography
+import com.github.rehei.scala.dox.reference.DoxBibKey
+import scala.collection.Seq
 
 abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
 
@@ -16,15 +13,15 @@ abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
     result.flush()
   }
 
-  def citet(key: ReferenceKey) {
+  def citet(key: DoxBibKey) {
     bibliography.append(key)
     citet(key.name())
   }
-  def citep(key: ReferenceKey) {
+  def citep(key: DoxBibKey) {
     bibliography.append(key)
     citep(key.name())
   }
-  def cite(key: ReferenceKey) {
+  def cite(key: DoxBibKey) {
     bibliography.append(key)
     cite(key.name())
   }

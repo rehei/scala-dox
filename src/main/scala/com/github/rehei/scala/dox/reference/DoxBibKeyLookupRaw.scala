@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.reference
 
-class ReferenceLookupRaw(name: String, content: String) extends ReferenceLookupBase {
+class DoxBibKeyLookupRaw(name: String, content: String) extends DoxBibKeyLookupBase {
 
   def lookupKey() = {
     wrap("___") // make sure that potentially equal raw entries have the same key '___'
@@ -11,8 +11,8 @@ class ReferenceLookupRaw(name: String, content: String) extends ReferenceLookupB
   }
 
   protected def wrap(key: String) = {
-    val database = BibtexParse().parse(content)
-    BibtexFormat(key).format(database)
+    val database = DoxBibtexParse().parse(content)
+    DoxBibtexFormat(key).format(database)
   }
 
 }

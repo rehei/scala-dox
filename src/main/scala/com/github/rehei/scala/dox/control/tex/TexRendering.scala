@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.model.DoxLikeSVG
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.control.DoxHandleBibliography
-import com.github.rehei.scala.dox.DoxRenderingBase
+import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.control.DoxHandleSVG
 
 class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle: DoxHandleSVG, bibHandle: DoxHandleBibliography) extends DoxRenderingBase(bibHandle) {

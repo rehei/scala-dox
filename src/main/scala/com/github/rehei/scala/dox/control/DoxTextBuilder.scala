@@ -1,7 +1,6 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.reference.ReferenceKey
-import com.github.rehei.scala.dox.DoxRenderingBase
+import com.github.rehei.scala.dox.reference.DoxBibKey
 import com.github.rehei.scala.dox.model.DoxDelegate
 import com.github.rehei.scala.dox.model.DoxReference
 
@@ -13,13 +12,13 @@ case class DoxTextBuilder(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
   def ref(reference: DoxReference) = {
     copyAppend(DoxDelegate(() => base.ref(reference)))
   }
-  def citet(reference: ReferenceKey) = {
+  def citet(reference: DoxBibKey) = {
     copyAppend(DoxDelegate(() => base.citet(reference)))
   }
-  def citep(reference: ReferenceKey) = {
+  def citep(reference: DoxBibKey) = {
     copyAppend(DoxDelegate(() => base.citep(reference)))
   }
-  def cite(reference: ReferenceKey) = {
+  def cite(reference: DoxBibKey) = {
     copyAppend(DoxDelegate(() => base.cite(reference)))
   }
   def flush() {

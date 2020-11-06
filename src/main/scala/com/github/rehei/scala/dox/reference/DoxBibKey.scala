@@ -1,9 +1,9 @@
 package com.github.rehei.scala.dox.reference
 
-trait ReferenceKey {
+trait DoxBibKey {
 
   def name(): String
 
-  def lookup(): ReferenceLookupBase
+  def lookup(): DoxBibKeyLookupBase
   
 }
