@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import org.apache.commons.io.FileUtils
 import com.github.rehei.scala.dox.model.DoxLikeSVG
+import scala.xml.Xhtml
 
 class SVG2File(protected val baseDirectory: Path) {
 
@@ -18,7 +19,7 @@ class SVG2File(protected val baseDirectory: Path) {
   }
 
   protected def write(file: File, image: DoxLikeSVG) = {
-    val content = XMLUtils.asString(image.generateSVG())
+    val content = Xhtml.toXhtml(image.generateSVG())
     FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8, false)
   }
 
