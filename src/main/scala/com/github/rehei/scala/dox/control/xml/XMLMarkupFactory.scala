@@ -1,19 +1,20 @@
 package com.github.rehei.scala.dox.control.xml
 
 import scala.xml.NodeSeq
-import com.github.rehei.scala.dox.util.NextID
+import com.github.rehei.scala.dox.util.DoxReferenceFactory
+import com.github.rehei.scala.dox.model.DoxReference
 
 trait XMLMarkupFactory {
 
-  case class XMLHeadline(nextID: NextID, name: String, multiply: Int, callback: XMLHeadline => NodeSeq) {
+  case class XMLHeadline(reference: DoxReference, name: String, multiply: Int, callback: XMLHeadline => NodeSeq) {
 
-    val id = nextID.next()
+    def id = { reference.referenceID }
 
     def renderHead() = {
 
       <span>
         { "\u00A0" * 4 * { multiply - 1 } }
-        <a href={ "#" + id }>
+        <a href={ "#" + reference.referenceID }>
           <strong>{ name }</strong><br style={ "clear: both" }/>
         </a>
       </span>
@@ -25,11 +26,11 @@ trait XMLMarkupFactory {
 
   }
 
-  protected val nextID = NextID("id")
+  protected val referenceFactory = DoxReferenceFactory("id")
 
-  def H1(name: String) = XMLHeadline(nextID, name, 1, headline => <h1 id={ headline.id }>{ headline.name }</h1>)
-  def H2(name: String) = XMLHeadline(nextID, name, 2, headline => <h2 id={ headline.id }>{ headline.name }</h2>)
-  def H3(name: String) = XMLHeadline(nextID, name, 3, headline => <h3 id={ headline.id }>{ headline.name }</h3>)
-  def H4(name: String) = XMLHeadline(nextID, name, 4, headline => <h4 id={ headline.id }>{ headline.name }</h4>)
+  def H1(name: String) = XMLHeadline(referenceFactory.next(), name, 1, headline => <h1 id={ headline.id }>{ headline.name }</h1>)
+  def H2(name: String) = XMLHeadline(referenceFactory.next(), name, 2, headline => <h2 id={ headline.id }>{ headline.name }</h2>)
+  def H3(name: String) = XMLHeadline(referenceFactory.next(), name, 3, headline => <h3 id={ headline.id }>{ headline.name }</h3>)
+  def H4(name: String) = XMLHeadline(referenceFactory.next(), name, 4, headline => <h4 id={ headline.id }>{ headline.name }</h4>)
 
 }

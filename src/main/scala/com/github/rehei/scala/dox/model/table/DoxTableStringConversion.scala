@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model.table
 
-trait DataTableStringConversion {
+trait DoxTableStringConversion {
   
   def render(model: Any): String
   

@@ -9,7 +9,7 @@ import scala.xml.Xhtml
 
 class SVG2File(protected val baseDirectory: Path) {
 
-  protected val nextID = NextID("image")
+  protected val nextID = DoxReferenceFactory("image")
   protected val prefix = "generated"
 
   def generateSVGFile(image: DoxLikeSVG) = {

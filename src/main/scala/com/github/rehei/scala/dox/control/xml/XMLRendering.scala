@@ -5,11 +5,11 @@ import scala.xml.NodeSeq
 
 import com.github.rehei.scala.dox.control.xml.XMLMarkupFactory
 import com.github.rehei.scala.dox.model.DoxLikeSVG
-import com.github.rehei.scala.dox.model.table.DataTable
-import com.github.rehei.scala.dox.model.table.DataTableAlignment
-import com.github.rehei.scala.dox.model.table.DataTableKeyConfig
+import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.table.DoxTableAlignment
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-class XMLRendering(indexKeyConfig: DataTableKeyConfig) extends XMLMarkupFactory {
+class XMLRendering(indexKeyConfig: DoxTableKeyConfig) extends XMLMarkupFactory {
 
   protected val legend = ListBuffer[XMLHeadline]()
   protected val xml = ListBuffer[NodeSeq]()
@@ -33,7 +33,7 @@ class XMLRendering(indexKeyConfig: DataTableKeyConfig) extends XMLMarkupFactory 
     append { H4(name) }
   }
 
-  def table(model: DataTable) = {
+  def table(model: DoxTable) = {
 
     model.withIndex(Some(indexKeyConfig))
 
@@ -71,11 +71,11 @@ class XMLRendering(indexKeyConfig: DataTableKeyConfig) extends XMLMarkupFactory 
     xml.flatten
   }
 
-  protected def getStyle(config: DataTableKeyConfig) = {
+  protected def getStyle(config: DoxTableKeyConfig) = {
 
     config.alignment match {
-      case DataTableAlignment.LEFT  => "text-align: left;"
-      case DataTableAlignment.RIGHT => "text-align: right;"
+      case DoxTableAlignment.LEFT  => "text-align: left;"
+      case DoxTableAlignment.RIGHT => "text-align: right;"
       case _                        => "text-align: center;"
     }
 

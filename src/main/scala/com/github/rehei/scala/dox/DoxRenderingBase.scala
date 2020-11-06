@@ -5,11 +5,11 @@ import com.github.rehei.scala.dox.control.DoxSVGBuilder
 import com.github.rehei.scala.dox.control.DoxTextBuilder
 import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
-import com.github.rehei.scala.dox.model.table.DataTable
+import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.reference.ReferenceKey
 import com.github.rehei.scala.dox.control.DoxHandleBibliography
 
-abstract class RenderingBase(val bibliography: DoxHandleBibliography) {
+abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
 
   def list(callback: DoxListBuilder => DoxListBuilder) {
     val result = callback(DoxListBuilder(this, Seq.empty))
@@ -46,7 +46,7 @@ abstract class RenderingBase(val bibliography: DoxHandleBibliography) {
   }
 
   def ref(reference: DoxReference): Unit
-  def table(in: DataTable): Unit
+  def table(in: DoxTable): Unit
   def clearpage(): Unit
   def list(itemSeq: Seq[String])
 

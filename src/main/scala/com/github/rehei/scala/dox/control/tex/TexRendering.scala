@@ -1,15 +1,15 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.table.DataTableKeyConfig
-import com.github.rehei.scala.dox.model.table.DataTable
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxLikeSVG
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.control.DoxHandleBibliography
-import com.github.rehei.scala.dox.RenderingBase
+import com.github.rehei.scala.dox.DoxRenderingBase
 import com.github.rehei.scala.dox.control.DoxHandleSVG
 
-class TexRendering(baseAST: TexAST, indexKeyConfig: DataTableKeyConfig, svgHandle: DoxHandleSVG, bibHandle: DoxHandleBibliography) extends RenderingBase(bibHandle) {
+class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle: DoxHandleSVG, bibHandle: DoxHandleBibliography) extends DoxRenderingBase(bibHandle) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
@@ -17,7 +17,7 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DataTableKeyConfig, svgHandl
   protected val POSITIONING_FIGURE = "H"
 
   def label(reference: DoxReference) {
-    \ label { reference.in }
+    \ label { reference.referenceID }
   }
 
   def clearpage() {
@@ -45,7 +45,7 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DataTableKeyConfig, svgHandl
   }
 
   def ref(reference: DoxReference) = {
-    \ ref { reference.in }
+    \ ref { reference.referenceID }
   }
 
   protected def citet(key: String) = {
@@ -60,7 +60,7 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DataTableKeyConfig, svgHandl
     \ cite { key }
   }
 
-  def table(model: DataTable) {
+  def table(model: DoxTable) {
     model.withIndex(Some(indexKeyConfig))
 
     new TexRenderingTable(baseAST, model).create()

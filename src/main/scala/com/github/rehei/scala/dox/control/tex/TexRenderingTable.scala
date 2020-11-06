@@ -1,11 +1,11 @@
 package com.github.rehei.scala.dox.control.tex
 
 import scala.collection.mutable.ArrayBuffer
-import com.github.rehei.scala.dox.model.table.DataTableKeyConfig
-import com.github.rehei.scala.dox.model.table.DataTable
-import com.github.rehei.scala.dox.model.table.DataTableAlignment
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 
-class TexRenderingTable(baseAST: TexAST, model: DataTable) {
+class TexRenderingTable(baseAST: TexAST, model: DoxTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
@@ -34,13 +34,13 @@ class TexRenderingTable(baseAST: TexAST, model: DataTable) {
     model.head.map(config => getTexAlignment(config)).mkString
   }
 
-  protected def getTexAlignment(config: DataTableKeyConfig) = {
+  protected def getTexAlignment(config: DoxTableKeyConfig) = {
     if (config.dynamic) {
       "X"
     } else {
       config.alignment match {
-        case DataTableAlignment.LEFT  => "l"
-        case DataTableAlignment.RIGHT => "r"
+        case DoxTableAlignment.LEFT  => "l"
+        case DoxTableAlignment.RIGHT => "r"
         case _                        => "c"
       }
     }

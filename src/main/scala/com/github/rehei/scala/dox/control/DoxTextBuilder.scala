@@ -1,11 +1,11 @@
 package com.github.rehei.scala.dox.control
 
 import com.github.rehei.scala.dox.reference.ReferenceKey
-import com.github.rehei.scala.dox.RenderingBase
+import com.github.rehei.scala.dox.DoxRenderingBase
 import com.github.rehei.scala.dox.model.DoxDelegate
 import com.github.rehei.scala.dox.model.DoxReference
 
-case class DoxTextBuilder(base: RenderingBase, args: Seq[DoxDelegate]) {
+case class DoxTextBuilder(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
   
   def text(in: String) = {
     copyAppend(DoxDelegate(() => base.text(in)))

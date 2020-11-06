@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model.table
 
-class DataTableStringConversionDefault extends DataTableStringConversion {
+class DoxTableStringConversionDefault extends DoxTableStringConversion {
 
   def render(model: Any): String = {
     if (model == null) {

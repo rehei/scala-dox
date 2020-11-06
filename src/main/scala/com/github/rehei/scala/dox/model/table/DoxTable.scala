@@ -1,17 +1,17 @@
 package com.github.rehei.scala.dox.model.table
 
-case class DataTable(
-  protected val _config: DataTableConfig,
-  protected val _head:   Seq[DataTableKeyConfig],
+case class DoxTable(
+  protected val _config: DoxTableConfig,
+  protected val _head:   Seq[DoxTableKeyConfig],
   protected val _data:   Seq[Seq[String]]) {
 
-  protected var index: Option[DataTableKeyConfig] = None
+  protected var index: Option[DoxTableKeyConfig] = None
 
   def caption() = {
     _config.caption
   }
   
-  def withIndex(indexConfig: Option[DataTableKeyConfig]) = {
+  def withIndex(indexConfig: Option[DoxTableKeyConfig]) = {
     if (_config.enableIndexing) {
       index = indexConfig
     }
