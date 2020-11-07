@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox.control
 import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.reference.DoxBibKey
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
 
 abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {

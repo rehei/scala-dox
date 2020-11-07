@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.reference
+package com.github.rehei.scala.dox.model.bibliography
 
 abstract class DoxBibKeyLookupBase {
   

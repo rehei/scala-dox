@@ -5,7 +5,7 @@ import java.io.File
 import java.nio.charset.StandardCharsets
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Map
-import com.github.rehei.scala.dox.reference.DoxBibKey
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 
 class DoxHandleBibliography(cache: DoxCacheBibliography) {
 

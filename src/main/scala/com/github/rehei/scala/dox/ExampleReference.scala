@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox
 
-import com.github.rehei.scala.dox.reference.DoxBibKeyEnum
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 
 object ExampleReference extends DoxBibKeyEnum {
 

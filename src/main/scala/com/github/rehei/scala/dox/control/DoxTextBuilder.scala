@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.reference.DoxBibKey
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.DoxDelegate
 import com.github.rehei.scala.dox.model.DoxReference
 

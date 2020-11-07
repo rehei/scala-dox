@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.reference
+package com.github.rehei.scala.dox.model.bibliography
 
 trait DoxBibKeyEnum extends Enumeration {
 
@@ -7,9 +7,8 @@ trait DoxBibKeyEnum extends Enumeration {
 
     def name() = {
       val keyName = super.toString()
-
       if (keyName.contains("Invalid enum")) {
-        throw new DoxBibKeyInvalidException("Invalid enum reference in " + clazz.getCanonicalName)
+        throw new DoxBibKeyInvalidException("Invalid enum reference in " + clazz.getName)
       }
 
       val extension = {
@@ -30,9 +29,9 @@ trait DoxBibKeyEnum extends Enumeration {
     }
   }
 
-  class KeyDOI(_doi: String) extends KeyBase {
+  class KeyDOI(_doi: String, year: Long, by: String, title: String) extends KeyBase {
     def lookup() = {
-      new DoxBibKeyLookupDoi(this.name(), _doi)
+      new DoxBibKeyLookupDoi(this.name(), _doi, year, by, title)
     }
   }
 
@@ -45,9 +44,9 @@ trait DoxBibKeyEnum extends Enumeration {
   protected def fromDOI(doi: String) = {
     new {
       def year(year: Long) = new {
-        def by(description: String) = new {
+        def by(by: String) = new {
           def title(title: String) = {
-            new KeyDOI(doi)
+            new KeyDOI(doi, year, by, title)
           }
         }
       }

@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.reference
+package com.github.rehei.scala.dox.model.bibliography
 
 import org.jbibtex.BibTeXFormatter
 import org.jbibtex.BibTeXEntry
@@ -9,6 +9,7 @@ import org.jbibtex.Value
 import scala.collection.JavaConversions._
 import org.jbibtex.BibTeXDatabase
 import java.io.StringWriter
+import scala.collection.Seq
 
 case class DoxBibtexFormat(keyOverride: String) {
 

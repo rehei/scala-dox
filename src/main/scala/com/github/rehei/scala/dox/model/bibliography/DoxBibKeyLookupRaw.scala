@@ -1,13 +1,13 @@
-package com.github.rehei.scala.dox.reference
+package com.github.rehei.scala.dox.model.bibliography
 
-class DoxBibKeyLookupRaw(name: String, content: String) extends DoxBibKeyLookupBase {
+class DoxBibKeyLookupRaw(bibKeyName: String, content: String) extends DoxBibKeyLookupBase {
 
   def lookupKey() = {
     wrap("___") // make sure that potentially equal raw entries have the same key '___'
   }
 
   def resolve() = {
-    wrap(name)
+    wrap(bibKeyName)
   }
 
   protected def wrap(key: String) = {

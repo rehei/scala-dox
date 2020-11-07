@@ -1,30 +1,30 @@
 package com.github.rehei.scala.dox.test
 
 import org.junit.Test
-import com.github.rehei.scala.dox.reference.DoxBibKeyEnum
-import com.github.rehei.scala.dox.reference.DoxBibKeyEnum
-import com.github.rehei.scala.dox.reference.DoxBibKeyEnum
-import com.github.rehei.scala.dox.reference.DoxBibKeyInvalidException
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyInvalidException
 
 class TestNestedBibKeyReference {
 
   object Example extends DoxBibKeyEnum {
     val MUELLER = {
       fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-        .year(2019).by("Müller, R., Oehm, L.").title("Process industries versus discrete processing: how system characteristics affect operator tasks. ")
+        .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
     }
 
     object Inner1 {
       val MUELLER = {
         fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-          .year(2019).by("Müller, R., Oehm, L.").title("Process industries versus discrete processing: how system characteristics affect operator tasks. ")
+          .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
       }
     }
 
     object Inner2 extends DoxBibKeyEnum {
       val MUELLER = {
         fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-          .year(2019).by("Müller, R., Oehm, L.").title("Process industries versus discrete processing: how system characteristics affect operator tasks. ")
+          .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
       }
     }
 

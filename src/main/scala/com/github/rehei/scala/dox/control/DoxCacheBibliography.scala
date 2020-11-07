@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 
 import org.apache.commons.io.FileUtils
-import com.github.rehei.scala.dox.reference.DoxBibKey
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 
 class DoxCacheBibliography(target: Path) {
 
