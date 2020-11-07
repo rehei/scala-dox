@@ -7,8 +7,8 @@ env:
   - BINTRAY_HOST=api.bintray.com
   - BINTRAY_USER=rehei
   - secure: "vs4c+gxljOKrThgNXpeZfmprB28zQO1PQVorBCzYfSZ0jVwJPc6it4yvWtobkofnXvxojqoeh+nkl/ovaJiB5ZFIufPqxq7RjxA65nqXxMy41xU28pbxFyty5IzuRmPwuYdosV1pIcE0rGC4RrnlesqW8suzTl3nHl6QAVjglrKmq6QfCiTygHrdTRGyHX6yE59mtGB5PHczq4BzGNIZqt32WgDJ8B2FHK8vxZ4Ih/H8ukgom7MrCw0xN5CMb2ESqDAB1eMvB9j7nLrDcSUAQfl9eBcY8Ol1nxFcQ5CkfK5ECOcHogztwXNsnYU/Ro8X0J+Cv0yfF6V5VD0mzz80ASKNg17w4NHBE21EHeOTSsjmKLDrHRtdnxGgvUhQBPYCkFENUYqmHLGNFkfpobm6UmRdGuOi0lshmMrOCSx0PlvDRLANDbTydhw4X9icOEt0fqgcF376u7Xd6TIShkiKXQfEYXhnnXYcSCKfm5lBUMhdHloQpKla96xkQYldQThxqIVOIobUvPclaMzeDYBfVCKCrw1+r4g0R6EB1gUggZvC+8KMMGAYeMip0f83SUuJk0E4kHEnORbPlI8KQzlm8klNrWNXLsxr/SMjdjodo3VWFyn/GqgEGbL4SfNXygrHO//4p1vwiEfpS1dPJOhWvJZHQ9i/A+MRI+dyy/aEnfo="
-script:
-- "./sbt -Dtag=${TRAVIS_TAG} +package"
+script: 
+- "./package.sh"  
 deploy:
 - provider: releases
   skip_cleanup: true
