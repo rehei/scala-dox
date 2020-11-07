@@ -10,3 +10,8 @@ bin/
 project/target
 project/project
 /.idea/
+
+
+# as sbt version is determined by the given binary
+project/build.properties
+

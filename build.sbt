@@ -19,10 +19,11 @@ libraryDependencies ++= {
   Seq(
     "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
     "commons-io" % "commons-io" % "2.6",
-    "org.reflections" % "reflections" % "0.9.12",
     "com.github.rehei" %% "scala-macros" % "0.9.3",
     "org.jbibtex" % "jbibtex" % "1.0.17",
-    "org.scalaj" %% "scalaj-http" % "2.4.2"
+    "org.scalaj" %% "scalaj-http" % "2.4.2",
+    "com.novocode" % "junit-interface" % "0.11" % Test,
+    "junit" % "junit" % "4.13" % Test
   )
 }
 
