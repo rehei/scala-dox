@@ -6,58 +6,58 @@ import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
 
 class TestIntegrityOnResolveDOI {
 
-  protected val DOI = "https://doi.org/10.1007/s10111-018-0511-1"
+  protected val DOI = "https://doi.org/10.1016/j.procir.2019.03.022"
 
-  protected val DEFAULT_YEAR = 2018
-  protected val DEFAULT_BY = "Romy Müller and Lukas Oehm"
-  protected val DEFAULT_TITLE = "Process industries versus discrete processing: how system characteristics affect operator tasks"
+  protected val DEFAULT_YEAR = 2019
+  protected val DEFAULT_BY = "Heiner Reinhardt and Marek Weber and Matthias Putz"
+  protected val DEFAULT_TITLE = "A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing"
 
   @Test
   def testDefault() {
 
     object Example extends DoxBibKeyEnum {
-      val MUELLER = {
+      val REINHARDT = {
         fromDOI(DOI).year(DEFAULT_YEAR).by(DEFAULT_BY).title(DEFAULT_TITLE)
       }
     }
 
-    assert(Example.MUELLER.lookup().resolve().startsWith("@article{"))
+    assert(Example.REINHARDT.lookup().resolve().startsWith("@article{"))
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])
   def testYear() {
 
     object Example extends DoxBibKeyEnum {
-      val MUELLER = {
+      val REINHARDT = {
         fromDOI(DOI).year(DEFAULT_YEAR - 1).by(DEFAULT_BY).title(DEFAULT_TITLE)
       }
     }
 
-    Example.MUELLER.lookup().resolve()
+    Example.REINHARDT.lookup().resolve()
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])
   def testBy() {
 
     object Example extends DoxBibKeyEnum {
-      val MUELLER = {
+      val REINHARDT = {
         fromDOI(DOI).year(DEFAULT_YEAR).by("foobar").title(DEFAULT_TITLE)
       }
     }
 
-    Example.MUELLER.lookup().resolve()
+    Example.REINHARDT.lookup().resolve()
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])
   def testTitle() {
 
     object Example extends DoxBibKeyEnum {
-      val MUELLER = {
+      val REINHARDT = {
         fromDOI(DOI).year(DEFAULT_YEAR).by(DEFAULT_BY).title("foobar")
       }
     }
 
-    Example.MUELLER.lookup().resolve()
+    Example.REINHARDT.lookup().resolve()
   }
 
 }

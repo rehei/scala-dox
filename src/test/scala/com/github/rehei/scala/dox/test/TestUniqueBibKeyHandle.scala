@@ -16,23 +16,25 @@ class TestUniqueBibKeyHandle {
     object Example extends DoxBibKeyEnum {
       val plain1 = fromRAW {
         """
-          @book{anything,
-            title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
-            author={Tietze, Oliver},
-            year={2003},
-            publisher={Springer-Verlag}
-          }
+        @inproceedings{anything,
+          title={Mathematical computations for linked data applications with openmath},
+          author={Wenzel, Ken and Reinhardt, Heiner},
+          booktitle={Proceedings of the 24th Workshop on OpenMath},
+          pages={38--48},
+          year={2012}
+        }
         """
       }
 
       val plain2 = fromRAW {
         """
-          @book{foobar,
-            title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
-            author={Tietze, Oliver},
-            year={2003},
-            publisher={Springer-Verlag}
-          }
+        @inproceedings{foobar,
+          title={Mathematical computations for linked data applications with openmath},
+          author={Wenzel, Ken and Reinhardt, Heiner},
+          booktitle={Proceedings of the 24th Workshop on OpenMath},
+          pages={38--48},
+          year={2012}
+        }
         """
       }
     }
@@ -48,22 +50,22 @@ class TestUniqueBibKeyHandle {
 
     object Example extends DoxBibKeyEnum {
 
-      val FOO = {
-        fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-          .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
+      val REINHARDT_2019a = {
+        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
       }
 
-      val BAR = {
-        fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-          .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
+      val REINHARDT_2019b = {
+        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
       }
 
     }
 
     val handle = createBibTexHandle()
 
-    handle.append(Example.FOO)
-    handle.append(Example.BAR)
+    handle.append(Example.REINHARDT_2019a)
+    handle.append(Example.REINHARDT_2019b)
 
   }
 
