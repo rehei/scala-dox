@@ -7,11 +7,13 @@ import scala.collection.mutable.HashSet
 import scala.collection.mutable.Map
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
 
 class DoxHandleBibliography(cache: DoxCacheBibliography) {
 
   protected val keys = HashSet[DoxBibKey]()
-
   protected val inverseKeyLookup = Map[String, String]()
 
   def append(key: DoxBibKey) {
@@ -30,14 +32,14 @@ class DoxHandleBibliography(cache: DoxCacheBibliography) {
     keys.add(key)
   }
 
-  def writeTo(file: File) = {
+  def writeTo(path: Path) = {
     for (referenceKey <- keys) {
-      write(file, cache.getOrUpdate(referenceKey))
+      write(path, cache.getOrUpdate(referenceKey))
     }
   }
 
-  protected def write(file: File, content: String) = {
-    FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8, true)
+  protected def write(path: Path, content: String) = {
+    Files.write(path, content.getBytes, StandardOpenOption.CREATE)
   }
 
 }

@@ -5,8 +5,15 @@ import java.nio.file.Path
 
 import org.apache.commons.io.FileUtils
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
+import java.nio.file.Files
+import scala.collection.JavaConversions._
+import java.nio.file.StandardOpenOption
 
 class DoxCacheBibliography(target: Path) {
+
+  if (!Files.exists(target)) {
+    Files.createDirectories(target)
+  }
 
   protected val map = scala.collection.mutable.Map[DoxBibKey, String]()
 
@@ -25,9 +32,11 @@ class DoxCacheBibliography(target: Path) {
   }
 
   protected def lookupPersistentCache(key: DoxBibKey) = {
-    val cacheFile = file(key)
-    if (cacheFile.exists()) {
-      Some(FileUtils.readFileToString(cacheFile, StandardCharsets.UTF_8))
+    val cacheFile = path(key)
+    if (Files.exists(cacheFile)) {
+      val tmp = new String(Files.readAllBytes(cacheFile))
+      map.put(key, tmp)
+      Some(tmp)
     } else {
       None
     }
@@ -39,12 +48,12 @@ class DoxCacheBibliography(target: Path) {
 
   protected def updateCache(key: DoxBibKey, content: String) {
     map.put(key, content)
-    FileUtils.writeStringToFile(file(key), content, StandardCharsets.UTF_8, true)
+    Files.write(path(key), content.getBytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
   }
 
-  protected def file(key: DoxBibKey) = {
+  protected def path(key: DoxBibKey) = {
     val filename = friendlyFilename(key.name())
-    target.resolve(filename + ".bib").toFile()
+    target.resolve(filename + ".bib")
   }
 
   protected def friendlyFilename(input: String) = {
