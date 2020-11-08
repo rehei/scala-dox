@@ -9,22 +9,22 @@ import com.github.rehei.scala.dox.model.ex.DoxBibKeyInvalidException
 class TestNestedBibKeyReference {
 
   object Example extends DoxBibKeyEnum {
-    val MUELLER = {
-      fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-        .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
+    val REINHARDT_2019 = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
     }
 
     object Inner1 {
-      val MUELLER = {
-        fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-          .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
+      val REINHARDT_2019 = {
+        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
       }
     }
 
     object Inner2 extends DoxBibKeyEnum {
-      val MUELLER = {
-        fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-          .year(2018).by("Romy Müller and Lukas Oehm").title("Process industries versus discrete processing: how system characteristics affect operator tasks")
+      val REINHARDT_2019 = {
+        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
       }
     }
 
@@ -32,19 +32,19 @@ class TestNestedBibKeyReference {
 
   @Test
   def test1() {
-    val tmp = Example.MUELLER.lookup().resolve()
-    assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example--MUELLER-UUUUUUU"))
+    val tmp = Example.REINHARDT_2019.lookup().resolve()
+    assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example--REINHARDT_2019-UUUUUUUUU-----"))
   }
 
   @Test(expected = classOf[DoxBibKeyInvalidException])
   def test2() {
-    Example.Inner1.MUELLER.lookup().resolve()
+    Example.Inner1.REINHARDT_2019.lookup().resolve()
   }
 
   @Test
   def test3() {
-    val tmp = Example.Inner2.MUELLER.lookup().resolve()
-    assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example-Inner2--MUELLER-UUUUUUU"))
+    val tmp = Example.Inner2.REINHARDT_2019.lookup().resolve()
+    assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example-Inner2--REINHARDT_2019-UUUUUUUUU-----"))
   }
 
 }

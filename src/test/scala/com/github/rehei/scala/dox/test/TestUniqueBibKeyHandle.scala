@@ -16,24 +16,24 @@ class TestUniqueBibKeyHandle {
     object Example extends DoxBibKeyEnum {
       val plain1 = fromRAW {
         """
-      @book{anything,
-        title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
-        author={Tietze, Oliver},
-        year={2003},
-        publisher={Springer-Verlag}
-      }
-    """
+          @book{anything,
+            title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
+            author={Tietze, Oliver},
+            year={2003},
+            publisher={Springer-Verlag}
+          }
+        """
       }
 
       val plain2 = fromRAW {
         """
-      @book{foobar,
-        title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
-        author={Tietze, Oliver},
-        year={2003},
-        publisher={Springer-Verlag}
-      }
-      """
+          @book{foobar,
+            title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
+            author={Tietze, Oliver},
+            year={2003},
+            publisher={Springer-Verlag}
+          }
+        """
       }
     }
 

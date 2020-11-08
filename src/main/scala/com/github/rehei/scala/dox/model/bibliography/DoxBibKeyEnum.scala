@@ -8,26 +8,28 @@ trait DoxBibKeyEnum extends Enumeration {
     protected val clazz = DoxBibKeyEnum.this.getClass()
 
     def name() = {
-      val keyName = super.toString()
-      if (keyName.contains("Invalid enum")) {
+      val valName = super.toString()
+      if (valName.contains("Invalid enum")) {
         throw new DoxBibKeyInvalidException("Invalid enum reference in " + clazz.getName)
       }
 
-      val extension = {
-        for (character <- keyName) yield {
-          if (character.isUpper) {
-            "U"
-          } else {
-            if (character.isLower) {
-              "L"
-            } else {
-              "-"
-            }
-          }
+      friendlyClassName() + "-" + valName + "-" + caseExtension(valName)
+    }
+
+    protected def friendlyClassName() = {
+      clazz.getName.replace("$", "-").replace(".", "-")
+    }
+
+    protected def caseExtension(valName: String) = {
+      val sb = new StringBuilder()
+      for (character <- valName) {
+        character match {
+          case c if c.isUpper => sb.append("U")
+          case c if c.isLower => sb.append("L")
+          case _ => sb.append("-")
         }
       }
-
-      clazz.getName.replace("$", "-").replace(".", "-") + "-" + keyName + "-" + extension.mkString
+      sb.toString()
     }
   }
 

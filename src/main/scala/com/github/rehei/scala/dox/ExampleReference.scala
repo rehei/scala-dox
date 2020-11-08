@@ -7,29 +7,41 @@ object ExampleReference extends DoxBibKeyEnum {
   val PLAIN = {
     fromRAW {
       """
-      @book{tietze2003,
-        title={Strategische Positionierung in der Automobilbranche: der Einsatz von virtueller Produktentwicklung und Wertsch{\"o}pfungsnetzwerken},
-        author={Tietze, Oliver},
-        year={2003},
-        publisher={Springer-Verlag}
-      }
-    """
+        @inproceedings{wenzel2012mathematical,
+          title={Mathematical computations for linked data applications with openmath},
+          author={Wenzel, Ken and Reinhardt, Heiner},
+          booktitle={Proceedings of the 24th Workshop on OpenMath},
+          pages={38--48},
+          year={2012}
+        }
+      """
     }
   }
 
-  object FOO {
+  object REINHARDT extends DoxBibKeyEnum {
 
-    val MUELLER = {
-      fromDOI("https://doi.org/10.1007/s10111-018-0511-1")
-        .year(2019).by("Müller, R., Oehm, L.").title("Process industries versus discrete processing: how system characteristics affect operator tasks. ")
+    val REINHARDT_2019 = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
+    }
+
+    val REINHARDT_2020a = {
+      fromDOI("https://doi.org/10.1016/j.procir.2020.01.078")
+        .year(2020).by("Heiner Reinhardt and Jan-Peter Bergmann and Marc Münnich and David Rein and Matthias Putz").title("A survey on modeling and forecasting the energy consumption in discrete manufacturing")
+    }
+    val REINHARDT_2020b = {
+      fromDOI("https://doi.org/10.1016/j.procir.2020.04.055")
+        .year(2020).by("Heiner Reinhardt and Jan-Peter Bergmann and Anke Stoll and Matthias Putz").title("Temporal analysis of event-discrete alarm data for improved manufacturing")
     }
 
   }
 
   def main(args: Array[String]): Unit = {
 
-//    println(PLAIN.lookup().resolve())
-    println(FOO.MUELLER.lookup().resolve())
+    println(PLAIN.lookup().resolve())
+    println(REINHARDT.REINHARDT_2019.lookup().resolve())
+    println(REINHARDT.REINHARDT_2020a.lookup().resolve())
+    println(REINHARDT.REINHARDT_2020b.lookup().resolve())
 
   }
 
