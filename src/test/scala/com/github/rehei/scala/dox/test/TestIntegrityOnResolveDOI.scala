@@ -2,7 +2,7 @@ package com.github.rehei.scala.dox.test
 
 import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyIntegrityException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
 
 class TestIntegrityOnResolveDOI {
 

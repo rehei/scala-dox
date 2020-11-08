@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Map
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
 
 class DoxHandleBibliography(cache: DoxCacheBibliography) {
 
@@ -19,7 +20,7 @@ class DoxHandleBibliography(cache: DoxCacheBibliography) {
       referenceKey =>
         {
           if (key.name() != referenceKey) {
-            throw new RuntimeException("LookupKeys should be referenced uniquely")
+            throw new DoxBibKeyNotUniqueException("LookupKeys should be referenced uniquely")
           }
         }
     } getOrElse {

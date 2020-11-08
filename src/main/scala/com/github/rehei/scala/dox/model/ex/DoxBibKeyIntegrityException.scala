@@ -1,5 +1,3 @@
-package com.github.rehei.scala.dox.model.bibliography
-
-import org.jbibtex.Key
+package com.github.rehei.scala.dox.model.ex
 
 class DoxBibKeyIntegrityException(message: String) extends RuntimeException(message: String)

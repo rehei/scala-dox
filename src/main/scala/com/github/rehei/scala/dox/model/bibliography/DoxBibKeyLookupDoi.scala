@@ -6,6 +6,7 @@ import org.jbibtex.BibTeXDatabase
 import org.jbibtex.BibTeXEntry
 import scala.collection.JavaConversions._
 import org.jbibtex.Key
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
 
 class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String, title: String) extends DoxBibKeyLookupBase {
 

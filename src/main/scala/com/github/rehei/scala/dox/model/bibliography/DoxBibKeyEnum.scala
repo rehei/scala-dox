@@ -1,5 +1,7 @@
 package com.github.rehei.scala.dox.model.bibliography
 
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyInvalidException
+
 trait DoxBibKeyEnum extends Enumeration {
 
   abstract class KeyBase extends Val with DoxBibKey {

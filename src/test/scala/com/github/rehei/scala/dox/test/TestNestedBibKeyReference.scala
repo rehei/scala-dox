@@ -4,7 +4,7 @@ import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyInvalidException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyInvalidException
 
 class TestNestedBibKeyReference {
 
