@@ -7,6 +7,10 @@ trait DoxBibKeyEnum extends Enumeration {
   abstract class KeyBase extends Val with DoxBibKey {
     protected val clazz = DoxBibKeyEnum.this.getClass()
 
+    override def toString() = {
+      "@" + this.getClass.getSimpleName + "{" + super.toString() + "}"
+    }
+
     def name() = {
       val valName = super.toString()
       if (valName.contains("Invalid enum")) {
@@ -26,20 +30,20 @@ trait DoxBibKeyEnum extends Enumeration {
         character match {
           case c if c.isUpper => sb.append("U")
           case c if c.isLower => sb.append("L")
-          case _ => sb.append("-")
+          case _              => sb.append("-")
         }
       }
       sb.toString()
     }
   }
 
-  class KeyDOI(_doi: String, year: Long, by: String, title: String) extends KeyBase {
+  case class KeyDOI(_doi: String, year: Long, by: String, title: String) extends KeyBase {
     def lookup() = {
       new DoxBibKeyLookupDoi(this.name(), _doi, year, by, title)
     }
   }
 
-  class KeyRAW(_raw: String) extends KeyBase {
+  case class KeyRAW(_raw: String) extends KeyBase {
     def lookup() = {
       new DoxBibKeyLookupRaw(this.name(), _raw)
     }
@@ -50,7 +54,7 @@ trait DoxBibKeyEnum extends Enumeration {
       def year(year: Long) = new {
         def by(by: String) = new {
           def title(title: String) = {
-            new KeyDOI(doi, year, by, title)
+            KeyDOI(doi, year, by, title)
           }
         }
       }
@@ -58,7 +62,7 @@ trait DoxBibKeyEnum extends Enumeration {
   }
 
   protected def fromRAW(content: String) = {
-    new KeyRAW(content)
+    KeyRAW(content)
   }
 
 }
