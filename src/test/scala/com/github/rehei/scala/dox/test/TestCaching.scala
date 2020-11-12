@@ -1,8 +1,8 @@
 package com.github.rehei.scala.dox.test
 
 import org.junit.Test
-import com.github.rehei.scala.dox.control.DoxHandleBibliography
-import com.github.rehei.scala.dox.control.DoxCacheBibliography
+import com.github.rehei.scala.dox.control.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
@@ -10,8 +10,9 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import java.nio.file.Path
 import java.nio.file.Files
 import scala.collection.JavaConversions._
-import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
-import com.github.rehei.scala.dox.control.DoxBibKeyScanner
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 
 object TestCaching {
 
@@ -53,7 +54,7 @@ class TestCaching {
 
   import TestCaching._
 
-  class OpenCache(target: Path, warmup: Seq[DoxBibKey]) extends DoxCacheBibliography(target, warmup) {
+  class OpenCache(target: Path, warmup: Seq[DoxBibKey]) extends DoxBibKeyCache(target, warmup) {
     override def lookupMemoryCache(key: DoxBibKey) = {
       super.lookupMemoryCache(key)
     }
@@ -118,12 +119,12 @@ class TestCaching {
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
     val cache1 = new OpenCache(path, Seq.empty)
     val map1 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
-    val handle1 = DoxHandleBibliography(cache1, map1)
+    val handle1 = DoxBibKeyRendering(cache1, map1)
 
     val cache2 = new OpenCache(path, Seq.empty)
     val map2 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
 
-    val handle2 = new DoxHandleBibliography(cache2, map2)
+    val handle2 = new DoxBibKeyRendering(cache2, map2)
 
     handle1.append(Example.REINHARDT_2019)
     handle1.writeTo(fileSystem.getPath("/tmp/example1.bib"))

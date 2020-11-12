@@ -1,18 +1,25 @@
-package com.github.rehei.scala.dox.control
+package com.github.rehei.scala.dox.model.bibliography
 
-import java.nio.charset.StandardCharsets
 import java.nio.file.Path
-
-import org.apache.commons.io.FileUtils
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import java.nio.file.Files
 import scala.collection.JavaConversions._
 import java.nio.file.StandardOpenOption
 import com.github.rehei.scala.dox.model.DoxDOI
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyLookupResult
-import com.github.rehei.scala.dox.model.bibliography.DoxBibtexParse
+import scala.collection.Seq
 
-case class DoxCacheBibliography(target: Path, warmup: Seq[DoxBibKey]) {
+object DoxBibKeyCache {
+
+  def apply(target: Path): DoxBibKeyCache = {
+    DoxBibKeyCache(target, Seq.empty)
+  }
+  
+  protected def apply(target: Path, warmup: Seq[DoxBibKey]) = {
+    new DoxBibKeyCache(target, warmup)
+  }
+
+}
+
+case class DoxBibKeyCache protected(target: Path, warmup: Seq[DoxBibKey]) {
 
   if (!Files.exists(target)) {
     Files.createDirectories(target)
@@ -22,6 +29,10 @@ case class DoxCacheBibliography(target: Path, warmup: Seq[DoxBibKey]) {
 
   for (key <- warmup) {
     getOrUpdate(key)
+  }
+
+  def warmup(sequence: Seq[DoxBibKey]) = {
+    this.copy(warmup = sequence)
   }
 
   def getOrUpdate(key: DoxBibKey) = {

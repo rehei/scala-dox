@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.mutable.ArrayBuffer
-import com.github.rehei.scala.dox.control.DoxBibKeyScanner
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 
 object ExampleTraversal {
 

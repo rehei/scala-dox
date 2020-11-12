@@ -2,13 +2,13 @@ package com.github.rehei.scala.dox.test
 
 import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
-import com.github.rehei.scala.dox.control.DoxCacheBibliography
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import java.nio.file.Files
-import com.github.rehei.scala.dox.control.DoxHandleBibliography
+import com.github.rehei.scala.dox.control.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
-import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
-import com.github.rehei.scala.dox.control.DoxBibKeyScanner
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 
 class TestUniqueBibKeyHandle {
 
@@ -74,10 +74,10 @@ class TestUniqueBibKeyHandle {
   protected def createBibTexHandle() = {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = DoxCacheBibliography(path, Seq.empty)
+    val cache = DoxBibKeyCache(path)
     val map = DoxBibKeyCountMap(Seq.empty).strict(false)
 
-    DoxHandleBibliography(cache, map)
+    DoxBibKeyRendering(cache, map)
   }
 
 }

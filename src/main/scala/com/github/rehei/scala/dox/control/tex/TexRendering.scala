@@ -5,11 +5,11 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxLikeSVG
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.DoxReference
-import com.github.rehei.scala.dox.control.DoxHandleBibliography
+import com.github.rehei.scala.dox.control.DoxBibKeyRendering
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.control.DoxHandleSVG
 
-class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle: DoxHandleSVG, bibHandle: DoxHandleBibliography) extends DoxRenderingBase(bibHandle) {
+class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle: DoxHandleSVG, bibHandle: DoxBibKeyRendering) extends DoxRenderingBase(bibHandle) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._

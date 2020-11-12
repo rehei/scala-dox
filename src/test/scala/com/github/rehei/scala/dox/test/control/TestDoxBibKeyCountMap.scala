@@ -4,10 +4,10 @@ import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.control.tex.TexRendering
 import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.control.DoxHandleBibliography
-import com.github.rehei.scala.dox.control.DoxCacheBibliography
-import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
-import com.github.rehei.scala.dox.control.DoxBibKeyScanner
+import com.github.rehei.scala.dox.control.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
 
@@ -115,9 +115,8 @@ class TestDoxBibKeyCountMap {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
 
-    val cache = DoxCacheBibliography(path, Seq.empty)
-
-    val bibHandle = DoxHandleBibliography(cache, map)
+    val bibCache = DoxBibKeyCache(path)
+    val bibHandle = DoxBibKeyRendering(bibCache, map)
 
     new TexRendering(TexAST(), null, null, bibHandle)
   }

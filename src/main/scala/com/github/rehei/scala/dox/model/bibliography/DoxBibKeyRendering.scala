@@ -10,8 +10,10 @@ import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 
-case class DoxHandleBibliography(cache: DoxCacheBibliography, map: DoxBibKeyCountMap) {
+case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
 
   protected val keys = HashSet[DoxBibKey]()
   protected val inverseKeyLookup = Map[String, String]()

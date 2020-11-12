@@ -3,10 +3,10 @@ package com.github.rehei.scala.dox.control.noop
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.DoxReference
-import com.github.rehei.scala.dox.control.DoxHandleBibliography
+import com.github.rehei.scala.dox.control.DoxBibKeyRendering
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 
-class RenderingNull(handle: DoxHandleBibliography) extends DoxRenderingBase(handle) {
+class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(handle) {
 
   def label(reference: DoxReference) = Unit
   def chapter(name: String) = Unit

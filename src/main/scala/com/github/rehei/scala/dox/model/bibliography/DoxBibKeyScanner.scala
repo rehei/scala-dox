@@ -1,10 +1,7 @@
-package com.github.rehei.scala.dox.control
+package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
-import scala.collection.mutable.ArrayBuffer
 import com.github.rehei.scala.dox.model.ex.DoxBibKeySourceObjectRequiredException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.reflect.runtime.universe._
 
 object DoxBibKeyScanner {

@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
 
-abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
+abstract class DoxRenderingBase(val bibliography: DoxBibKeyRendering) {
 
   def list(callback: DoxBuilderList => DoxBuilderList) {
     val result = callback(DoxBuilderList(this, Seq.empty))

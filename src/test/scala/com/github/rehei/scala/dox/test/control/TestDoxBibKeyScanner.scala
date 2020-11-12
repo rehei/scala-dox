@@ -2,7 +2,7 @@ package com.github.rehei.scala.dox.test.control
 
 import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
-import com.github.rehei.scala.dox.control.DoxBibKeyScanner
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.ex.DoxBibKeySourceObjectRequiredException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException

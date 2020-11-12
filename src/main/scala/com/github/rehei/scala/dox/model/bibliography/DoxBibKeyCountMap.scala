@@ -1,11 +1,7 @@
-package com.github.rehei.scala.dox.control
+package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.mutable.HashMap
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCount
 
 object DoxBibKeyCountMap {
   def apply(sequence: Seq[DoxBibKey]): DoxBibKeyCountMap = {
