@@ -12,21 +12,23 @@ trait DoxBibKeyEnum extends Enumeration {
     }
 
     def name() = {
-      val valName = super.toString()
-      if (valName.contains("Invalid enum")) {
+
+      friendlyClassName() + "-" + enumerationValueName() + "-" + caseExtension()
+    }
+
+    def validate() {
+      if (!isValid()) {
         throw new DoxBibKeyInvalidException("Invalid enum reference in " + clazz.getName)
       }
-
-      friendlyClassName() + "-" + valName + "-" + caseExtension(valName)
     }
 
-    protected def friendlyClassName() = {
-      clazz.getName.replace("$", "-").replace(".", "-")
+    protected def isValid() = {
+      !enumerationValueName().contains("Invalid enum")
     }
 
-    protected def caseExtension(valName: String) = {
+    protected def caseExtension() = {
       val sb = new StringBuilder()
-      for (character <- valName) {
+      for (character <- enumerationValueName()) {
         character match {
           case c if c.isUpper => sb.append("U")
           case c if c.isLower => sb.append("L")
@@ -35,6 +37,15 @@ trait DoxBibKeyEnum extends Enumeration {
       }
       sb.toString()
     }
+
+    protected def enumerationValueName() = {
+      super.toString()
+    }
+
+    protected def friendlyClassName() = {
+      clazz.getName.replace("$", "-").replace(".", "-")
+    }
+
   }
 
   case class KeyDOI(_doi: String, year: Long, by: String, title: String) extends KeyBase {

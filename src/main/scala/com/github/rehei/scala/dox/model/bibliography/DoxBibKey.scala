@@ -6,4 +6,6 @@ trait DoxBibKey {
 
   def lookup(): DoxBibKeyLookupBase
 
+  def validate(): Unit
+  
 }
