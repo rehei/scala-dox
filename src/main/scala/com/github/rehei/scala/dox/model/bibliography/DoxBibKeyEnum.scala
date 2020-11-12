@@ -1,6 +1,7 @@
 package com.github.rehei.scala.dox.model.bibliography
 
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
+import com.github.rehei.scala.dox.model.DoxDOI
 
 trait DoxBibKeyEnum extends Enumeration {
 
@@ -11,9 +12,11 @@ trait DoxBibKeyEnum extends Enumeration {
       "@" + this.getClass.getSimpleName + "{" + super.toString() + "}"
     }
 
+    def documentID(): Option[DoxDOI]
+
     def name() = {
       validate()
-      
+
       friendlyClassName() + "-" + enumerationValueName() + "-" + caseExtension()
     }
 
@@ -50,12 +53,20 @@ trait DoxBibKeyEnum extends Enumeration {
   }
 
   case class KeyDOI(_doi: String, year: Long, by: String, title: String) extends KeyBase {
+
+    def documentID() = {
+      Some(DoxDOI(_doi))
+    }
+
     def lookup() = {
       new DoxBibKeyLookupDoi(this.name(), _doi, year, by, title)
     }
   }
 
   case class KeyRAW(_raw: String) extends KeyBase {
+    def documentID() = {
+      None
+    }
     def lookup() = {
       new DoxBibKeyLookupRaw(this.name(), _raw)
     }

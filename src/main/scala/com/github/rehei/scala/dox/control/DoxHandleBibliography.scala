@@ -20,8 +20,9 @@ case class DoxHandleBibliography(cache: DoxCacheBibliography, map: DoxBibKeyCoun
     
     map.increase(key)
     
+    val content = key.lookup().resolve().normalize()
 
-    inverseKeyLookup.get(key.lookup().lookupKey()).map {
+    inverseKeyLookup.get(content).map {
       referenceKey =>
         {
           if (key.name() != referenceKey) {
@@ -29,7 +30,7 @@ case class DoxHandleBibliography(cache: DoxCacheBibliography, map: DoxBibKeyCoun
           }
         }
     } getOrElse {
-      inverseKeyLookup.put(key.lookup().lookupKey(), key.name())
+      inverseKeyLookup.put(content, key.name())
     }
 
     keys.add(key)

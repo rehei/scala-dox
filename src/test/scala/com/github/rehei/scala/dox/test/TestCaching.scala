@@ -22,6 +22,31 @@ object TestCaching {
     }
   }
 
+  object ExampleNormalizedExt extends DoxBibKeyEnum {
+    val REINHARDT_2019 = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
+    }
+  }
+
+  object ExampleNoCache extends DoxBibKeyEnum {
+
+    val PLAIN = {
+      fromRAW {
+        """
+        @inproceedings{anything,
+          title={Mathematical computations for linked data applications with openmath},
+          author={Wenzel, Ken and Reinhardt, Heiner},
+          booktitle={Proceedings of the 24th Workshop on OpenMath},
+          pages={38--48},
+          year={2012}
+        }
+        """
+      }
+    }
+
+  }
+
 }
 
 class TestCaching {
@@ -29,9 +54,6 @@ class TestCaching {
   import TestCaching._
 
   class OpenCache(target: Path) extends DoxCacheBibliography(target) {
-    override def path(key: DoxBibKey) = {
-      super.path(key)
-    }
     override def lookupMemoryCache(key: DoxBibKey) = {
       super.lookupMemoryCache(key)
     }
@@ -50,6 +72,44 @@ class TestCaching {
 
     assert(cache.lookupMemoryCache(Example.REINHARDT_2019).isDefined)
     assert(cache.lookupPersistentCache(Example.REINHARDT_2019).isDefined)
+  }
+
+  @Test
+  def testNoCache() {
+
+    val fileSystem = MemoryFileSystemBuilder.newLinux().build()
+    val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
+    val cache = new OpenCache(path)
+
+    cache.getOrUpdate(ExampleNoCache.PLAIN)
+
+    assert(cache.lookupMemoryCache(Example.REINHARDT_2019).isEmpty)
+    assert(cache.lookupPersistentCache(Example.REINHARDT_2019).isEmpty)
+  }
+
+  @Test
+  def testCacheNormalize() {
+
+    val fileSystem = MemoryFileSystemBuilder.newLinux().build()
+    val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
+    val cache = new OpenCache(path)
+
+    cache.getOrUpdate(Example.REINHARDT_2019)
+
+    val r1 = cache.lookupPersistentCache(Example.REINHARDT_2019).get
+    val r2 = cache.lookupPersistentCache(ExampleNormalizedExt.REINHARDT_2019).get
+
+    val doiPath = path.resolve(Example.REINHARDT_2019.documentID().get.value)
+
+    assert(r1.startsWith("@article{com-github-rehei-scala-dox-test-TestCaching-Example--REINHARDT_2019-UUUUUUUUU-----"))
+    assertContent(r1)
+    assert(r2.startsWith("@article{com-github-rehei-scala-dox-test-TestCaching-ExampleNormalizedExt--REINHARDT_2019-UUUUUUUUU-----"))
+    assertContent(r2)
+
+    val fileResult = new String(Files.readAllBytes(doiPath.resolve("cache.bib")))
+
+    assert(fileResult.startsWith("@article{___"))
+    assertContent(fileResult)
   }
 
   @Test

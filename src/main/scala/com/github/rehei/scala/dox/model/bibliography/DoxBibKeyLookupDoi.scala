@@ -7,6 +7,7 @@ import org.jbibtex.BibTeXEntry
 import scala.collection.JavaConversions._
 import org.jbibtex.Key
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
+import com.github.rehei.scala.dox.model.DoxDOI
 
 class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String, title: String) extends DoxBibKeyLookupBase {
 
@@ -26,10 +27,6 @@ class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String
       s"Checking integrity for ${bibKeyName} on ${key.getValue} failed, as ${expected} was expected, but actually ${actual} was given."
     }
 
-  }
-
-  def lookupKey(): String = {
-    doi
   }
 
   def resolve() = {
@@ -52,7 +49,7 @@ class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String
     entry.expect(BibTeXEntry.KEY_AUTHOR, by.toString())
     entry.expect(BibTeXEntry.KEY_TITLE, title)
 
-    DoxBibtexFormat(bibKeyName).format(database)
+    DoxBibKeyLookupResult(bibKeyName, database)
   }
 
 }

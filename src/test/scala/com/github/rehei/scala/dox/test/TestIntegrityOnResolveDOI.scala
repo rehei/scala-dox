@@ -21,7 +21,7 @@ class TestIntegrityOnResolveDOI {
       }
     }
 
-    assert(Example.REINHARDT.lookup().resolve().startsWith("@article{"))
+    assert(Example.REINHARDT.lookup().resolve().get().startsWith("@article{"))
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])

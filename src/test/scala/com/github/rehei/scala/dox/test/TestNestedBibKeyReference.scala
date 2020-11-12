@@ -32,7 +32,7 @@ class TestNestedBibKeyReference {
 
   @Test
   def test1() {
-    val tmp = Example.REINHARDT_2019.lookup().resolve()
+    val tmp = Example.REINHARDT_2019.lookup().resolve().get()
     assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example--REINHARDT_2019-UUUUUUUUU-----"))
   }
 
@@ -43,7 +43,7 @@ class TestNestedBibKeyReference {
 
   @Test
   def test3() {
-    val tmp = Example.Inner2.REINHARDT_2019.lookup().resolve()
+    val tmp = Example.Inner2.REINHARDT_2019.lookup().resolve().get()
     assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example-Inner2--REINHARDT_2019-UUUUUUUUU-----"))
   }
 

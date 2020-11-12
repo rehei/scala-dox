@@ -1,9 +1,10 @@
 package com.github.rehei.scala.dox.model.bibliography
 
+import com.github.rehei.scala.dox.control.DoxCacheBibliography
+import com.github.rehei.scala.dox.model.DoxDOI
+
 abstract class DoxBibKeyLookupBase {
   
-  def lookupKey(): String
-  
-  def resolve(): String
+  def resolve(): DoxBibKeyLookupResult
   
 }
