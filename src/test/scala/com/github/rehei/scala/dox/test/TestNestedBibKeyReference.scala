@@ -4,7 +4,7 @@ import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyInvalidException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
 
 class TestNestedBibKeyReference {
 
@@ -36,7 +36,7 @@ class TestNestedBibKeyReference {
     assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Example--REINHARDT_2019-UUUUUUUUU-----"))
   }
 
-  @Test(expected = classOf[DoxBibKeyInvalidException])
+  @Test(expected = classOf[DoxBibKeyNotValidException])
   def test2() {
     Example.Inner1.REINHARDT_2019.lookup().resolve()
   }

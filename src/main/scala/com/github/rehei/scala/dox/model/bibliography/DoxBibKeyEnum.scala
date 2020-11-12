@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyInvalidException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
 
 trait DoxBibKeyEnum extends Enumeration {
 
@@ -12,13 +12,14 @@ trait DoxBibKeyEnum extends Enumeration {
     }
 
     def name() = {
-
+      validate()
+      
       friendlyClassName() + "-" + enumerationValueName() + "-" + caseExtension()
     }
 
     def validate() {
       if (!isValid()) {
-        throw new DoxBibKeyInvalidException("Invalid enum reference in " + clazz.getName)
+        throw new DoxBibKeyNotValidException("Invalid enum reference in " + clazz.getName)
       }
     }
 
