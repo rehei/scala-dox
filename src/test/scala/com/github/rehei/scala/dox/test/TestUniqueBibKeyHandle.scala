@@ -74,7 +74,7 @@ class TestUniqueBibKeyHandle {
   protected def createBibTexHandle() = {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = DoxCacheBibliography(path)
+    val cache = DoxCacheBibliography(path, Seq.empty)
     val map = DoxBibKeyCountMap(Seq.empty).strict(false)
 
     DoxHandleBibliography(cache, map)

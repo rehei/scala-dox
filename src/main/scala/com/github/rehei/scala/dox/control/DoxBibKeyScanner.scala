@@ -27,14 +27,17 @@ object DoxBibKeyScanner {
 
 }
 
-class DoxBibKeyScanner protected(module: ModuleSymbol) {
+class DoxBibKeyScanner protected (module: ModuleSymbol) {
 
   protected val globalRuntimeM = runtimeMirror(this.getClass.getClassLoader)
 
-  def list(): Seq[DoxBibKey] = {
-
+  protected lazy val result: Seq[DoxBibKey] = {
     val instance = globalRuntimeM.reflectModule(module).instance
     list(module.typeSignature, instance)
+  }
+
+  def list() = {
+    result
   }
 
   protected def list(source: Type, instance: Any): Seq[DoxBibKey] = {

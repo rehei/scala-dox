@@ -15,15 +15,15 @@ abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
 
   def citet(key: DoxBibKey) {
     bibliography.append(key)
-    citet(key.name())
+    citet(key.name)
   }
   def citep(key: DoxBibKey) {
     bibliography.append(key)
-    citep(key.name())
+    citep(key.name)
   }
   def cite(key: DoxBibKey) {
     bibliography.append(key)
-    cite(key.name())
+    cite(key.name)
   }
 
   protected def citet(key: String)

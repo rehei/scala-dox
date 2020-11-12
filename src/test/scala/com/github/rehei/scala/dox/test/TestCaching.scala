@@ -53,7 +53,7 @@ class TestCaching {
 
   import TestCaching._
 
-  class OpenCache(target: Path) extends DoxCacheBibliography(target) {
+  class OpenCache(target: Path, warmup: Seq[DoxBibKey]) extends DoxCacheBibliography(target, warmup) {
     override def lookupMemoryCache(key: DoxBibKey) = {
       super.lookupMemoryCache(key)
     }
@@ -66,9 +66,8 @@ class TestCaching {
   def testWarmup() {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = new OpenCache(path)
-
-    cache.warmup(DoxBibKeyScanner.create[Example.type].list())
+    val scanner = DoxBibKeyScanner.create[Example.type]
+    val cache = new OpenCache(path, scanner.list())
 
     assert(cache.lookupMemoryCache(Example.REINHARDT_2019).isDefined)
     assert(cache.lookupPersistentCache(Example.REINHARDT_2019).isDefined)
@@ -79,7 +78,7 @@ class TestCaching {
 
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = new OpenCache(path)
+    val cache = new OpenCache(path, Seq.empty)
 
     cache.getOrUpdate(ExampleNoCache.PLAIN)
 
@@ -92,12 +91,12 @@ class TestCaching {
 
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = new OpenCache(path)
+    val cache = new OpenCache(path, Seq.empty)
 
     cache.getOrUpdate(Example.REINHARDT_2019)
 
-    val r1 = cache.lookupPersistentCache(Example.REINHARDT_2019).get
-    val r2 = cache.lookupPersistentCache(ExampleNormalizedExt.REINHARDT_2019).get
+    val r1 = cache.lookupPersistentCache(Example.REINHARDT_2019).get.get()
+    val r2 = cache.lookupPersistentCache(ExampleNormalizedExt.REINHARDT_2019).get.get()
 
     val doiPath = path.resolve(Example.REINHARDT_2019.documentID().get.value)
 
@@ -117,11 +116,11 @@ class TestCaching {
 
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache1 = new OpenCache(path)
+    val cache1 = new OpenCache(path, Seq.empty)
     val map1 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
     val handle1 = DoxHandleBibliography(cache1, map1)
 
-    val cache2 = new OpenCache(path)
+    val cache2 = new OpenCache(path, Seq.empty)
     val map2 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
 
     val handle2 = new DoxHandleBibliography(cache2, map2)
@@ -129,17 +128,17 @@ class TestCaching {
     handle1.append(Example.REINHARDT_2019)
     handle1.writeTo(fileSystem.getPath("/tmp/example1.bib"))
 
-    assertContent(cache1.lookupMemoryCache(Example.REINHARDT_2019).get)
-    assertContent(cache1.lookupPersistentCache(Example.REINHARDT_2019).get)
+    assertContent(cache1.lookupMemoryCache(Example.REINHARDT_2019).get.get())
+    assertContent(cache1.lookupPersistentCache(Example.REINHARDT_2019).get.get())
 
     assert(cache2.lookupMemoryCache(Example.REINHARDT_2019).isEmpty)
-    assertContent(cache2.lookupPersistentCache(Example.REINHARDT_2019).get)
-    assertContent(cache2.lookupMemoryCache(Example.REINHARDT_2019).get)
+    assertContent(cache2.lookupPersistentCache(Example.REINHARDT_2019).get.get())
+    assertContent(cache2.lookupMemoryCache(Example.REINHARDT_2019).get.get())
 
     handle2.writeTo(fileSystem.getPath("/tmp/example2.bib"))
 
-    assertContent(cache2.lookupMemoryCache(Example.REINHARDT_2019).get)
-    assertContent(cache2.lookupPersistentCache(Example.REINHARDT_2019).get)
+    assertContent(cache2.lookupMemoryCache(Example.REINHARDT_2019).get.get())
+    assertContent(cache2.lookupPersistentCache(Example.REINHARDT_2019).get.get())
   }
 
   protected def assertContent(content: String) {

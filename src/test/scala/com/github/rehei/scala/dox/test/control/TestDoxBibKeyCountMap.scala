@@ -115,7 +115,7 @@ class TestDoxBibKeyCountMap {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
 
-    val cache = DoxCacheBibliography(path)
+    val cache = DoxCacheBibliography(path, Seq.empty)
 
     val bibHandle = DoxHandleBibliography(cache, map)
 

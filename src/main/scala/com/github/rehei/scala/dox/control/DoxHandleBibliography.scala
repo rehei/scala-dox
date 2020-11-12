@@ -20,17 +20,18 @@ case class DoxHandleBibliography(cache: DoxCacheBibliography, map: DoxBibKeyCoun
     
     map.increase(key)
     
-    val content = key.lookup().resolve().normalize()
+    val result = cache.getOrUpdate(key)
+    val content = result.normalize()
 
     inverseKeyLookup.get(content).map {
       referenceKey =>
         {
-          if (key.name() != referenceKey) {
+          if (key.name != referenceKey) {
             throw new DoxBibKeyNotUniqueException("LookupKeys should be referenced uniquely")
           }
         }
     } getOrElse {
-      inverseKeyLookup.put(content, key.name())
+      inverseKeyLookup.put(content, key.name)
     }
 
     keys.add(key)
@@ -38,7 +39,7 @@ case class DoxHandleBibliography(cache: DoxCacheBibliography, map: DoxBibKeyCoun
 
   def writeTo(path: Path) = {
     for (referenceKey <- keys) {
-      write(path, cache.getOrUpdate(referenceKey))
+      write(path, cache.getOrUpdate(referenceKey).get())
     }
   }
 

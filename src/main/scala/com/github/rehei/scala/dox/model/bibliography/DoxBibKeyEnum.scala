@@ -12,12 +12,16 @@ trait DoxBibKeyEnum extends Enumeration {
       "@" + this.getClass.getSimpleName + "{" + super.toString() + "}"
     }
 
-    def documentID(): Option[DoxDOI]
+    def documentID: Option[DoxDOI]
 
-    def name() = {
+    def name = {
       validate()
 
       friendlyClassName() + "-" + enumerationValueName() + "-" + caseExtension()
+    }
+
+    def canonicalName = {
+      clazz.getName + this.enumerationValueName()
     }
 
     def validate() {
@@ -59,7 +63,7 @@ trait DoxBibKeyEnum extends Enumeration {
     }
 
     def lookup() = {
-      new DoxBibKeyLookupDoi(this.name(), _doi, year, by, title)
+      new DoxBibKeyLookupDoi(this.name, _doi, year, by, title)
     }
   }
 
@@ -68,7 +72,7 @@ trait DoxBibKeyEnum extends Enumeration {
       None
     }
     def lookup() = {
-      new DoxBibKeyLookupRaw(this.name(), _raw)
+      new DoxBibKeyLookupRaw(this.name, _raw)
     }
   }
 

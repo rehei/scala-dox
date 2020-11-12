@@ -12,24 +12,22 @@ import com.github.rehei.scala.dox.model.DoxDOI
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyLookupResult
 import com.github.rehei.scala.dox.model.bibliography.DoxBibtexParse
 
-case class DoxCacheBibliography(target: Path) {
+case class DoxCacheBibliography(target: Path, warmup: Seq[DoxBibKey]) {
 
   if (!Files.exists(target)) {
     Files.createDirectories(target)
   }
 
-  protected val memoryCache = scala.collection.mutable.Map[DoxDOI, String]()
+  protected val memoryCache = scala.collection.mutable.Map[DoxDOI, DoxBibKeyLookupResult]()
 
-  def warmup(sequence: Seq[DoxBibKey]) = {
-    for (key <- sequence) {
-      getOrUpdate(key)
-    }
+  for (key <- warmup) {
+    getOrUpdate(key)
   }
 
   def getOrUpdate(key: DoxBibKey) = {
     lookupMemoryCache(key).getOrElse {
       lookupPersistentCache(key).getOrElse {
-        val content = lookupDelegate(key).normalize()
+        val content = lookupDelegate(key)
         updateCache(key, content)
         content
       }
@@ -37,26 +35,26 @@ case class DoxCacheBibliography(target: Path) {
   }
 
   protected def lookupMemoryCache(key: DoxBibKey) = {
-    key.documentID().flatMap(doi => memoryCache.get(doi))
+    key.documentID.flatMap(doi => memoryCache.get(doi))
   }
 
   protected def lookupPersistentCache(key: DoxBibKey) = {
-    for (doi <- key.documentID(); cacheFile = path(doi) if Files.exists(cacheFile)) yield {
+    for (doi <- key.documentID; cacheFile = path(doi) if Files.exists(cacheFile)) yield {
       val tmp = new String(Files.readAllBytes(cacheFile))
-      val result = DoxBibKeyLookupResult(key.name(), DoxBibtexParse().parse(tmp))
-      memoryCache.put(doi, result.get())
-      result.get()
+      val result = DoxBibKeyLookupResult(key.name, DoxBibtexParse().parse(tmp))
+      memoryCache.put(doi, result)
+      result
     }
   }
 
   protected def lookupDelegate(key: DoxBibKey) = {
-    key.lookup().resolve()
+    key.lookup.resolve()
   }
 
-  protected def updateCache(key: DoxBibKey, content: String) {
-    for (doi <- key.documentID()) {
-      memoryCache.put(doi, content)
-      Files.write(path(doi), content.getBytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+  protected def updateCache(key: DoxBibKey, result: DoxBibKeyLookupResult) {
+    for (doi <- key.documentID) {
+      memoryCache.put(doi, result)
+      Files.write(path(doi), result.normalize().getBytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
     }
   }
 

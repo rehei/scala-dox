@@ -4,11 +4,13 @@ import com.github.rehei.scala.dox.model.DoxDOI
 
 trait DoxBibKey {
 
-  def name(): String
-
-  def documentID(): Option[DoxDOI]
+  def name: String
   
-  def lookup(): DoxBibKeyLookupBase
+  def canonicalName: String
+
+  def documentID: Option[DoxDOI]
+  
+  def lookup: DoxBibKeyLookupBase
 
   def validate(): Unit
   

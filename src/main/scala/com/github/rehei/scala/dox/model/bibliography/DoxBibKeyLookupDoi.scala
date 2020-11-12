@@ -39,14 +39,13 @@ class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String
     }
 
     if (!content.isSuccess) {
-      throw new RuntimeException("Could not resolve DOI")
+      throw new RuntimeException("Could not resolve DOI" + content.body)
     }
     val database = DoxBibtexParse().parse(content.body)
     val entry = SingleEntry(database)
 
     entry.expect(BibTeXEntry.KEY_DOI, doi.stripPrefix("https://doi.org/"))
     entry.expect(BibTeXEntry.KEY_YEAR, year.toString())
-    entry.expect(BibTeXEntry.KEY_AUTHOR, by.toString())
     entry.expect(BibTeXEntry.KEY_TITLE, title)
 
     DoxBibKeyLookupResult(bibKeyName, database)
