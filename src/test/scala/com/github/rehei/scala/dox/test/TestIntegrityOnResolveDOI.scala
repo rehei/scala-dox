@@ -37,18 +37,6 @@ class TestIntegrityOnResolveDOI {
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])
-  def testBy() {
-
-    object Example extends DoxBibKeyEnum {
-      val REINHARDT = {
-        fromDOI(DOI).year(DEFAULT_YEAR).by("foobar").title(DEFAULT_TITLE)
-      }
-    }
-
-    Example.REINHARDT.lookup().resolve()
-  }
-
-  @Test(expected = classOf[DoxBibKeyIntegrityException])
   def testTitle() {
 
     object Example extends DoxBibKeyEnum {
