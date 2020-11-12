@@ -6,7 +6,7 @@ version := sys.props.getOrElse("tag", default = "0.0.0")
 organization := "com.github.rehei"
 
 scalaVersion := "2.12.12"
-crossScalaVersions := Seq("2.12.12", "2.11.11")
+crossScalaVersions := Seq("2.12.12")
 
 resolvers += "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 resolvers += "staging" at "https://oss.sonatype.org/content/repositories/staging"
