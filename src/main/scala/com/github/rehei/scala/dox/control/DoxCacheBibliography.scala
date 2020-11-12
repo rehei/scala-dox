@@ -17,6 +17,12 @@ case class DoxCacheBibliography(target: Path) {
 
   protected val map = scala.collection.mutable.Map[DoxBibKey, String]()
 
+  def warmup(sequence: Seq[DoxBibKey]) = {
+    for (key <- sequence) {
+      getOrUpdate(key)
+    }
+  }
+
   def getOrUpdate(key: DoxBibKey) = {
     lookupMemoryCache(key).getOrElse {
       lookupPersistentCache(key).getOrElse {

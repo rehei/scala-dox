@@ -13,7 +13,20 @@ import scala.collection.JavaConversions._
 import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.control.DoxBibKeyScanner
 
+object TestCaching {
+
+  object Example extends DoxBibKeyEnum {
+    val REINHARDT_2019 = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
+    }
+  }
+
+}
+
 class TestCaching {
+
+  import TestCaching._
 
   class OpenCache(target: Path) extends DoxCacheBibliography(target) {
     override def path(key: DoxBibKey) = {
@@ -27,11 +40,16 @@ class TestCaching {
     }
   }
 
-  object Example extends DoxBibKeyEnum {
-    val REINHARDT_2019 = {
-      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
-        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
-    }
+  @Test
+  def testWarmup() {
+    val fileSystem = MemoryFileSystemBuilder.newLinux().build()
+    val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
+    val cache = new OpenCache(path)
+
+    cache.warmup(DoxBibKeyScanner.create[Example.type].list())
+
+    assert(cache.lookupMemoryCache(Example.REINHARDT_2019).isDefined)
+    assert(cache.lookupPersistentCache(Example.REINHARDT_2019).isDefined)
   }
 
   @Test
