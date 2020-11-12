@@ -4,16 +4,16 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.mutable.HashMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCount
 
 object DoxBibKeyCountMap {
   def apply(sequence: Seq[DoxBibKey]): DoxBibKeyCountMap = {
-    DoxBibKeyCountMap(sequence, false)
+    DoxBibKeyCountMap(sequence, true)
   }
 }
 
 case class DoxBibKeyCountMap protected (protected val sequence: Seq[DoxBibKey], protected val strict: Boolean) {
-
-  case class KeyCount(key: DoxBibKey, count: Int)
 
   protected val map = HashMap[DoxBibKey, Int]()
 
@@ -25,7 +25,7 @@ case class DoxBibKeyCountMap protected (protected val sequence: Seq[DoxBibKey], 
     val value = map.get(key)
 
     if (strict && value.isEmpty) {
-      throw new RuntimeException("This should already be initialized by scanner.")
+      throw new DoxBibKeyCountStrictException("This should already be initialized by scanner.")
     }
 
     val count = value.getOrElse(0)
@@ -45,7 +45,7 @@ case class DoxBibKeyCountMap protected (protected val sequence: Seq[DoxBibKey], 
   }
 
   def listAll() = {
-    map.map(entry => KeyCount(entry._1, entry._2)).toSeq
+    map.map(entry => DoxBibKeyCount(entry._1, entry._2)).toSeq
   }
 
 }

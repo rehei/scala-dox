@@ -9,8 +9,13 @@ import com.github.rehei.scala.dox.control.DoxCacheBibliography
 import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.control.DoxBibKeyScanner
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
 
 object TestDoxBibKeyCountMap {
+
+  object TestEmpty {
+
+  }
 
   object TestKeys extends DoxBibKeyEnum {
 
@@ -51,20 +56,36 @@ class TestDoxBibKeyCountMap {
 
   import TestDoxBibKeyCountMap._
 
+  @Test(expected = classOf[DoxBibKeyCountStrictException])
+  def testStrictInitExceptionCite() = {
+    testStrictInitExceptionByCallback(_.cite(TestKeys.X))
+  }
+
+  @Test(expected = classOf[DoxBibKeyCountStrictException])
+  def testStrictInitExceptionCiteP() = {
+    testStrictInitExceptionByCallback(_.citep(TestKeys.X))
+  }
+
+  @Test(expected = classOf[DoxBibKeyCountStrictException])
+  def testStrictInitExceptionCiteT() = {
+    testStrictInitExceptionByCallback(_.citet(TestKeys.X))
+  }
+
+  protected def testStrictInitExceptionByCallback(callback: TexRendering => Unit) = {
+    val scanner = DoxBibKeyScanner.create[TestDoxBibKeyCountMap.TestEmpty.type]
+    val map = DoxBibKeyCountMap(scanner.list())
+    val rendering = createTexRendering(map)
+
+    callback(rendering)
+  }
+
   @Test
   def test() = {
 
-    val fileSystem = MemoryFileSystemBuilder.newLinux().build()
-    val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
+    val scanner = DoxBibKeyScanner.create[TestDoxBibKeyCountMap.type]
+    val map = DoxBibKeyCountMap(scanner.list())
 
-    val cache = DoxCacheBibliography(path)
-    val map = DoxBibKeyCountMap(DoxBibKeyScanner.create[TestDoxBibKeyCountMap.type].list())
-
-    val bibHandle = DoxHandleBibliography(cache, map)
-
-    val rendering = new TexRendering(TexAST(), null, null, bibHandle)
-
-    val sequence = map.listAll()
+    val rendering = createTexRendering(map)
 
     testing(map).x(0).y(0)
 
@@ -88,6 +109,17 @@ class TestDoxBibKeyCountMap {
 
     rendering.citep(TestKeys.Y)
     testing(map).x(4).y(3)
+  }
+
+  protected def createTexRendering(map: DoxBibKeyCountMap) = {
+    val fileSystem = MemoryFileSystemBuilder.newLinux().build()
+    val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
+
+    val cache = DoxCacheBibliography(path)
+
+    val bibHandle = DoxHandleBibliography(cache, map)
+
+    new TexRendering(TexAST(), null, null, bibHandle)
   }
 
   protected def testing(map: DoxBibKeyCountMap) = new {
