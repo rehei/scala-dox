@@ -23,6 +23,18 @@ class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String
       }
     }
 
+    def expectWeak(key: Key, expected: String) = {
+      val actual = entry.getField(key).toUserString()
+
+      val actualWordSeq = actual.split("\\s")
+      val exepectedWordSeq = expected.split("\\s")
+
+      val matchingResult = actualWordSeq.intersect(exepectedWordSeq)
+      if (matchingResult.isEmpty) {
+        throw new DoxBibKeyIntegrityException(getExceptionMessage(key, expected, actual))
+      }
+    }
+
     protected def getExceptionMessage(key: Key, expected: String, actual: String) = {
       s"Checking integrity for ${bibKeyName} on ${key.getValue} failed, as ${expected} was expected, but actually ${actual} was given."
     }
@@ -45,6 +57,7 @@ class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String
     val entry = SingleEntry(database)
 
     entry.expect(BibTeXEntry.KEY_DOI, doi.stripPrefix("https://doi.org/"))
+    entry.expectWeak(BibTeXEntry.KEY_AUTHOR, by.toString())
     entry.expect(BibTeXEntry.KEY_YEAR, year.toString())
     entry.expect(BibTeXEntry.KEY_TITLE, title)
 
