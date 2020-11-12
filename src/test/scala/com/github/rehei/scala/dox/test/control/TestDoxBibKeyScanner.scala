@@ -7,36 +7,36 @@ import com.github.rehei.scala.dox.model.ex.DoxBibKeySourceObjectRequiredExceptio
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException
 
-class DoxBibKeyScannerTest {
+class TestDoxBibKeyScanner {
 
   @Test(expected = classOf[DoxBibKeySourceObjectRequiredException])
   def testObjectRequirement() {
-    new DoxBibKeyScanner().list[TestRepository.TestRepositorySourceObjectRequirement]
+    DoxBibKeyScanner.create[TestRepository.TestRepositorySourceObjectRequirement].list()
   }
 
   @Test
   def testObjectRequirementSatisfied() {
-    new DoxBibKeyScanner().list[TestRepository.TestRepositorySourceObjectRequirement.type]
+    DoxBibKeyScanner.create[TestRepository.TestRepositorySourceObjectRequirement.type].list()
   }
 
   @Test(expected = classOf[DoxBibKeyNotValidException])
   def testKeyValidation() {
-    new DoxBibKeyScanner().list[TestRepository.TestRepositoryKeyValidation.type]
+    DoxBibKeyScanner.create[TestRepository.TestRepositoryKeyValidation.type].list()
   }
 
   @Test(expected = classOf[DoxBibKeyNotValidException])
   def testKeyValidationNested() {
-    new DoxBibKeyScanner().list[TestRepository.TestRepositoryKeyValidationNested.type]
+    DoxBibKeyScanner.create[TestRepository.TestRepositoryKeyValidationNested.type].list()
   }
   
   @Test(expected = classOf[DoxBibKeyNotFinalException])
   def testKeyFinal() {
-    new DoxBibKeyScanner().list[TestRepository.TestRepositoryKeyFinal.type]
+    DoxBibKeyScanner.create[TestRepository.TestRepositoryKeyFinal.type].list()
   }
 
   @Test
   def testSequence() {
-    val result = new DoxBibKeyScanner().list[TestRepository.TestAggregated.type]
+    val result = DoxBibKeyScanner.create[TestRepository.TestAggregated.type].list()
     
     assert(result.contains(TestRepository.TestAggregated.reference1))
     assert(result.contains(TestRepository.TestAggregated.Inner.reference2))

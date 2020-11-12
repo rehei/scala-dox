@@ -5,19 +5,12 @@ import scala.collection.mutable.ArrayBuffer
 import com.github.rehei.scala.dox.model.ex.DoxBibKeySourceObjectRequiredException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
+import scala.reflect.runtime.universe._
 
-class DoxBibKeyScanner() {
+object DoxBibKeyScanner {
 
-  import scala.reflect.runtime.universe._
-
-  protected val globalRuntimeM = runtimeMirror(this.getClass.getClassLoader)
-
-  def list[T](implicit typeTag: TypeTag[T]): Seq[DoxBibKey] = {
-
-    val module = getStaticModule(typeTag)
-    val instance = globalRuntimeM.reflectModule(module).instance
-
-    list(module.typeSignature, instance)
+  def create[T](implicit typeTag: TypeTag[T]) = {
+    new DoxBibKeyScanner(getStaticModule(typeTag))
   }
 
   protected def getStaticModule[T](typeTag: TypeTag[T]) = {
@@ -30,6 +23,18 @@ class DoxBibKeyScanner() {
     }
 
     symbol.asModule
+  }
+
+}
+
+class DoxBibKeyScanner protected(module: ModuleSymbol) {
+
+  protected val globalRuntimeM = runtimeMirror(this.getClass.getClassLoader)
+
+  def list(): Seq[DoxBibKey] = {
+
+    val instance = globalRuntimeM.reflectModule(module).instance
+    list(module.typeSignature, instance)
   }
 
   protected def list(source: Type, instance: Any): Seq[DoxBibKey] = {

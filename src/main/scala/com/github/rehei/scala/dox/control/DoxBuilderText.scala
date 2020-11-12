@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.DoxDelegate
 import com.github.rehei.scala.dox.model.DoxReference
 
-case class DoxTextBuilder(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
+case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
   
   def text(in: String) = {
     copyAppend(DoxDelegate(() => base.text(in)))

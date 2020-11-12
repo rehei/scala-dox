@@ -7,6 +7,8 @@ import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import java.nio.file.Files
 import com.github.rehei.scala.dox.control.DoxHandleBibliography
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
+import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
+import com.github.rehei.scala.dox.control.DoxBibKeyScanner
 
 class TestUniqueBibKeyHandle {
 
@@ -72,8 +74,10 @@ class TestUniqueBibKeyHandle {
   protected def createBibTexHandle() = {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = new DoxCacheBibliography(path)
-    new DoxHandleBibliography(cache)
+    val cache = DoxCacheBibliography(path)
+    val map = DoxBibKeyCountMap(Seq.empty).strict(false)
+
+    DoxHandleBibliography(cache, map)
   }
 
 }

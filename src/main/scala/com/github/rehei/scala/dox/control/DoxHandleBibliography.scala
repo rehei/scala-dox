@@ -11,12 +11,15 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
-class DoxHandleBibliography(cache: DoxCacheBibliography) {
+case class DoxHandleBibliography(cache: DoxCacheBibliography, map: DoxBibKeyCountMap) {
 
   protected val keys = HashSet[DoxBibKey]()
   protected val inverseKeyLookup = Map[String, String]()
 
   def append(key: DoxBibKey) {
+    
+    map.increase(key)
+    
 
     inverseKeyLookup.get(key.lookup().lookupKey()).map {
       referenceKey =>

@@ -8,8 +8,8 @@ import scala.collection.Seq
 
 abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
 
-  def list(callback: DoxListBuilder => DoxListBuilder) {
-    val result = callback(DoxListBuilder(this, Seq.empty))
+  def list(callback: DoxBuilderList => DoxBuilderList) {
+    val result = callback(DoxBuilderList(this, Seq.empty))
     result.flush()
   }
 
@@ -37,8 +37,8 @@ abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
   def subsubsection(name: String): Unit
 
   def text(in: String): Unit
-  def text(callback: DoxTextBuilder => DoxTextBuilder) {
-    val result = callback(DoxTextBuilder(this, Seq.empty))
+  def text(callback: DoxBuilderText => DoxBuilderText) {
+    val result = callback(DoxBuilderText(this, Seq.empty))
     result.flush()
   }
 
@@ -47,8 +47,8 @@ abstract class DoxRenderingBase(val bibliography: DoxHandleBibliography) {
   def clearpage(): Unit
   def list(itemSeq: Seq[String])
 
-  def svg(callback: DoxSVGBuilder.type => DoxSVGFigureSet) {
-    val data = callback(DoxSVGBuilder)
+  def svg(callback: DoxBuilderSVG.type => DoxSVGFigureSet) {
+    val data = callback(DoxBuilderSVG)
     this.svg(data)
   }
 

@@ -9,7 +9,7 @@ import java.nio.file.Files
 import scala.collection.JavaConversions._
 import java.nio.file.StandardOpenOption
 
-class DoxCacheBibliography(target: Path) {
+case class DoxCacheBibliography(target: Path) {
 
   if (!Files.exists(target)) {
     Files.createDirectories(target)

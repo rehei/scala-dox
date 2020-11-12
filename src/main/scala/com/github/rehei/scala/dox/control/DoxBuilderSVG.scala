@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.DoxLikeString
 import com.github.rehei.scala.dox.model.DoxReference
 
-object DoxSVGBuilder {
+object DoxBuilderSVG {
 
   def caption(_builder: DoxLikeString) = {
     create(_builder.get())

@@ -10,6 +10,8 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import java.nio.file.Path
 import java.nio.file.Files
 import scala.collection.JavaConversions._
+import com.github.rehei.scala.dox.control.DoxBibKeyCountMap
+import com.github.rehei.scala.dox.control.DoxBibKeyScanner
 
 class TestCaching {
 
@@ -38,10 +40,13 @@ class TestCaching {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
     val cache1 = new OpenCache(path)
-    val handle1 = new DoxHandleBibliography(cache1)
+    val map1 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
+    val handle1 = DoxHandleBibliography(cache1, map1)
 
     val cache2 = new OpenCache(path)
-    val handle2 = new DoxHandleBibliography(cache2)
+    val map2 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
+
+    val handle2 = new DoxHandleBibliography(cache2, map2)
 
     handle1.append(Example.REINHARDT_2019)
     handle1.writeTo(fileSystem.getPath("/tmp/example1.bib"))
