@@ -1,12 +1,6 @@
 package com.github.rehei.scala.dox.control.tex
 
-import scala.collection.mutable.ListBuffer
 import com.github.rehei.scala.macros.Query
-import scala.xml.Elem
-import org.apache.commons.io.FileUtils
-import java.io.File
-import java.nio.charset.StandardCharsets
-import scala.collection.mutable.Stack
 
 class TexMarkupFactory(protected val ast: TexAST) {
 

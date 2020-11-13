@@ -1,6 +1,5 @@
 package com.github.rehei.scala.dox.control
 
-import org.apache.commons.io.FileUtils
 import java.io.File
 import java.nio.charset.StandardCharsets
 import scala.collection.mutable.HashSet
@@ -12,6 +11,7 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
+import com.github.rehei.scala.dox.util.IOUtils
 
 case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
 
@@ -46,7 +46,7 @@ case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
   }
 
   protected def write(path: Path, content: String) = {
-    Files.write(path, content.getBytes, StandardOpenOption.CREATE)
+    IOUtils.writeString(path, content)
   }
 
 }

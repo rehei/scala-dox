@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import scala.collection.Seq
 import scala.sys.process.Process
-import org.apache.commons.io.FileUtils
 
 class SVG2PDF(protected val baseDirectory: Path) {
   /*
@@ -27,16 +26,16 @@ class SVG2PDF(protected val baseDirectory: Path) {
   }
 
   protected def executable = {
-    val commandFile = baseDirectory.resolve("shellscript.sh").toFile()
-    FileUtils.writeStringToFile(commandFile, command, StandardCharsets.UTF_8, false)
-    commandFile.setExecutable(true, true)
-    commandFile.getAbsolutePath
+    val commandFile = baseDirectory.resolve("shellscript.sh")
+    IOUtils.writeString(commandFile, command)
+    commandFile.toFile().setExecutable(true, true)
+    commandFile.toAbsolutePath().toString()
   }
 
   protected def command = {
 
     val processors = Math.max((Runtime.getRuntime().availableProcessors() * 0.9).toInt, 1)
-    
+
     Seq(
       "for f in *.svg; do echo --file=${f} --export-pdf=${f%.*}.pdf >> inkscape.command.txt",
       "done",

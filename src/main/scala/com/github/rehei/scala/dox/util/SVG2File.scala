@@ -3,7 +3,6 @@ package com.github.rehei.scala.dox.util
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
-import org.apache.commons.io.FileUtils
 import com.github.rehei.scala.dox.model.DoxLikeSVG
 import scala.xml.Xhtml
 import com.github.rehei.scala.dox.control.DoxReferenceFactory
@@ -19,14 +18,14 @@ class SVG2File(protected val baseDirectory: Path) {
     file
   }
 
-  protected def write(file: File, image: DoxLikeSVG) = {
+  protected def write(path: Path, image: DoxLikeSVG) = {
     val content = Xhtml.toXhtml(image.generateSVG())
-    FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8, false)
+    IOUtils.writeString(path, content)
   }
 
   protected def nextFile() = {
     val filename = s"${prefix}_${nextID.next()}.svg"
-    baseDirectory.resolve(filename).toFile()
+    baseDirectory.resolve(filename)
   }
 
 }

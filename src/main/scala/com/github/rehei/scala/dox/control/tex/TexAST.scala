@@ -1,9 +1,10 @@
 package com.github.rehei.scala.dox.control.tex
 
-import org.apache.commons.io.FileUtils
 import scala.collection.mutable.Stack
 import java.io.File
 import java.nio.charset.StandardCharsets
+import com.github.rehei.scala.dox.util.IOUtils
+import java.nio.file.Path
 
 case class TexAST() {
 
@@ -21,8 +22,8 @@ case class TexAST() {
     stack.reverseIterator.map(_.generate()).mkString("\n")
   }
 
-  def writeTo(file: File) = {
-    FileUtils.writeStringToFile(file, build(), StandardCharsets.UTF_8)
+  def writeTo(path: Path) = {
+    IOUtils.writeString(path, build())
   }
 
 }

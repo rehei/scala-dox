@@ -6,6 +6,7 @@ import scala.collection.JavaConversions._
 import java.nio.file.StandardOpenOption
 import com.github.rehei.scala.dox.model.DoxDOI
 import scala.collection.Seq
+import com.github.rehei.scala.dox.util.IOUtils
 
 object DoxBibKeyCache {
 
@@ -65,7 +66,7 @@ case class DoxBibKeyCache protected(target: Path, warmup: Seq[DoxBibKey]) {
   protected def updateCache(key: DoxBibKey, result: DoxBibKeyLookupResult) {
     for (doi <- key.documentID) {
       memoryCache.put(doi, result)
-      Files.write(path(doi), result.normalize().getBytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+      IOUtils.writeString(path(doi), result.normalize())
     }
   }
 

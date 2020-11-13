@@ -13,6 +13,7 @@ import scala.collection.JavaConversions._
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
+import com.github.rehei.scala.dox.util.IOUtils
 
 object TestCaching {
 
@@ -106,7 +107,7 @@ class TestCaching {
     assert(r2.startsWith("@article{com-github-rehei-scala-dox-test-TestCaching-ExampleNormalizedExt--REINHARDT_2019-UUUUUUUUU-----"))
     assertContent(r2)
 
-    val fileResult = new String(Files.readAllBytes(doiPath.resolve("cache.bib")))
+    val fileResult = IOUtils.readString(path)
 
     assert(fileResult.startsWith("@article{___"))
     assertContent(fileResult)

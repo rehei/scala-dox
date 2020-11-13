@@ -18,7 +18,6 @@ licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 libraryDependencies ++= {
   Seq(
     "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
-    "commons-io" % "commons-io" % "2.6",
     "com.github.rehei" %% "scala-macros" % "0.9.3",
     "org.jbibtex" % "jbibtex" % "1.0.17",
     "org.scalaj" %% "scalaj-http" % "2.4.2",
