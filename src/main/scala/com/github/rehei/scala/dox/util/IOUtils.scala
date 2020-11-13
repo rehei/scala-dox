@@ -7,7 +7,8 @@ import java.nio.file.Path
 object IOUtils {
 
   def writeString(path: Path, content: String) = {
-    Files.write(path, content.getBytes, StandardOpenOption.CREATE)
+    Files.createDirectories(path.getParent())
+    Files.write(path, content.getBytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
   }
   
   def readString(path: Path) = {

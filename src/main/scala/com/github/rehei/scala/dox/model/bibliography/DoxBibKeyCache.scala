@@ -22,10 +22,6 @@ object DoxBibKeyCache {
 
 case class DoxBibKeyCache protected(target: Path, warmup: Seq[DoxBibKey]) {
 
-  if (!Files.exists(target)) {
-    Files.createDirectories(target)
-  }
-
   protected val memoryCache = scala.collection.mutable.Map[DoxDOI, DoxBibKeyLookupResult]()
 
   for (key <- warmup) {
@@ -71,9 +67,7 @@ case class DoxBibKeyCache protected(target: Path, warmup: Seq[DoxBibKey]) {
   }
 
   protected def path(doi: DoxDOI) = {
-    val path = target.resolve(doi.value)
-    Files.createDirectories(path)
-    path.resolve("cache.bib")
+    target.resolve(doi.value).resolve("cache.bib")
   }
 
 }
