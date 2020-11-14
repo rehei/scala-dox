@@ -17,11 +17,11 @@ trait DoxBibKeyEnum extends Enumeration {
     def name = {
       validate()
 
-      friendlyClassName() + "-" + enumerationValueName() + "-" + caseExtension()
+      friendlyClassName() + "-" + friendlyEnumerationValueName() + "-" + friendlyCaseExtension()
     }
 
     def canonicalName = {
-      clazz.getName + this.enumerationValueName()
+      clazz.getName + enumerationValueName()
     }
 
     def validate() {
@@ -34,9 +34,9 @@ trait DoxBibKeyEnum extends Enumeration {
       !enumerationValueName().contains("Invalid enum")
     }
 
-    protected def caseExtension() = {
+    protected def friendlyCaseExtension() = {
       val sb = new StringBuilder()
-      for (character <- enumerationValueName()) {
+      for (character <- friendlyEnumerationValueName()) {
         character match {
           case c if c.isUpper => sb.append("U")
           case c if c.isLower => sb.append("L")
@@ -44,6 +44,11 @@ trait DoxBibKeyEnum extends Enumeration {
         }
       }
       sb.toString()
+
+    }
+
+    protected def friendlyEnumerationValueName() = {
+      friendlyString(enumerationValueName())
     }
 
     protected def enumerationValueName() = {
@@ -52,6 +57,32 @@ trait DoxBibKeyEnum extends Enumeration {
 
     protected def friendlyClassName() = {
       clazz.getName.replace("$", "-").replace(".", "-")
+    }
+
+    protected def friendlyString(input: String) = {
+      if (input == null || input == "") {
+        input
+      } else {
+        input
+          .replace("&", "and")
+          .replace(" ", "-")
+          .replace("(", "-")
+          .replace(")", "-")
+          .replace("[", "-")
+          .replace("]", "-")
+          .replace("\"", "-")
+          .replace("ß", "ss")
+          .replace("Ö", "Oe")
+          .replace("Ü", "Ue")
+          .replace("Ä", "Ae")
+          .replace("ö", "oe")
+          .replace("ü", "ue")
+          .replace("ä", "ae")
+          .replaceAll("[,?!.:;\\/+]", "-")
+          .replaceAll("-+", "-")
+          .replaceAll("-$", "-")
+          .replaceAll("^-", "")
+      }
     }
 
   }

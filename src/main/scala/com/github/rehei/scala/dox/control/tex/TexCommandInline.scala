@@ -1,9 +1,11 @@
 package com.github.rehei.scala.dox.control.tex
 
-case class TexCommandInline(ast: TexAST, name: String, args: TexSeq) extends AbstractTexCommand[TexCommandInline](name, args) {
+abstract class TexCommandInline(val args: TexSeq) extends AbstractTexCommand[TexCommandInline](args) {
 
   protected def create(in: TexSeq) = {
-    this.copy(args = TexSeq(args.sequence ++ in.sequence))
+    new TexCommandInline(args.append(in)) {
+      override def name() = TexCommandInline.this.name()
+    }
   }
 
 }

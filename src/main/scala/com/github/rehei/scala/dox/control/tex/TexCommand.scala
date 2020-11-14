@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.control.tex
 
-case class TexCommand(ast: TexAST, name: String, args: TexSeq) extends AbstractTexCommand[TexCommand](name, args) {
+abstract class TexCommand(ast: TexAST, args: TexSeq) extends AbstractTexCommand[TexCommand](args) {
 
   ast.append(this)
 
@@ -10,7 +10,10 @@ case class TexCommand(ast: TexAST, name: String, args: TexSeq) extends AbstractT
 
   protected def create(in: TexSeq) = {
     ast.reverse()
-    this.copy(args = TexSeq(args.sequence ++ in.sequence))
+    
+    new TexCommand(ast, args.append(in)) {
+      override def name() = TexCommand.this.name()
+    }
   }
 
 }

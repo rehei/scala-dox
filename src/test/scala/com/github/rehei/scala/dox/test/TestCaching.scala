@@ -107,7 +107,7 @@ class TestCaching {
     assert(r2.startsWith("@article{com-github-rehei-scala-dox-test-TestCaching-ExampleNormalizedExt--REINHARDT_2019-UUUUUUUUU-----"))
     assertContent(r2)
 
-    val fileResult = IOUtils.readString(path)
+    val fileResult = IOUtils.readString(doiPath)
 
     assert(fileResult.startsWith("@article{___"))
     assertContent(fileResult)

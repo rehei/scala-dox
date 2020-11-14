@@ -13,6 +13,8 @@ object ExampleTex {
 
     \ FloatBarrier
 
+    \ chapter { "foo" }
+
     \ includegraphics & { ###("scale=0.5") } { "bla" } { "bli" } { "foo" } { "bli" }
     \ includegraphics & { ###("scale=0.5") } { "bla" } { "bli" } { "foo" }
     \ includegraphics & { ###("scale=0.5") } { "bla" } { "bli" }
@@ -23,11 +25,14 @@ object ExampleTex {
     \ includegraphics & { ###("bla") } { "li" }
     \ includegraphics & { "sd" } { "fl" }
 
+    \ plain { "bla" }
+
     \ includegraphics & { "sd" }
 
     \ includegraphics;
     $ { _ itemize & { ###("foo") } { "lv" } } {
-      \ includegraphics
+      \ centering;
+      \ includegraphics;
     }
 
     $ { _ itemize & { ###("foo") } { "bla" } { "bli" } } {

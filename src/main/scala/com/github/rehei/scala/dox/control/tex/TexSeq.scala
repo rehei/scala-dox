@@ -15,9 +15,12 @@ case class TexSeq(sequence: Seq[AbstractTexObject]) extends AbstractTexObject {
   }
 
   def sub(in: AbstractTexObject) = {
-    in match {
-      case element @ TexOption(_) => "[" + element.generate() + "]"
-      case element                => "{" + element.generate() + "}"
-    }
+    in.generate()
+  }
+  def append(in: Seq[AbstractTexObject]) = {
+    TexSeq(sequence ++ in)
+  }
+  def append(in: TexSeq) = {
+    TexSeq(sequence ++ in.sequence)
   }
 }

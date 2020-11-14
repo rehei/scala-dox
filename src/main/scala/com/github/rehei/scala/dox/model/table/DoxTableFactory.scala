@@ -4,7 +4,6 @@ import scala.collection.mutable.ListBuffer
 import scala.reflect.ClassTag
 
 import com.github.rehei.scala.macros.Query
-import com.github.rehei.scala.macros.util.QReflection
 
 case class DoxTableFactory[T <: AnyRef](
     callbackConfig: DoxTableConfigBuilder.type => DoxTableConfig, 
