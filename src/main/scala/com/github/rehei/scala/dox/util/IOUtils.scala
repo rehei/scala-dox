@@ -14,7 +14,7 @@ object IOUtils {
   }
 
   def readString(path: Path) = {
-    new String(Files.readAllBytes(path.resolve("cache.bib")))
+    new String(Files.readAllBytes(path))
   }
 
 }

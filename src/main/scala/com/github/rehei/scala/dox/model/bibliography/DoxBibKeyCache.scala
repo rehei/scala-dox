@@ -65,7 +65,7 @@ case class DoxBibKeyCache protected (target: Path, warmup: Seq[DoxBibKey]) {
 
   def lookupPersistentCacheValidated(key: DoxBibKey) = {
     for (doi <- key.documentID; cacheFile = path(doi) if Files.exists(cacheFile)) yield {
-      val tmp = new String(Files.readAllBytes(cacheFile))
+      val tmp = IOUtils.readString(cacheFile)
       val database = DoxBibtexParse().parse(tmp)
       val result = DoxBibKeyLookupResult(key.name, database)
       key.lookup.validate(result)

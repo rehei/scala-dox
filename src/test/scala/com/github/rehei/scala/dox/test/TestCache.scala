@@ -93,14 +93,12 @@ class TestCache {
 
     val doiPath = path.resolve(Example.REINHARDT_2019.documentID().get.value)
 
-    println(r1)
-    
     assert(r1.startsWith("@article{com-github-rehei-scala-dox-test-TestCache-Example--REINHARDT_2019-UUUUUUUUU-----"))
     assertContent(r1)
     assert(r2.startsWith("@article{com-github-rehei-scala-dox-test-TestCache-ExampleNormalizedExt--REINHARDT_2019-UUUUUUUUU-----"))
     assertContent(r2)
 
-    val fileResult = IOUtils.readString(doiPath)
+    val fileResult = IOUtils.readString(doiPath.resolve("cache.bib"))
 
     assert(fileResult.startsWith("@article{___"))
     assertContent(fileResult)
