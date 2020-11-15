@@ -12,7 +12,7 @@ import com.github.rehei.scala.dox.util.NormalizeUtils
 
 class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String, title: String) extends DoxBibKeyLookupBase {
 
-  def resolve() = {
+  def resolveValidated() = {
     val content = {
       Http(this.doi)
         .header("Accept", "application/x-bibtex")
@@ -25,14 +25,21 @@ class DoxBibKeyLookupDoi(bibKeyName: String, doi: String, year: Long, by: String
       throw new RuntimeException("Could not resolve DOI" + content.body)
     }
     val database = DoxBibtexParse().parse(content.body)
-    val entry = DoxBibtexParseSingleEntry(bibKeyName, database)
+
+    val result = DoxBibKeyLookupResult(bibKeyName, database)
+
+    validate(result)
+
+    result
+  }
+
+  def validate(result: DoxBibKeyLookupResult) {
+    val entry = DoxBibtexParseSingleEntry(bibKeyName, result.database)
 
     entry.expectNormalized(BibTeXEntry.KEY_DOI, doi.stripPrefix("https://doi.org/").stripPrefix("http://dx.doi.org/"))
     entry.expectAnyWordNormalized(BibTeXEntry.KEY_AUTHOR, by.toString())
     entry.expectNormalized(BibTeXEntry.KEY_YEAR, year.toString())
     entry.expectNormalized(BibTeXEntry.KEY_TITLE, title)
-
-    DoxBibKeyLookupResult(bibKeyName, entry.asDatabase)
   }
 
 }

@@ -21,7 +21,7 @@ class TestIntegrityOnResolveDOI {
       }
     }
 
-    assert(Example.REINHARDT.lookup().resolve().get().startsWith("@article{"))
+    assert(Example.REINHARDT.lookup().resolveValidated().get().startsWith("@article{"))
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])
@@ -33,7 +33,7 @@ class TestIntegrityOnResolveDOI {
       }
     }
 
-    Example.REINHARDT.lookup().resolve()
+    Example.REINHARDT.lookup().resolveValidated()
   }
 
   @Test(expected = classOf[DoxBibKeyIntegrityException])
@@ -45,7 +45,7 @@ class TestIntegrityOnResolveDOI {
       }
     }
 
-    Example.REINHARDT.lookup().resolve()
+    Example.REINHARDT.lookup().resolveValidated()
   }
   
   @Test
@@ -57,7 +57,7 @@ class TestIntegrityOnResolveDOI {
       }
     }
 
-    Example.REINHARDT.lookup().resolve()
+    Example.REINHARDT.lookup().resolveValidated()
   }
   
 
@@ -70,7 +70,7 @@ class TestIntegrityOnResolveDOI {
       }
     }
 
-    Example.REINHARDT.lookup().resolve()
+    Example.REINHARDT.lookup().resolveValidated()
   }
 
 }

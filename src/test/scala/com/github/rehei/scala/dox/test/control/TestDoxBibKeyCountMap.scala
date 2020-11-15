@@ -4,12 +4,12 @@ import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.control.tex.TexRendering
 import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.control.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 
 object TestDoxBibKeyCountMap {
 

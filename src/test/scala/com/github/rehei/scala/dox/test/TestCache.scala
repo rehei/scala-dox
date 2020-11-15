@@ -1,7 +1,6 @@
 package com.github.rehei.scala.dox.test
 
 import org.junit.Test
-import com.github.rehei.scala.dox.control.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
@@ -14,8 +13,9 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.rehei.scala.dox.util.IOUtils
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 
-object TestCaching {
+object TestCache {
 
   object Example extends DoxBibKeyEnum {
     val REINHARDT_2019 = {
@@ -51,28 +51,19 @@ object TestCaching {
 
 }
 
-class TestCaching {
+class TestCache {
 
-  import TestCaching._
-
-  class OpenCache(target: Path, warmup: Seq[DoxBibKey]) extends DoxBibKeyCache(target, warmup) {
-    override def lookupMemoryCache(key: DoxBibKey) = {
-      super.lookupMemoryCache(key)
-    }
-    override def lookupPersistentCache(key: DoxBibKey) = {
-      super.lookupPersistentCache(key)
-    }
-  }
+  import TestCache._
 
   @Test
   def testWarmup() {
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
     val scanner = DoxBibKeyScanner.create[Example.type]
-    val cache = new OpenCache(path, scanner.list())
+    val cache = DoxBibKeyCache(path).warmup(scanner.list())
 
-    assert(cache.lookupMemoryCache(Example.REINHARDT_2019).isDefined)
-    assert(cache.lookupPersistentCache(Example.REINHARDT_2019).isDefined)
+    assert(cache.lookupMemoryCacheValidated(Example.REINHARDT_2019).isDefined)
+    assert(cache.lookupPersistentCacheValidated(Example.REINHARDT_2019).isDefined)
   }
 
   @Test
@@ -80,12 +71,12 @@ class TestCaching {
 
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = new OpenCache(path, Seq.empty)
+    val cache = DoxBibKeyCache(path)
 
     cache.getOrUpdate(ExampleNoCache.PLAIN)
 
-    assert(cache.lookupMemoryCache(Example.REINHARDT_2019).isEmpty)
-    assert(cache.lookupPersistentCache(Example.REINHARDT_2019).isEmpty)
+    assert(cache.lookupMemoryCacheValidated(Example.REINHARDT_2019).isEmpty)
+    assert(cache.lookupPersistentCacheValidated(Example.REINHARDT_2019).isEmpty)
   }
 
   @Test
@@ -93,18 +84,20 @@ class TestCaching {
 
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache = new OpenCache(path, Seq.empty)
+    val cache = DoxBibKeyCache(path)
 
     cache.getOrUpdate(Example.REINHARDT_2019)
 
-    val r1 = cache.lookupPersistentCache(Example.REINHARDT_2019).get.get()
-    val r2 = cache.lookupPersistentCache(ExampleNormalizedExt.REINHARDT_2019).get.get()
+    val r1 = cache.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get()
+    val r2 = cache.lookupPersistentCacheValidated(ExampleNormalizedExt.REINHARDT_2019).get.get()
 
     val doiPath = path.resolve(Example.REINHARDT_2019.documentID().get.value)
 
-    assert(r1.startsWith("@article{com-github-rehei-scala-dox-test-TestCaching-Example--REINHARDT_2019-UUUUUUUUU-----"))
+    println(r1)
+    
+    assert(r1.startsWith("@article{com-github-rehei-scala-dox-test-TestCache-Example--REINHARDT_2019-UUUUUUUUU-----"))
     assertContent(r1)
-    assert(r2.startsWith("@article{com-github-rehei-scala-dox-test-TestCaching-ExampleNormalizedExt--REINHARDT_2019-UUUUUUUUU-----"))
+    assert(r2.startsWith("@article{com-github-rehei-scala-dox-test-TestCache-ExampleNormalizedExt--REINHARDT_2019-UUUUUUUUU-----"))
     assertContent(r2)
 
     val fileResult = IOUtils.readString(doiPath)
@@ -118,29 +111,34 @@ class TestCaching {
 
     val fileSystem = MemoryFileSystemBuilder.newLinux().build()
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
-    val cache1 = new OpenCache(path, Seq.empty)
+    val cache1 = DoxBibKeyCache(path)
     val map1 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
     val handle1 = DoxBibKeyRendering(cache1, map1)
 
-    val cache2 = new OpenCache(path, Seq.empty)
+    val cache2 = DoxBibKeyCache(path)
     val map2 = DoxBibKeyCountMap(DoxBibKeyScanner.create[Example.type].list())
 
-    val handle2 = new DoxBibKeyRendering(cache2, map2)
+    val handle2 = DoxBibKeyRendering(cache2, map2)
 
     handle1.append(Example.REINHARDT_2019)
     handle1.writeTo(fileSystem.getPath("/tmp/example1.bib"))
 
-    assertContent(cache1.lookupMemoryCache(Example.REINHARDT_2019).get.get())
-    assertContent(cache1.lookupPersistentCache(Example.REINHARDT_2019).get.get())
+    assertContent(cache1.lookupMemoryCacheValidated(Example.REINHARDT_2019).get.get())
+    assertContent(cache1.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
 
-    assert(cache2.lookupMemoryCache(Example.REINHARDT_2019).isEmpty)
-    assertContent(cache2.lookupPersistentCache(Example.REINHARDT_2019).get.get())
-    assertContent(cache2.lookupMemoryCache(Example.REINHARDT_2019).get.get())
+    assert(cache2.lookupMemoryCacheValidated(Example.REINHARDT_2019).isEmpty)
+    assertContent(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
+    assert(cache2.lookupMemoryCacheValidated(Example.REINHARDT_2019).isEmpty)
 
     handle2.writeTo(fileSystem.getPath("/tmp/example2.bib"))
 
-    assertContent(cache2.lookupMemoryCache(Example.REINHARDT_2019).get.get())
-    assertContent(cache2.lookupPersistentCache(Example.REINHARDT_2019).get.get())
+    assert(cache2.lookupMemoryCacheValidated(Example.REINHARDT_2019).isEmpty)
+    assertContent(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
+
+    assertContent(cache2.getOrUpdate(Example.REINHARDT_2019).get())
+    assertContent(cache2.lookupMemoryCacheValidated(Example.REINHARDT_2019).get.get())
+    assertContent(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
+
   }
 
   protected def assertContent(content: String) {

@@ -38,10 +38,10 @@ object ExampleReference extends DoxBibKeyEnum {
 
   def main(args: Array[String]): Unit = {
 
-    println(PLAIN.lookup().resolve())
-    println(REINHARDT.REINHARDT_2019.lookup().resolve())
-    println(REINHARDT.REINHARDT_2020a.lookup().resolve())
-    println(REINHARDT.REINHARDT_2020b.lookup().resolve())
+    println(PLAIN.lookup().resolveValidated())
+    println(REINHARDT.REINHARDT_2019.lookup().resolveValidated())
+    println(REINHARDT.REINHARDT_2020a.lookup().resolveValidated())
+    println(REINHARDT.REINHARDT_2020b.lookup().resolveValidated())
 
   }
 

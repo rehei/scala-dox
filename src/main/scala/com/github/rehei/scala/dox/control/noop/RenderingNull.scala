@@ -1,10 +1,10 @@
 package com.github.rehei.scala.dox.control.noop
 
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxSVGFigureSet
-import com.github.rehei.scala.dox.model.DoxReference
-import com.github.rehei.scala.dox.control.DoxBibKeyRendering
 import com.github.rehei.scala.dox.control.DoxRenderingBase
+import com.github.rehei.scala.dox.model.DoxReference
+import com.github.rehei.scala.dox.model.DoxSVGFigureSet
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.table.DoxTable
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(handle) {
 
@@ -21,7 +21,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(handle)
   def list(itemSeq: Seq[String]) = Unit
 
   def citet(key: String) = Unit
-  def citep(key: String) =  Unit
+  def citep(key: String) = Unit
   def cite(key: String) = Unit
 
 }

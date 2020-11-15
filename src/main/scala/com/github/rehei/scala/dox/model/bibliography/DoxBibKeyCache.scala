@@ -13,14 +13,16 @@ object DoxBibKeyCache {
   def apply(target: Path): DoxBibKeyCache = {
     DoxBibKeyCache(target, Seq.empty)
   }
-  
+
   protected def apply(target: Path, warmup: Seq[DoxBibKey]) = {
     new DoxBibKeyCache(target, warmup)
   }
 
 }
 
-case class DoxBibKeyCache protected(target: Path, warmup: Seq[DoxBibKey]) {
+case class DoxBibKeyCache protected (target: Path, warmup: Seq[DoxBibKey]) {
+
+  case class LookupSupport(result: DoxBibKeyLookupResult, updateMemory: Boolean, updatePersistent: Boolean)
 
   protected val memoryCache = scala.collection.mutable.Map[DoxDOI, DoxBibKeyLookupResult]()
 
@@ -33,37 +35,46 @@ case class DoxBibKeyCache protected(target: Path, warmup: Seq[DoxBibKey]) {
   }
 
   def getOrUpdate(key: DoxBibKey) = {
-    lookupMemoryCache(key).getOrElse {
-      lookupPersistentCache(key).getOrElse {
-        val content = lookupDelegate(key)
-        updateCache(key, content)
-        content
+
+    val lookup = {
+      lookupMemoryCacheValidated(key).map(LookupSupport(_, false, false)).getOrElse {
+        lookupPersistentCacheValidated(key).map(LookupSupport(_, true, false)).getOrElse {
+          LookupSupport(lookupDelegateValidated(key), true, true)
+        }
       }
     }
+
+    for (doi <- key.documentID) {
+      if (lookup.updateMemory) {
+        memoryCache.put(doi, lookup.result)
+      }
+      if (lookup.updatePersistent) {
+        IOUtils.writeString(path(doi), lookup.result.normalize())
+      }
+    }
+
+    lookup.result
   }
 
-  protected def lookupMemoryCache(key: DoxBibKey) = {
-    key.documentID.flatMap(doi => memoryCache.get(doi))
-  }
-
-  protected def lookupPersistentCache(key: DoxBibKey) = {
-    for (doi <- key.documentID; cacheFile = path(doi) if Files.exists(cacheFile)) yield {
-      val tmp = new String(Files.readAllBytes(cacheFile))
-      val result = DoxBibKeyLookupResult(key.name, DoxBibtexParse().parse(tmp))
-      memoryCache.put(doi, result)
+  def lookupMemoryCacheValidated(key: DoxBibKey) = {
+    for (doi <- key.documentID; result <- memoryCache.get(doi)) yield {
+      key.lookup.validate(result)
       result
     }
   }
 
-  protected def lookupDelegate(key: DoxBibKey) = {
-    key.lookup.resolve()
+  def lookupPersistentCacheValidated(key: DoxBibKey) = {
+    for (doi <- key.documentID; cacheFile = path(doi) if Files.exists(cacheFile)) yield {
+      val tmp = new String(Files.readAllBytes(cacheFile))
+      val database = DoxBibtexParse().parse(tmp)
+      val result = DoxBibKeyLookupResult(key.name, database)
+      key.lookup.validate(result)
+      result
+    }
   }
 
-  protected def updateCache(key: DoxBibKey, result: DoxBibKeyLookupResult) {
-    for (doi <- key.documentID) {
-      memoryCache.put(doi, result)
-      IOUtils.writeString(path(doi), result.normalize())
-    }
+  protected def lookupDelegateValidated(key: DoxBibKey) = {
+    key.lookup.resolveValidated()
   }
 
   protected def path(doi: DoxDOI) = {
