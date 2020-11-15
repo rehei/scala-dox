@@ -17,16 +17,19 @@ case class DoxBibtexParseSingleEntry(protected val bibKeyName: String, protected
   
   def expectNormalized(key: Key, expected: String) = {
     val actual = entry.getField(key).toUserString()
-    if (NormalizeUtils.normalizeTex(actual) != NormalizeUtils.normalizeString(expected)) {
+    if (NormalizeUtils.normalizeBibTex(actual.toLowerCase()) != NormalizeUtils.normalizeString(expected.toLowerCase())) {
       throw new DoxBibKeyIntegrityException(getExceptionMessage(key, expected, actual))
     }
   }
 
   def expectAnyWordNormalized(key: Key, expected: String) = {
+    
+    import NormalizeUtils._
+    
     val actual = entry.getField(key).toUserString()
 
-    val actualWordSeq = actual.split("\\s").map(NormalizeUtils.normalizeTex(_))
-    val exepectedWordSeq = expected.split("\\s").map(NormalizeUtils.normalizeString(_))
+    val actualWordSeq = normalizeString(normalizeBibTex(actual)).toLowerCase().split("\\s")
+    val exepectedWordSeq = normalizeString(expected).toLowerCase.split("\\s")
 
     val matchingResult = actualWordSeq.intersect(exepectedWordSeq)
     if (matchingResult.isEmpty) {

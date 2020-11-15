@@ -33,7 +33,7 @@ object NormalizeUtils {
   \ { "" } { quote("\\i") } replaceWith "ı"
   \ { "ss" } { none } replaceWith "ß"
 
-  def normalizeTex(input: String) = {
+  def normalizeBibTex(input: String) = {
     var result = input
     for (pattern <- texPatternSeq) {
       result = result.replaceAll(pattern.matching, pattern.replacement)
@@ -47,7 +47,10 @@ object NormalizeUtils {
   
   protected def \(texCommand: String)(argument: String) = new {
     def replaceWith(replacement: String) = {
-      val pattern = TexPattern("\\\\" + texCommand + quote("{") + "(" + argument + ")" + quote("}"), replacement)
+      val > = quote("}")
+      val < = quote("{")
+      val matching = < + "\\\\" + texCommand + < + "(" + argument + ")" + > + >
+      val pattern = TexPattern(matching, replacement)
       texPatternSeq.append(pattern)
     }
   }
