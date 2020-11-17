@@ -54,7 +54,7 @@ class TestSpecialCharacters {
 
     val writer = new StringWriter()
     
-    handle.writeTo(writer)
+    handle.write(writer)
 
     val content = writer.toString()
 

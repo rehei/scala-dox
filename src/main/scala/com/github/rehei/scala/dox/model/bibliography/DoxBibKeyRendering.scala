@@ -41,14 +41,10 @@ case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
     keys.add(key)
   }
 
-  def writeTo(writer: Writer) = {
+  def write(writer: Writer) = {
     for (referenceKey <- keys) {
-      write(writer, cache.getOrUpdate(referenceKey).get())
+      writer.write(cache.getOrUpdate(referenceKey).get())
     }
-  }
-
-  protected def write(writer: Writer, content: String) = {
-    writer.append(content)
   }
 
 }

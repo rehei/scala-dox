@@ -5,12 +5,20 @@ import java.nio.file.StandardOpenOption
 import java.nio.file.Path
 import java.util.regex.Pattern
 import scala.collection.mutable.ArrayBuffer
+import java.nio.charset.StandardCharsets
 
 object IOUtils {
 
   def writeString(path: Path, content: String) = {
     Files.createDirectories(path.getParent())
-    Files.write(path, content.getBytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+
+    val writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+
+    try {
+      writer.write(content)
+    } finally {
+      writer.close()
+    }
   }
 
   def readString(path: Path) = {
