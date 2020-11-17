@@ -44,7 +44,7 @@ object NormalizeUtils {
   def normalizeString(input: String) = {
     org.apache.commons.lang3.StringUtils.stripAccents(input)
   }
-  
+
   protected def \(texCommand: String)(argument: String) = new {
     def replaceWith(replacement: String) = {
       val > = quote("}")
@@ -53,6 +53,10 @@ object NormalizeUtils {
       val pattern = TexPattern(matching, replacement)
       texPatternSeq.append(pattern)
     }
+  }
+
+  def trim(value: String) = {
+    value.replace('\u00a0', ' ').trim() // replace non breaking space and trim
   }
 
 }

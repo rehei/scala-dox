@@ -73,9 +73,14 @@ class DoxBibKeyScanner protected (module: ModuleSymbol) {
     val instanceM = globalRuntimeM.reflect(instance)
     val key = instanceM.reflectMethod(method).apply().asInstanceOf[DoxBibKey]
 
-    key.validate()
+    check(key)
 
     Seq(key)
+  }
+
+  protected def check(key: DoxBibKey) {
+    key.name // may throw an exception if not properly initialized
+    key.canonicalName // may throw an exception if not properly initialized
   }
 
   protected def traverseSetter(method: MethodSymbol) = {

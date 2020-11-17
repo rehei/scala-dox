@@ -1,11 +1,12 @@
 package com.github.rehei.scala.dox.model.bibliography
 
 import org.jbibtex.BibTeXDatabase
+import com.github.rehei.scala.dox.model.DoxValueRAW
 
-class DoxBibKeyLookupRaw(bibKeyName: String, content: String) extends DoxBibKeyLookupBase {
+class DoxBibKeyLookupRAW(bibKeyName: String, content: DoxValueRAW) extends DoxBibKeyLookupBase {
 
   def resolveValidated() = {
-    val database = DoxBibtexParse().parse(content)
+    val database = DoxBibtexParse().parse(content.value)
 
     DoxBibKeyLookupResult(bibKeyName, database)
   }

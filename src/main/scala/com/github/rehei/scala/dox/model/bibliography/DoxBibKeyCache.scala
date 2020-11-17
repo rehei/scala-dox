@@ -4,7 +4,7 @@ import java.nio.file.Path
 import java.nio.file.Files
 import scala.collection.JavaConversions._
 import java.nio.file.StandardOpenOption
-import com.github.rehei.scala.dox.model.DoxDOI
+import com.github.rehei.scala.dox.model.DoxValueDOI
 import scala.collection.Seq
 import com.github.rehei.scala.dox.util.IOUtils
 
@@ -24,7 +24,7 @@ case class DoxBibKeyCache protected (target: Path, warmup: Seq[DoxBibKey]) {
 
   case class LookupSupport(result: DoxBibKeyLookupResult, updateMemory: Boolean, updatePersistent: Boolean)
 
-  protected val memoryCache = scala.collection.mutable.Map[DoxDOI, DoxBibKeyLookupResult]()
+  protected val memoryCache = scala.collection.mutable.Map[DoxValueDOI, DoxBibKeyLookupResult]()
 
   for (key <- warmup) {
     getOrUpdate(key)
@@ -77,7 +77,7 @@ case class DoxBibKeyCache protected (target: Path, warmup: Seq[DoxBibKey]) {
     key.lookup.resolveValidated()
   }
 
-  protected def path(doi: DoxDOI) = {
+  protected def path(doi: DoxValueDOI) = {
     target.resolve(doi.value).resolve("cache.bib")
   }
 

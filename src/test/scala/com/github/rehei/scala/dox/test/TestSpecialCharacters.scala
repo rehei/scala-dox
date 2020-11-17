@@ -8,6 +8,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.util.IOUtils
+import java.io.StringWriter
 
 object TestSpecialCharacters {
 
@@ -51,9 +52,11 @@ class TestSpecialCharacters {
     handle.append(Example.VEJAR_2011)
     handle.append(Example.STRAßBURGER_2008)
 
-    handle.writeTo(output)
+    val writer = new StringWriter()
+    
+    handle.writeTo(writer)
 
-    val content = IOUtils.readString(output)
+    val content = writer.toString()
 
     assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example--MUELLER_2018-UUUUUUU"))
     assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example--VEJAR_2011-UUUUU"))

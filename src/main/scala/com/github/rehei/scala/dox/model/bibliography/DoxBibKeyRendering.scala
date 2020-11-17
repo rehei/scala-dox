@@ -7,6 +7,9 @@ import scala.collection.mutable.Map
 
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
 import com.github.rehei.scala.dox.util.IOUtils
+import java.io.Writer
+import org.apache.commons.lang3.StringUtils
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyValueBlankException
 
 case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
 
@@ -14,9 +17,13 @@ case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
   protected val inverseKeyLookup = Map[String, String]()
 
   def append(key: DoxBibKey) {
-    
+
+    if (StringUtils.isBlank(key.name)) {
+      throw new DoxBibKeyValueBlankException("Name of key should not be blank.")
+    }
+
     map.increase(key)
-    
+
     val result = cache.getOrUpdate(key)
     val content = result.normalize()
 
@@ -34,14 +41,14 @@ case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
     keys.add(key)
   }
 
-  def writeTo(path: Path) = {
+  def writeTo(writer: Writer) = {
     for (referenceKey <- keys) {
-      write(path, cache.getOrUpdate(referenceKey).get())
+      write(writer, cache.getOrUpdate(referenceKey).get())
     }
   }
 
-  protected def write(path: Path, content: String) = {
-    IOUtils.writeString(path, content)
+  protected def write(writer: Writer, content: String) = {
+    writer.append(content)
   }
 
 }

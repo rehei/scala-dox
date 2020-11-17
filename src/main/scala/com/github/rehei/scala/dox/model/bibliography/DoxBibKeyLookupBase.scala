@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.DoxDOI
+import com.github.rehei.scala.dox.model.DoxValueDOI
 import org.jbibtex.BibTeXDatabase
 
 abstract class DoxBibKeyLookupBase {

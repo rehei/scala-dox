@@ -1,7 +1,8 @@
 package com.github.rehei.scala.dox.model.bibliography
 
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
-import com.github.rehei.scala.dox.model.DoxDOI
+import com.github.rehei.scala.dox.model.DoxValueDOI
+import com.github.rehei.scala.dox.model.DoxValueRAW
 
 trait DoxBibKeyEnum extends Enumeration {
 
@@ -12,7 +13,7 @@ trait DoxBibKeyEnum extends Enumeration {
       "@" + this.getClass.getSimpleName + "{" + super.toString() + "}"
     }
 
-    def documentID: Option[DoxDOI]
+    def documentID: Option[DoxValueDOI]
 
     def name = {
       validate()
@@ -24,7 +25,7 @@ trait DoxBibKeyEnum extends Enumeration {
       clazz.getName + enumerationValueName()
     }
 
-    def validate() {
+    protected def validate() {
       if (!isValid()) {
         throw new DoxBibKeyNotValidException("Invalid enum reference in " + clazz.getName)
       }
@@ -87,14 +88,14 @@ trait DoxBibKeyEnum extends Enumeration {
 
   }
 
-  case class KeyDOI(_doi: String, year: Long, by: String, title: String) extends KeyBase {
+  case class KeyDOI(_doi: DoxValueDOI, year: Long, by: String, title: String) extends KeyBase {
 
     def documentID() = {
-      Some(DoxDOI(_doi))
+      Some(_doi)
     }
 
     def lookup() = {
-      new DoxBibKeyLookupDoi(this.name, _doi, year, by, title)
+      new DoxBibKeyLookupDOI(this.name, _doi, Some(year), Some(by), Some(title))
     }
   }
 
@@ -103,7 +104,7 @@ trait DoxBibKeyEnum extends Enumeration {
       None
     }
     def lookup() = {
-      new DoxBibKeyLookupRaw(this.name, _raw)
+      new DoxBibKeyLookupRAW(this.name, new DoxValueRAW(_raw))
     }
   }
 
@@ -112,7 +113,7 @@ trait DoxBibKeyEnum extends Enumeration {
       def year(year: Long) = new {
         def by(by: String) = new {
           def title(title: String) = {
-            KeyDOI(doi, year, by, title)
+            KeyDOI(new DoxValueDOI(doi), year, by, title)
           }
         }
       }

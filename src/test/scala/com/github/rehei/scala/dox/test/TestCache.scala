@@ -14,6 +14,8 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.rehei.scala.dox.util.IOUtils
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 object TestCache {
 
@@ -119,7 +121,7 @@ class TestCache {
     val handle2 = DoxBibKeyRendering(cache2, map2)
 
     handle1.append(Example.REINHARDT_2019)
-    handle1.writeTo(fileSystem.getPath("/tmp/example1.bib"))
+    handle1.writeTo(Files.newBufferedWriter(fileSystem.getPath("/tmp/example1.bib"), StandardCharsets.UTF_8))
 
     assertContent(cache1.lookupMemoryCacheValidated(Example.REINHARDT_2019).get.get())
     assertContent(cache1.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
@@ -128,7 +130,7 @@ class TestCache {
     assertContent(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
     assert(cache2.lookupMemoryCacheValidated(Example.REINHARDT_2019).isEmpty)
 
-    handle2.writeTo(fileSystem.getPath("/tmp/example2.bib"))
+    handle2.writeTo(Files.newBufferedWriter(fileSystem.getPath("/tmp/example2.bib"), StandardCharsets.UTF_8))
 
     assert(cache2.lookupMemoryCacheValidated(Example.REINHARDT_2019).isEmpty)
     assertContent(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).get.get())
