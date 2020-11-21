@@ -1,14 +1,14 @@
 package com.github.rehei.scala.dox.control
 
 import com.github.rehei.scala.dox.model.DoxReference
+import com.github.rehei.scala.dox.util.NextID
 
-case class DoxReferenceFactory(val prefix: String) {
+case class DoxReferenceFactory(protected val prefix: String) {
   
-  protected var current = 0
+  protected val nextID = NextID(prefix)
   
   def next() = {
-    current = current + 1 
-    DoxReference(prefix + current)
+    DoxReference(nextID.nextID())
   }
   
 }
