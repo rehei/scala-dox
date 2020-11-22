@@ -6,8 +6,6 @@ import com.github.rehei.scala.dox.util.ReflectUtils
 
 case class DoxBibKeyScanner(any: AnyRef) {
 
-  protected val globalRuntimeM = runtimeMirror(this.getClass.getClassLoader)
-
   protected lazy val result: Seq[DoxBibKey] = {
     list(any)
   }
@@ -18,19 +16,17 @@ case class DoxBibKeyScanner(any: AnyRef) {
 
   protected def list(model: Any): Seq[DoxBibKey] = {
 
-    val instance = globalRuntimeM.reflect(model)
+    val instance = ReflectUtils.reflectInstance(model)
 
     instance.symbol.typeSignature.members.flatMap {
 
       declaration =>
 
-        println(declaration)
-
         {
           declaration match {
-            case m: ModuleSymbol => traverseModule(m, model)
+            case m: ModuleSymbol => traverseModule(model, m)
             case m: MethodSymbol if ReflectUtils.isSetter[DoxBibKey](m) => traverseSetter(m)
-            case m: MethodSymbol if ReflectUtils.isGetter[DoxBibKey](m) => traverseGetter(m, model)
+            case m: MethodSymbol if ReflectUtils.isGetter[DoxBibKey](m) => traverseGetter(model, m)
             case _ => Seq.empty
           }
         }
@@ -39,35 +35,12 @@ case class DoxBibKeyScanner(any: AnyRef) {
 
   }
 
-  protected def traverseModule(module: ModuleSymbol, model: Any) = {
-
-    println("traverse module" + module)
-
-    val subInstance = {
-      if (module.isStatic) {
-        globalRuntimeM.reflectModule(module).instance
-      } else {
-        globalRuntimeM.reflect(model).reflectModule(module).instance
-      }
-    }
-
-
-    list(subInstance)
-
+  protected def traverseModule(model: Any, module: ModuleSymbol) = {
+    list(ReflectUtils.applyModule(model, module))
   }
 
-  protected def traverseGetter(method: MethodSymbol, instance: Any) = {
-    val instanceM = globalRuntimeM.reflect(instance)
-    val methodM = instanceM.reflectMethod(method)
-    val key1 = methodM.apply().asInstanceOf[DoxBibKey]
-    val key2 = methodM.apply().asInstanceOf[DoxBibKey]
-
-    if (key1 == key2) {
-      Seq(key1)
-    } else {
-      Seq.empty
-    }
-
+  protected def traverseGetter(model: Any, method: MethodSymbol) = {
+    ReflectUtils.applyGetMethodConstant(model, method).toSeq.map(_.asInstanceOf[DoxBibKey])
   }
 
   protected def traverseSetter(method: MethodSymbol) = {

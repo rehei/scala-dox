@@ -24,17 +24,22 @@ class TestDoxBibKeyScanner {
 
       val reference1 = fromRAW("")
 
-      object Inner {
+      object Nested {
         val reference2 = fromRAW("")
+
+        object Nested {
+          val reference3 = fromRAW("")
+        }
       }
     }
 
     val result = DoxBibKeyScanner(TestAggregated).list()
 
-    println(result.size)
-    
+    assert(result.size == 3)
+
     assert(result.contains(TestAggregated.reference1))
-    assert(result.contains(TestAggregated.Inner.reference2))
+    assert(result.contains(TestAggregated.Nested.reference2))
+    assert(result.contains(TestAggregated.Nested.Nested.reference3))
   }
 
   @Test
@@ -53,7 +58,7 @@ class TestDoxBibKeyScanner {
     assert(result.size == 1)
     assert(result.contains(TestAggregated.foo))
     assert(!result.contains(TestAggregated.reference1))
-
+    
   }
 
 }

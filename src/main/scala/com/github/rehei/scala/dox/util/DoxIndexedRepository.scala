@@ -36,7 +36,6 @@ abstract class DoxIndexedRepository {
   private val map = mutable.Map[String, String]()
 
   private var refresh = true
-  private val globalRuntimeM = runtimeMirror(this.getClass.getClassLoader)
 
   protected def push(any: DoxIndexedHandle) = {
     refresh = true
@@ -60,52 +59,41 @@ abstract class DoxIndexedRepository {
   }
 
   protected def traverseType(prefix: String, model: Any) {
-    val instance = globalRuntimeM.reflect(model)
+    val instance = ReflectUtils.reflectInstance(model)
 
     for (member <- instance.symbol.typeSignature.members if member.isPublic) {
       member match {
-        case m: ModuleSymbol => traverseModule(prefix, m, instance)
-        case m: MethodSymbol => traverseMethod(prefix, m, instance)
-        case _               => // do nothing
+        case module: ModuleSymbol => traverseModule(prefix, model, module)
+        case method: MethodSymbol => traverseMethod(prefix, model, method)
+        case _                    => // do nothing
       }
     }
   }
 
-  protected def traverseMethod(prefix: String, method: MethodSymbol, instance: InstanceMirror) = {
-    scala.util.Try {
+  protected def traverseMethod(prefix: String, model: Any, method: MethodSymbol) {
 
-      val result = instance.reflectMethod(method).apply()
+    for (result <- scala.util.Try(ReflectUtils.applyGetMethodConstant(model, method)).toOption.flatten) {
 
       result match {
-        case model: DoxIndexedHandle => traverseMethodValue(prefix, method, model)
-        case model                   => traverseMethodRecursive(prefix, method, model)
+        case model: DoxIndexedHandle => traverseMethodValue(prefix, model, method)
+        case model                   => traverseMethodRecursive(prefix, model, method)
       }
 
-    } getOrElse {
-      Seq.empty
     }
 
   }
 
-  protected def traverseModule(prefix: String, module: ModuleSymbol, instance: InstanceMirror) = {
-    val subInstance = {
-      if (module.isStatic) {
-        globalRuntimeM.reflectModule(module).instance
-      } else {
-        instance.reflectModule(module).instance
-      }
-    }
-
-    traverseType(prefix + "." + module.name, subInstance)
+  protected def traverseModule(prefix: String, model: Any, module: ModuleSymbol) = {
+    traverseType(prefix + "." + module.name, ReflectUtils.applyModule(model, module))
   }
 
-  protected def traverseMethodValue(prefix: String, method: MethodSymbol, handle: DoxIndexedHandle) {
-    map.put(handle.index, prefix + "." + method.name)
+  protected def traverseMethodValue(prefix: String, model: DoxIndexedHandle, method: MethodSymbol) {
+    map.put(model.index, prefix + "." + method.name)
   }
 
-  protected def traverseMethodRecursive(prefix: String, method: MethodSymbol, container: Any) {
-    if (container.getClass().getName.startsWith(this.getClass.getName)) {
-      traverseType(prefix + "." + method.name, container)
+  protected def traverseMethodRecursive(prefix: String, model: Any, method: MethodSymbol) {
+    if (model.getClass().getName.startsWith(this.getClass.getName)) {
+      traverseType(prefix + "." + method.name, model)
     }
   }
 
