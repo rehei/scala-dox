@@ -1,43 +1,26 @@
 package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
 import com.github.rehei.scala.dox.model.DoxValueDOI
 import com.github.rehei.scala.dox.model.DoxValueRAW
+import com.github.rehei.scala.dox.util.DoxIndexedRepository
 
-trait DoxBibKeyEnum extends Enumeration {
+trait DoxBibKeyEnum extends DoxIndexedRepository {
 
-  abstract class KeyBase extends Val with DoxBibKey {
-    protected val clazz = DoxBibKeyEnum.this.getClass()
-
-    override def toString() = {
-      "@" + this.getClass.getSimpleName + "{" + super.toString() + "}"
-    }
+  abstract class KeyBase extends DoxIndexedHandle with DoxBibKey {
 
     def documentID: Option[DoxValueDOI]
 
-    def name = {
-      validate()
-
-      friendlyClassName() + "-" + friendlyEnumerationValueName() + "-" + friendlyCaseExtension()
+    override def name = {
+      friendlyEnumerationValueName() + "-" + friendlyCaseExtension()
     }
 
     def canonicalName = {
-      clazz.getName + enumerationValueName()
-    }
-
-    protected def validate() {
-      if (!isValid()) {
-        throw new DoxBibKeyNotValidException("Invalid enum reference in " + clazz.getName)
-      }
-    }
-
-    protected def isValid() = {
-      !enumerationValueName().contains("Invalid enum")
+      enumerationValueName()
     }
 
     protected def friendlyCaseExtension() = {
       val sb = new StringBuilder()
-      for (character <- friendlyEnumerationValueName()) {
+      for (character <- friendlyEnumerationValueName().split("-").last) {
         character match {
           case c if c.isUpper => sb.append("U")
           case c if c.isLower => sb.append("L")
@@ -53,11 +36,7 @@ trait DoxBibKeyEnum extends Enumeration {
     }
 
     protected def enumerationValueName() = {
-      super.toString()
-    }
-
-    protected def friendlyClassName() = {
-      clazz.getName.replace("$", "-").replace(".", "-")
+      super.name
     }
 
     protected def friendlyString(input: String) = {
@@ -79,7 +58,7 @@ trait DoxBibKeyEnum extends Enumeration {
           .replace("ö", "oe")
           .replace("ü", "ue")
           .replace("ä", "ae")
-          .replaceAll("[,?!.:;\\/+]", "-")
+          .replaceAll("[,?!.:;$\\/+]", "-")
           .replaceAll("-+", "-")
           .replaceAll("-$", "-")
           .replaceAll("^-", "")

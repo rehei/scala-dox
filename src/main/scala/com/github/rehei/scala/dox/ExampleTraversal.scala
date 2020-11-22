@@ -11,7 +11,7 @@ object ExampleTraversal {
 
   def main(args: Array[String]): Unit = {
 
-    val scanner = DoxBibKeyScanner.create[ExampleReference.type]
+    val scanner = DoxBibKeyScanner(ExampleReference)
 
     for (key <- scanner.list) {
       println(key)

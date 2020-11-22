@@ -1,6 +1,5 @@
 package com.github.rehei.scala.dox.test.control
 
-import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.control.tex.TexRendering
 import com.github.rehei.scala.dox.control.tex.TexAST
@@ -10,18 +9,21 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import org.junit.Test
 
-object TestDoxBibKeyCountMap {
+class TestSpecialCharacters {
 
-  object TestEmpty {
+  object Test {
 
-  }
+    object TestEmpty {
 
-  object TestKeys extends DoxBibKeyEnum {
+    }
 
-    val X = {
-      fromRAW {
-        """
+    object TestKeys extends DoxBibKeyEnum {
+
+      val X = {
+        fromRAW {
+          """
         @inproceedings{anything,
           title={Mathematical computations for linked data applications with openmath},
           author={Wenzel, Ken and Reinhardt, Heiner},
@@ -30,12 +32,12 @@ object TestDoxBibKeyCountMap {
           year={2012}
         }
         """
+        }
       }
-    }
 
-    val Y = {
-      fromRAW {
-        """
+      val Y = {
+        fromRAW {
+          """
         @inbook{N-480204,
           author = {Reinhardt, Heiner and Singer, Adrian and Hutloff, David and Wenzel, Ken and Bolev, Dimitri},
           title = {Automatische Identifikation und Datenerfassung in der Fertigung von Hochleistungskomponenten},
@@ -45,34 +47,30 @@ object TestDoxBibKeyCountMap {
           keywords = {Hochleistungskomponente, Auto-ID, RFID, Barcode, QR-Code, Markierung, Steuerung, Produktion},
         } 
         """
+        }
       }
+
     }
 
   }
 
-}
-
-class TestDoxBibKeyCountMap {
-
-  import TestDoxBibKeyCountMap._
-
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCite() = {
-    testStrictInitExceptionByCallback(_.cite(TestKeys.X))
+    testStrictInitExceptionByCallback(_.cite(Test.TestKeys.X))
   }
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCiteP() = {
-    testStrictInitExceptionByCallback(_.citep(TestKeys.X))
+    testStrictInitExceptionByCallback(_.citep(Test.TestKeys.X))
   }
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCiteT() = {
-    testStrictInitExceptionByCallback(_.citet(TestKeys.X))
+    testStrictInitExceptionByCallback(_.citet(Test.TestKeys.X))
   }
 
   protected def testStrictInitExceptionByCallback(callback: TexRendering => Unit) = {
-    val scanner = DoxBibKeyScanner.create[TestDoxBibKeyCountMap.TestEmpty.type]
+    val scanner = DoxBibKeyScanner(Test.TestEmpty)
     val map = DoxBibKeyCountMap(scanner.list())
     val rendering = createTexRendering(map)
 
@@ -82,32 +80,32 @@ class TestDoxBibKeyCountMap {
   @Test
   def test() = {
 
-    val scanner = DoxBibKeyScanner.create[TestDoxBibKeyCountMap.type]
+    val scanner = DoxBibKeyScanner(Test)
     val map = DoxBibKeyCountMap(scanner.list())
 
     val rendering = createTexRendering(map)
 
     testing(map).x(0).y(0)
 
-    rendering.cite(TestKeys.X)
+    rendering.cite(Test.TestKeys.X)
     testing(map).x(1).y(0)
 
-    rendering.cite(TestKeys.X)
+    rendering.cite(Test.TestKeys.X)
     testing(map).x(2).y(0)
 
-    rendering.citet(TestKeys.X)
+    rendering.citet(Test.TestKeys.X)
     testing(map).x(3).y(0)
 
-    rendering.citep(TestKeys.X)
+    rendering.citep(Test.TestKeys.X)
     testing(map).x(4).y(0)
 
-    rendering.cite(TestKeys.Y)
+    rendering.cite(Test.TestKeys.Y)
     testing(map).x(4).y(1)
 
-    rendering.citet(TestKeys.Y)
+    rendering.citet(Test.TestKeys.Y)
     testing(map).x(4).y(2)
 
-    rendering.citep(TestKeys.Y)
+    rendering.citep(Test.TestKeys.Y)
     testing(map).x(4).y(3)
   }
 
@@ -124,8 +122,8 @@ class TestDoxBibKeyCountMap {
   protected def testing(map: DoxBibKeyCountMap) = new {
     def x(countX: Int) = new {
       def y(countY: Int) = {
-        assert(map.listAll().filter(m => m.key == TestKeys.X && m.count == countX).size == 1)
-        assert(map.listAll().filter(m => m.key == TestKeys.Y && m.count == countY).size == 1)
+        assert(map.listAll().filter(m => m.key == Test.TestKeys.X && m.count == countX).size == 1)
+        assert(map.listAll().filter(m => m.key == Test.TestKeys.Y && m.count == countY).size == 1)
         assert(map.listAll().size == 2)
         assert(map.listAll().size == 2)
         assert(map.listZero().size == Seq(countX, countY).filter(_ == 0).size)

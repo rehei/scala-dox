@@ -10,7 +10,7 @@ import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.util.IOUtils
 import java.io.StringWriter
 
-object TestSpecialCharacters {
+class TestSpecialCharacters {
 
   object Example extends DoxBibKeyEnum {
 
@@ -30,13 +30,6 @@ object TestSpecialCharacters {
     }
 
   }
-
-}
-
-class TestSpecialCharacters {
-
-  import TestSpecialCharacters._
-
   @Test
   def test() {
 
@@ -58,9 +51,9 @@ class TestSpecialCharacters {
 
     val content = writer.toString()
 
-    assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example--MUELLER_2018-UUUUUUU"))
-    assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example--VEJAR_2011-UUUUU"))
-    assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example--STRAssBURGER_2008-UUUULLUUUUUU"))
+    assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example-MUELLER_2018-UUUUUUU"))
+    assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example-VEJAR_2011-UUUUU"))
+    assert(content.contains("com-github-rehei-scala-dox-test-TestSpecialCharacters-Example-STRAssBURGER_2008-UUUULLUUUUUU"))
     
   }
 

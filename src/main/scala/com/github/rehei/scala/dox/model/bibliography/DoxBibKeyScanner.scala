@@ -1,52 +1,36 @@
 package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.ex.DoxBibKeySourceObjectRequiredException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException
 import scala.reflect.runtime.universe._
+import com.github.rehei.scala.dox.util.ReflectUtils
 
-object DoxBibKeyScanner {
-
-  def create[T](implicit typeTag: TypeTag[T]) = {
-    new DoxBibKeyScanner(getStaticModule(typeTag))
-  }
-
-  protected def getStaticModule[T](typeTag: TypeTag[T]) = {
-
-    val symbol = typeTag.tpe.termSymbol
-
-    val isStaticModule = symbol.isModule && symbol.isStatic
-    if (!isStaticModule) {
-      throw new DoxBibKeySourceObjectRequiredException("Source for key scanning has to be a scala object.")
-    }
-
-    symbol.asModule
-  }
-
-}
-
-class DoxBibKeyScanner protected (module: ModuleSymbol) {
+case class DoxBibKeyScanner(any: AnyRef) {
 
   protected val globalRuntimeM = runtimeMirror(this.getClass.getClassLoader)
 
   protected lazy val result: Seq[DoxBibKey] = {
-    val instance = globalRuntimeM.reflectModule(module).instance
-    list(module.typeSignature, instance)
+    list(any)
   }
 
   def list() = {
     result
   }
 
-  protected def list(source: Type, instance: Any): Seq[DoxBibKey] = {
+  protected def list(model: Any): Seq[DoxBibKey] = {
 
-    source.members.flatMap {
+    val instance = globalRuntimeM.reflect(model)
+
+    instance.symbol.typeSignature.members.flatMap {
 
       declaration =>
+
+        println(declaration)
+
         {
           declaration match {
-            case m: ModuleSymbol if m.isStatic => traverseModule(m, instance)
-            case m: MethodSymbol if m.isGetter && m.returnType <:< typeOf[DoxBibKey] => traverseGetter(m, instance)
-            case m: MethodSymbol if m.isSetter && m.paramLists(0)(0).typeSignature <:< typeOf[DoxBibKey] => traverseSetter(m)
+            case m: ModuleSymbol => traverseModule(m, model)
+            case m: MethodSymbol if ReflectUtils.isSetter[DoxBibKey](m) => traverseSetter(m)
+            case m: MethodSymbol if ReflectUtils.isGetter[DoxBibKey](m) => traverseGetter(m, model)
             case _ => Seq.empty
           }
         }
@@ -55,40 +39,41 @@ class DoxBibKeyScanner protected (module: ModuleSymbol) {
 
   }
 
-  protected def traverseModule(module: ModuleSymbol, instance: Any) = {
+  protected def traverseModule(module: ModuleSymbol, model: Any) = {
+
+    println("traverse module" + module)
 
     val subInstance = {
       if (module.isStatic) {
         globalRuntimeM.reflectModule(module).instance
       } else {
-        val instanceM = globalRuntimeM.reflect(instance)
-        instanceM.reflectModule(module).instance
+        globalRuntimeM.reflect(model).reflectModule(module).instance
       }
     }
 
-    list(module.typeSignature, subInstance)
+
+    list(subInstance)
+
   }
 
   protected def traverseGetter(method: MethodSymbol, instance: Any) = {
     val instanceM = globalRuntimeM.reflect(instance)
-    val key = instanceM.reflectMethod(method).apply().asInstanceOf[DoxBibKey]
+    val methodM = instanceM.reflectMethod(method)
+    val key1 = methodM.apply().asInstanceOf[DoxBibKey]
+    val key2 = methodM.apply().asInstanceOf[DoxBibKey]
 
-    check(key)
+    if (key1 == key2) {
+      Seq(key1)
+    } else {
+      Seq.empty
+    }
 
-    Seq(key)
-  }
-
-  protected def check(key: DoxBibKey) {
-    key.name // may throw an exception if not properly initialized
-    key.canonicalName // may throw an exception if not properly initialized
   }
 
   protected def traverseSetter(method: MethodSymbol) = {
     val keyname = method.fullName.stripSuffix("_$eq")
 
     throw new DoxBibKeyNotFinalException("The key " + keyname + " must not be variable.")
-
-    Seq.empty
   }
 
 }
