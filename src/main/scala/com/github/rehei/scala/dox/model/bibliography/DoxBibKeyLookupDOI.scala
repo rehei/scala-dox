@@ -20,7 +20,7 @@ class DoxBibKeyLookupDOI(bibKeyName: String, doi: DoxValueDOI,
       Http(doi.value)
         .header("Accept", "application/x-bibtex")
         .option(HttpOptions.followRedirects(true))
-        .timeout(20 * 1000, 100 * 1000)
+        .timeout(50 * 1000, 100 * 1000)
         .asString
     }
 
