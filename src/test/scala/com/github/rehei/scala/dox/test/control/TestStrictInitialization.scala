@@ -11,19 +11,13 @@ import com.github.rehei.scala.dox.model.ex.DoxBibKeyCountStrictException
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import org.junit.Test
 
-class TestSpecialCharacters {
+class TestStrictInitialization {
 
-  object Test {
+  object Test extends DoxBibKeyEnum {
 
-    object TestEmpty {
-
-    }
-
-    object TestKeys extends DoxBibKeyEnum {
-
-      val X = {
-        fromRAW {
-          """
+    val X = {
+      fromRAW {
+        """
         @inproceedings{anything,
           title={Mathematical computations for linked data applications with openmath},
           author={Wenzel, Ken and Reinhardt, Heiner},
@@ -32,12 +26,12 @@ class TestSpecialCharacters {
           year={2012}
         }
         """
-        }
       }
+    }
 
-      val Y = {
-        fromRAW {
-          """
+    val Y = {
+      fromRAW {
+        """
         @inbook{N-480204,
           author = {Reinhardt, Heiner and Singer, Adrian and Hutloff, David and Wenzel, Ken and Bolev, Dimitri},
           title = {Automatische Identifikation und Datenerfassung in der Fertigung von Hochleistungskomponenten},
@@ -47,66 +41,30 @@ class TestSpecialCharacters {
           keywords = {Hochleistungskomponente, Auto-ID, RFID, Barcode, QR-Code, Markierung, Steuerung, Produktion},
         } 
         """
-        }
       }
-
     }
-
   }
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCite() = {
-    testStrictInitExceptionByCallback(_.cite(Test.TestKeys.X))
+    testStrictInitExceptionByCallback(_.cite(Test.X))
   }
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCiteP() = {
-    testStrictInitExceptionByCallback(_.citep(Test.TestKeys.X))
+    testStrictInitExceptionByCallback(_.citep(Test.X))
   }
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCiteT() = {
-    testStrictInitExceptionByCallback(_.citet(Test.TestKeys.X))
+    testStrictInitExceptionByCallback(_.citet(Test.X))
   }
 
   protected def testStrictInitExceptionByCallback(callback: TexRendering => Unit) = {
-    val scanner = DoxBibKeyScanner(Test.TestEmpty)
-    val map = DoxBibKeyCountMap(scanner.list())
+    val map = DoxBibKeyCountMap(Seq.empty)
     val rendering = createTexRendering(map)
 
     callback(rendering)
-  }
-
-  @Test
-  def test() = {
-
-    val scanner = DoxBibKeyScanner(Test)
-    val map = DoxBibKeyCountMap(scanner.list())
-
-    val rendering = createTexRendering(map)
-
-    testing(map).x(0).y(0)
-
-    rendering.cite(Test.TestKeys.X)
-    testing(map).x(1).y(0)
-
-    rendering.cite(Test.TestKeys.X)
-    testing(map).x(2).y(0)
-
-    rendering.citet(Test.TestKeys.X)
-    testing(map).x(3).y(0)
-
-    rendering.citep(Test.TestKeys.X)
-    testing(map).x(4).y(0)
-
-    rendering.cite(Test.TestKeys.Y)
-    testing(map).x(4).y(1)
-
-    rendering.citet(Test.TestKeys.Y)
-    testing(map).x(4).y(2)
-
-    rendering.citep(Test.TestKeys.Y)
-    testing(map).x(4).y(3)
   }
 
   protected def createTexRendering(map: DoxBibKeyCountMap) = {
@@ -117,19 +75,6 @@ class TestSpecialCharacters {
     val bibHandle = DoxBibKeyRendering(bibCache, map)
 
     new TexRendering(TexAST(), null, null, bibHandle)
-  }
-
-  protected def testing(map: DoxBibKeyCountMap) = new {
-    def x(countX: Int) = new {
-      def y(countY: Int) = {
-        assert(map.listAll().filter(m => m.key == Test.TestKeys.X && m.count == countX).size == 1)
-        assert(map.listAll().filter(m => m.key == Test.TestKeys.Y && m.count == countY).size == 1)
-        assert(map.listAll().size == 2)
-        assert(map.listAll().size == 2)
-        assert(map.listZero().size == Seq(countX, countY).filter(_ == 0).size)
-        assert(map.listMoreThanZero().size == Seq(countX, countY).filter(_ > 0).size)
-      }
-    }
   }
 
 }
