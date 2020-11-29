@@ -81,7 +81,7 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle
   protected def appendPDF(image: DoxLikeSVG) {
     val filename = svgHandle.serialize(image).toAbsolutePath().toString()
 
-    \ includegraphics & { ###("scale=0.5") } { filename }
+    \ includegraphics & { filename }
   }
 
   def list(itemSeq: Seq[String]) {
