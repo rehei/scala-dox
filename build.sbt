@@ -20,6 +20,7 @@ libraryDependencies ++= {
     "org.scala-lang.modules" %% "scala-xml" % "1.3.0",
     "com.github.rehei" %% "scala-macros" % "0.9.3",
     "org.apache.commons" % "commons-lang3" % "3.11",
+    "commons-io" % "commons-io" % "2.8.0",
     "org.jbibtex" % "jbibtex" % "1.0.17",
     "org.scalaj" %% "scalaj-http" % "2.4.2",
     "com.github.marschall" % "memoryfilesystem" % "2.1.0" % Test, 

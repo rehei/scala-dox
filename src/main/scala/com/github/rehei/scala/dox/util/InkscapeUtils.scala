@@ -5,7 +5,7 @@ import java.nio.file.Path
 import scala.collection.Seq
 import scala.sys.process.Process
 
-class SVG2PDF(protected val baseDirectory: Path) {
+class InkscapeUtils(protected val baseDirectory: Path) {
   /*
    * Some inkscape examples for your convenience:
    * inkscape -D -z --file=" + basePath + ".svg --export-pdf=" + baseName + ".pdf									 // generates pdf vector image
@@ -17,11 +17,7 @@ class SVG2PDF(protected val baseDirectory: Path) {
    *  -z => --without-gui
    */
 
-  def generate() = {
-    generatePDFs()
-  }
-
-  protected def generatePDFs() = {
+  def generatePDFs() {
     Process(executable, baseDirectory.toFile()).!
   }
 

@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox.util
 import java.nio.file.Path
 import scala.sys.process.Process
 
-class TEX2PDF(target: Path, filename: String, fastAndDirty: Boolean) {
+class TexUtils(target: Path, filename: String, fastAndDirty: Boolean) {
 
   //"pdflatex --shell-escape -synctex=1 -interaction=nonstopmode template.tex %.tex"
 
@@ -15,7 +15,7 @@ class TEX2PDF(target: Path, filename: String, fastAndDirty: Boolean) {
     "bibtex " + filename + ".aux"
   }
 
-  def generate() = {
+  def generatePDF() = {
     val pdftexProcess = Process(command, target.toFile())
 
     pdftexProcess.! // first run creates aux file which includes the table of contents
