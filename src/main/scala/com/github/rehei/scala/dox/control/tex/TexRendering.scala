@@ -96,7 +96,7 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle
     \ includegraphics & { filename }
   }
 
-  def formula(label: DoxReference) = new {
+  def eqnarray(label: DoxReference) = new {
     def expression(expression: String) {
       $ { _.eqnarray } {
         \ plain { expression }
