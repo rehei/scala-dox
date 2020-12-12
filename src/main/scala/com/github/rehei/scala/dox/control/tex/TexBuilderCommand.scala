@@ -4,7 +4,7 @@ class TexBuilderCommand(ast: TexAST) {
 
   protected class TexMarkupObject extends TexCommand(ast, TexSeq(Seq.empty)) {
     def name = {
-      this.getClass.getName.stripSuffix("$").split("\\$").last
+      this.getClass.getName.replace("$$", "*").stripSuffix("$").split("\\$").last
     }
   }
 
@@ -16,11 +16,17 @@ class TexBuilderCommand(ast: TexAST) {
   object includegraphics extends TexMarkupObject
   object caption extends TexMarkupObject
   object chapter extends TexMarkupObject
+  object chapter$ extends TexMarkupObject
   object section extends TexMarkupObject
+  object section$ extends TexMarkupObject
   object subsection extends TexMarkupObject
+  object subsection$ extends TexMarkupObject
   object subsubsection extends TexMarkupObject
+  object subsubsection$ extends TexMarkupObject
+
   object item extends TexMarkupObject
   object clearpage extends TexMarkupObject
+  object newpage extends TexMarkupObject
   object label extends TexMarkupObject
   object ref extends TexMarkupObject
   object usepackage extends TexMarkupObject

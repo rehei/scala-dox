@@ -24,12 +24,24 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle
     \ clearpage;
   }
 
+  def newpage() {
+    \ newpage;
+  }
+
   def chapter(name: String) {
     \ chapter & { escape(name) }
   }
 
+  def plain(input: String) {
+    \ plain (input)
+  }
+
   def section(name: String) {
     \ section & { escape(name) }
+  }
+  
+  def section$(name: String) {
+    \ section$ & { escape(name) }
   }
 
   def subsection(name: String) {
@@ -82,6 +94,15 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle
     val filename = svgHandle.serialize(image).toString()
 
     \ includegraphics & { filename }
+  }
+
+  def formula(label: DoxReference) = new {
+    def expression(expression: String) {
+      $ { _.eqnarray } {
+        \ plain { expression }
+        \ label { label.referenceID }
+      }
+    }
   }
 
   def list(itemSeq: Seq[String]) {

@@ -17,6 +17,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
     object figure extends SomeTexEnvironment
     object center extends SomeTexEnvironment
     object tabularx extends SomeTexEnvironment
+    object eqnarray extends SomeTexEnvironment
 
   }
 
