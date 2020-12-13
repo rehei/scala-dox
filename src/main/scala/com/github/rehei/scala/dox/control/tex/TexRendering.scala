@@ -8,8 +8,9 @@ import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.control.DoxHandleSVG
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.i18n.DoxI18N
 
-class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle: DoxHandleSVG, bibHandle: DoxBibKeyRendering) extends DoxRenderingBase(bibHandle) {
+class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle: DoxHandleSVG, i18n: DoxI18N, bibHandle: DoxBibKeyRendering) extends DoxRenderingBase(i18n, bibHandle) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
@@ -39,7 +40,7 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle
   def section(name: String) {
     \ section & { escape(name) }
   }
-  
+
   def section$(name: String) {
     \ section$ & { escape(name) }
   }
@@ -54,6 +55,14 @@ class TexRendering(baseAST: TexAST, indexKeyConfig: DoxTableKeyConfig, svgHandle
 
   def text(in: String) {
     \ plain { " " + escape(in) + " " }
+  }
+  
+  def textNoSpace(in: String) {
+    \ plain { escape(in) }
+  }
+
+  def nonBreakingSpace {
+    \ plain { "~" }
   }
 
   def ref(reference: DoxReference) = {

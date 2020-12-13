@@ -6,8 +6,9 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.i18n.DoxI18N
 
-abstract class DoxRenderingBase(val bibliography: DoxBibKeyRendering) {
+abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
   def list(callback: DoxBuilderList => DoxBuilderList) {
     val result = callback(DoxBuilderList(this, Seq.empty))
@@ -37,6 +38,9 @@ abstract class DoxRenderingBase(val bibliography: DoxBibKeyRendering) {
   def subsection(name: String): Unit
   def subsubsection(name: String): Unit
 
+  def nonBreakingSpace: Unit
+  
+  def textNoSpace(in: String): Unit
   def text(in: String): Unit
   def text(callback: DoxBuilderText => DoxBuilderText) {
     val result = callback(DoxBuilderText(this, Seq.empty))

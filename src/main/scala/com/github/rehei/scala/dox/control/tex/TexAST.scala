@@ -20,7 +20,7 @@ case class TexAST() {
   }
 
   def build() = {
-    stack.reverseIterator.map(_.generate()).mkString("\n")
+    stack.reverseIterator.map(_.generate()).mkString
   }
 
   def write(writer: Writer) = {

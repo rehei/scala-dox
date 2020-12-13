@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
 
-class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(handle) {
+class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
   def label(reference: DoxReference) = Unit
   def chapter(name: String) = Unit
@@ -14,6 +14,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(handle)
   def subsection(name: String) = Unit
   def subsubsection(name: String) = Unit
   def text(in: String) = Unit
+  def textNoSpace(in: String) = Unit
   def ref(reference: DoxReference) = Unit
   def svg(chart: DoxSVGFigureSet) = Unit
   def table(in: DoxTable) = Unit
@@ -23,5 +24,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(handle)
   def citet(key: String) = Unit
   def citep(key: String) = Unit
   def cite(key: String) = Unit
+
+  def nonBreakingSpace = Unit
 
 }
