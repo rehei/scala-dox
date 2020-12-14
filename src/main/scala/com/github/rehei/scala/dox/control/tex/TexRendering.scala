@@ -4,11 +4,12 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxLikeSVG
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
-import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.control.DoxHandleSVG
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.i18n.DoxI18N
+import com.github.rehei.scala.dox.model.DoxReferenceLike
+import com.github.rehei.scala.dox.model.DoxReferenceEquation
 
 class TexRendering(
   baseAST:        TexAST,
@@ -22,7 +23,7 @@ class TexRendering(
 
   protected val POSITIONING_FIGURE = "H"
 
-  def label(reference: DoxReference) {
+  def label(reference: DoxReferenceLike) {
     \ label { reference.referenceID }
   }
 
@@ -74,7 +75,7 @@ class TexRendering(
     \ plain { "~" }
   }
 
-  def ref(reference: DoxReference) = {
+  def ref(reference: DoxReferenceLike) = {
     \ ref { reference.referenceID }
   }
 
@@ -114,7 +115,7 @@ class TexRendering(
     \ includegraphics & { filename }
   }
 
-  def eqnarray(label: DoxReference) = new {
+  def eqnarray(label: DoxReferenceEquation) = new {
     def expression(expression: String) {
       $ { _.eqnarray } {
         \ plain { expression }

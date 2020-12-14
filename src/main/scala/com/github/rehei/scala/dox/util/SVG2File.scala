@@ -24,7 +24,7 @@ class SVG2File(protected val baseDirectory: Path) {
   }
 
   protected def nextFile() = {
-    val filename = s"${prefix}_${nextID.next().referenceID}.svg"
+    val filename = s"${prefix}_${nextID.filename().referenceID}.svg"
     baseDirectory.resolve(filename)
   }
 

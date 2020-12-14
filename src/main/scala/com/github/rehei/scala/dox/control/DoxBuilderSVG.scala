@@ -1,10 +1,10 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.model.DoxLikeSVG
 import com.github.rehei.scala.dox.model.DoxFigure
-import com.github.rehei.scala.dox.model.DoxSVGFigureSet
+import com.github.rehei.scala.dox.model.DoxLikeSVG
 import com.github.rehei.scala.dox.model.DoxLikeString
-import com.github.rehei.scala.dox.model.DoxReference
+import com.github.rehei.scala.dox.model.DoxReferenceFigure
+import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 
 object DoxBuilderSVG {
 
@@ -17,7 +17,7 @@ object DoxBuilderSVG {
   }
 
   protected def create(_caption: String) = new {
-    def label(_labelOption: Option[DoxReference]) = new {
+    def label(_labelOption: Option[DoxReferenceFigure]) = new {
       def data(_data: DoxLikeSVG) = {
         create(Seq(_data))
       }

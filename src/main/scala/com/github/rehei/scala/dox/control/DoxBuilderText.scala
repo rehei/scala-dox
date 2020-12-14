@@ -2,7 +2,10 @@ package com.github.rehei.scala.dox.control
 
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.DoxDelegate
-import com.github.rehei.scala.dox.model.DoxReference
+import com.github.rehei.scala.dox.model.DoxReferenceFigure
+import com.github.rehei.scala.dox.model.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.DoxReferenceTable
+import com.github.rehei.scala.dox.model.DoxReferenceLike
 
 case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
 
@@ -38,7 +41,7 @@ case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
     copyAppend(DoxDelegate(() => base.plain(in)))
   }
 
-  def ref(reference: DoxReference) = {
+  def ref(reference: DoxReferenceLike) = {
     copyAppend(DoxDelegate(() => base.ref(reference)))
   }
   def citet(reference: DoxBibKey) = {
@@ -51,31 +54,31 @@ case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
     copyAppend(DoxDelegate(() => base.cite(reference)))
   }
 
-  def refEquation(reference: DoxReference) = {
+  def refEquation(reference: DoxReferenceEquation) = {
     prefixReference(base.i18n.equation, reference)
   }
-  def refEquationP(reference: DoxReference) = {
+  def refEquationP(reference: DoxReferenceEquation) = {
     prefixReferenceP(base.i18n.equation, reference)
   }
 
-  def refFigure(reference: DoxReference) = {
+  def refFigure(reference: DoxReferenceFigure) = {
     prefixReference(base.i18n.figure, reference)
   }
-  def refFigureP(reference: DoxReference) = {
+  def refFigureP(reference: DoxReferenceFigure) = {
     prefixReferenceP(base.i18n.figure, reference)
   }
 
-  def refTable(reference: DoxReference) = {
+  def refTable(reference: DoxReferenceTable) = {
     prefixReference(base.i18n.table, reference)
   }
-  def refTableP(reference: DoxReference) = {
+  def refTableP(reference: DoxReferenceTable) = {
     prefixReferenceP(base.i18n.table, reference)
   }
 
-  protected def prefixReference(prefix: String, reference: DoxReference) = {
+  protected def prefixReference(prefix: String, reference: DoxReferenceLike) = {
     copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.textNoSpace(prefix).nonBreakingSpace.ref(reference))))
   }
-  protected def prefixReferenceP(prefix: String, reference: DoxReference) = {
+  protected def prefixReferenceP(prefix: String, reference: DoxReferenceLike) = {
     copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.`(`.textNoSpace(prefix).nonBreakingSpace.ref(reference).`)`)))
   }
 

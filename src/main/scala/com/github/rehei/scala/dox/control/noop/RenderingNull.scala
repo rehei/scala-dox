@@ -1,14 +1,14 @@
 package com.github.rehei.scala.dox.control.noop
 
 import com.github.rehei.scala.dox.control.DoxRenderingBase
-import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.DoxReferenceLike
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
-  def label(reference: DoxReference) = Unit
+  def label(reference: DoxReferenceLike) = Unit
   def chapter(name: String) = Unit
   def section(name: String) = Unit
   def subsection(name: String) = Unit
@@ -20,7 +20,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
 
   def plain(in: String) = Unit
   
-  def ref(reference: DoxReference) = Unit
+  def ref(reference: DoxReferenceLike) = Unit
   def svg(chart: DoxSVGFigureSet) = Unit
   def table(in: DoxTable) = Unit
   def clearpage() = Unit

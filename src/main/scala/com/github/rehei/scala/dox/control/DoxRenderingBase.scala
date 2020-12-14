@@ -1,12 +1,13 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.model.DoxReference
 import com.github.rehei.scala.dox.model.DoxSVGFigureSet
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.i18n.DoxI18N
+import com.github.rehei.scala.dox.model.DoxReferenceFigure
+import com.github.rehei.scala.dox.model.DoxReferenceLike
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -32,7 +33,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def citep(key: String)
   protected def cite(key: String)
 
-  def label(reference: DoxReference): Unit
+  def label(reference: DoxReferenceLike): Unit
   def chapter(name: String): Unit
   def section(name: String): Unit
   def subsection(name: String): Unit
@@ -50,7 +51,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   
   def plain(in: String): Unit
 
-  def ref(reference: DoxReference): Unit
+  def ref(reference: DoxReferenceLike): Unit
   def table(in: DoxTable): Unit
   def clearpage(): Unit
   def list(itemSeq: Seq[String])
