@@ -24,6 +24,8 @@ class TexBuilderCommand(ast: TexAST) {
   object subsubsection extends TexMarkupObject
   object subsubsection$ extends TexMarkupObject
 
+  object textit extends TexMarkupObject
+
   object item extends TexMarkupObject
   object clearpage extends TexMarkupObject
   object newpage extends TexMarkupObject

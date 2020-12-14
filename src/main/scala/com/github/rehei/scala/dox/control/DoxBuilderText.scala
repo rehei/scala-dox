@@ -25,9 +25,19 @@ case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
   def text(in: String) = {
     copyAppend(DoxDelegate(() => base.textNoSpace(" " + in))) // yes, that is right.
   }
+
+  def textItalic(in: String) = {
+    copyAppend(DoxDelegate(() => base.textItalic(" " + in)))
+  }
+
   def textNoSpace(in: String) = {
     copyAppend(DoxDelegate(() => base.textNoSpace(in)))
   }
+
+  def plain(in: String) = {
+    copyAppend(DoxDelegate(() => base.plain(in)))
+  }
+
   def ref(reference: DoxReference) = {
     copyAppend(DoxDelegate(() => base.ref(reference)))
   }
@@ -63,10 +73,10 @@ case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
   }
 
   protected def prefixReference(prefix: String, reference: DoxReference) = {
-    copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.textNoSpace(prefix).dot.nonBreakingSpace.ref(reference))))
+    copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.textNoSpace(prefix).nonBreakingSpace.ref(reference))))
   }
   protected def prefixReferenceP(prefix: String, reference: DoxReference) = {
-    copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.`(`.textNoSpace(prefix).dot.nonBreakingSpace.ref(reference).`)`)))
+    copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.`(`.textNoSpace(prefix).nonBreakingSpace.ref(reference).`)`)))
   }
 
   def flush() {

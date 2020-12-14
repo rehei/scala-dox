@@ -46,6 +46,9 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     val result = callback(DoxBuilderText(this, Seq.empty))
     result.flush()
   }
+  def textItalic(in: String): Unit
+  
+  def plain(in: String): Unit
 
   def ref(reference: DoxReference): Unit
   def table(in: DoxTable): Unit

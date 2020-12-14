@@ -13,8 +13,13 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   def section(name: String) = Unit
   def subsection(name: String) = Unit
   def subsubsection(name: String) = Unit
+  
   def text(in: String) = Unit
   def textNoSpace(in: String) = Unit
+  def textItalic(in: String) = Unit
+
+  def plain(in: String) = Unit
+  
   def ref(reference: DoxReference) = Unit
   def svg(chart: DoxSVGFigureSet) = Unit
   def table(in: DoxTable) = Unit
