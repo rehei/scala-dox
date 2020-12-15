@@ -23,78 +23,75 @@ class TexRendering(
 
   protected val POSITIONING_FIGURE = "H"
 
-  def label(reference: DoxReferenceLike) {
+  def label(reference: DoxReferenceLike) = {
     \ label { reference.referenceID }
+    this
   }
 
-  def clearpage() {
+  def clearpage() = {
     \ clearpage;
+    this
   }
 
-  def newpage() {
+  def newpage() = {
     \ newpage;
+    this
   }
 
-  def chapter(name: String) {
+  def chapter(name: String) = {
     \ chapter & { escape(name) }
+    this
   }
 
-  def plain(input: String) {
+  def plain(input: String) = {
     \ plain (input)
+    this
   }
 
-  def section(name: String) {
+  def section(name: String) = {
     \ section & { escape(name) }
+    this
   }
 
-  def section$(name: String) {
+  def section$(name: String) = {
     \ section$ & { escape(name) }
+    this
   }
 
-  def subsection(name: String) {
+  def subsection(name: String) = {
     \ subsection & { escape(name) }
+    this
   }
 
-  def subsubsection(name: String) {
+  def subsubsection(name: String) = {
     \ subsubsection & { escape(name) }
+    this
   }
 
-  def text(in: String) {
-    \ plain { " " + escape(in) + " " }
-  }
-  
-  def textItalic(in: String) {
-    \ textit { escape(in) }
-  }
-
-  def textNoSpace(in: String) {
+  def text(in: String) = {
     \ plain { escape(in) }
+    this
   }
-  
-  def nonBreakingSpace {
+
+  def textItalic(in: String) = {
+    \ textit { escape(in) }
+    this
+  }
+
+  def nonBreakingSpace = {
     \ plain { "~" }
+    this
   }
 
   def ref(reference: DoxReferenceLike) = {
     \ ref { reference.referenceID }
+    this
   }
 
-  protected def citet(key: String) = {
-    \ citet { key }
-  }
-
-  protected def citep(key: String) = {
-    \ citep { key }
-  }
-
-  protected def cite(key: String) = {
-    \ cite { key }
-  }
-
-  def table(model: DoxTable) {
+  def table(model: DoxTable) = {
     model.withIndex(Some(indexKeyConfig))
-
     new TexRenderingTable(baseAST, model).create()
+    this
   }
 
   override def svg(svgSet: DoxSVGFigureSet) {
@@ -122,6 +119,18 @@ class TexRendering(
         \ label { label.referenceID }
       }
     }
+  }
+
+  protected def citet(key: String) {
+    \ citet { key }
+  }
+
+  protected def citep(key: String) {
+    \ citep { key }
+  }
+
+  protected def cite(key: String) {
+    \ cite { key }
   }
 
   def list(itemSeq: Seq[String]) {

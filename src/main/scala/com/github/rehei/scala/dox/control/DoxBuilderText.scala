@@ -9,17 +9,8 @@ import com.github.rehei.scala.dox.model.DoxReferenceLike
 
 case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
 
-  def `(` = {
-    copyAppend(DoxDelegate(() => base.textNoSpace("(")))
-  }
 
-  def `)` = {
-    copyAppend(DoxDelegate(() => base.textNoSpace(")")))
-  }
 
-  def dot = {
-    copyAppend(DoxDelegate(() => base.textNoSpace(".")))
-  }
 
   def nonBreakingSpace = {
     copyAppend(DoxDelegate(() => base.nonBreakingSpace))
@@ -54,33 +45,7 @@ case class DoxBuilderText(base: DoxRenderingBase, args: Seq[DoxDelegate]) {
     copyAppend(DoxDelegate(() => base.cite(reference)))
   }
 
-  def refEquation(reference: DoxReferenceEquation) = {
-    prefixReference(base.i18n.equation, reference)
-  }
-  def refEquationP(reference: DoxReferenceEquation) = {
-    prefixReferenceP(base.i18n.equation, reference)
-  }
 
-  def refFigure(reference: DoxReferenceFigure) = {
-    prefixReference(base.i18n.figure, reference)
-  }
-  def refFigureP(reference: DoxReferenceFigure) = {
-    prefixReferenceP(base.i18n.figure, reference)
-  }
-
-  def refTable(reference: DoxReferenceTable) = {
-    prefixReference(base.i18n.table, reference)
-  }
-  def refTableP(reference: DoxReferenceTable) = {
-    prefixReferenceP(base.i18n.table, reference)
-  }
-
-  protected def prefixReference(prefix: String, reference: DoxReferenceLike) = {
-    copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.textNoSpace(prefix).nonBreakingSpace.ref(reference))))
-  }
-  protected def prefixReferenceP(prefix: String, reference: DoxReferenceLike) = {
-    copyAppend(DoxDelegate(() => base.text(_.nonBreakingSpace.`(`.textNoSpace(prefix).nonBreakingSpace.ref(reference).`)`)))
-  }
 
   def flush() {
     for (arg <- args) {

@@ -8,28 +8,29 @@ import com.github.rehei.scala.dox.model.DoxReferenceLike
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
-  def label(reference: DoxReferenceLike) = Unit
-  def chapter(name: String) = Unit
-  def section(name: String) = Unit
-  def subsection(name: String) = Unit
-  def subsubsection(name: String) = Unit
-  
-  def text(in: String) = Unit
-  def textNoSpace(in: String) = Unit
-  def textItalic(in: String) = Unit
+  def label(reference: DoxReferenceLike) = this
+  def chapter(name: String) = this
+  def section(name: String) = this
+  def subsection(name: String) = this
+  def subsubsection(name: String) = this
 
-  def plain(in: String) = Unit
-  
-  def ref(reference: DoxReferenceLike) = Unit
+  def text(in: String) = this
+  def textItalic(in: String) = this
+
+  def plain(in: String) = this
+
+  def ref(reference: DoxReferenceLike) = this
+  def table(in: DoxTable) = this
+  def clearpage() = this
+
+  def nonBreakingSpace = this
+
   def svg(chart: DoxSVGFigureSet) = Unit
-  def table(in: DoxTable) = Unit
-  def clearpage() = Unit
-  def list(itemSeq: Seq[String]) = Unit
 
-  def citet(key: String) = Unit
-  def citep(key: String) = Unit
-  def cite(key: String) = Unit
+  protected def citet(key: String) = Unit
+  protected def citep(key: String) = Unit
+  protected def cite(key: String) = Unit
 
-  def nonBreakingSpace = Unit
+  protected def list(itemSeq: Seq[String]) = Unit
 
 }
