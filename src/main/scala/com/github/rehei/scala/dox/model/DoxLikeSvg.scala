@@ -2,8 +2,8 @@ package com.github.rehei.scala.dox.model
 
 import scala.xml.NodeSeq
 
-trait DoxLikeSVG {
+trait DoxLikeSvg {
 
-  def generateSVG(): NodeSeq
+  def generateSvg(): NodeSeq
 
 }

@@ -31,5 +31,4 @@ case class DoxReferenceFactory(protected val prefix: String) {
     DoxReferenceTable("file-" + nextID.nextID())
   }
   
-  
 }

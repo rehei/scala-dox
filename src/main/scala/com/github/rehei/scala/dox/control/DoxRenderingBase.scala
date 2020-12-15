@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.model.DoxSVGFigureSet
+import com.github.rehei.scala.dox.model.DoxSvgFigureSet
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
@@ -19,7 +19,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
       base.trim()
     }
   }
-  
+
   def refEquation(reference: DoxReferenceEquation) = {
     prefixReference(i18n.equation, reference)
   }
@@ -42,60 +42,61 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   }
 
   protected def prefixReference(prefix: String, reference: DoxReferenceLike) = {
-    nonBreakingSpace.textNoSpace(prefix).nonBreakingSpace.ref(reference)
+    nonBreakingSpace.text(prefix).nonBreakingSpace.ref(reference)
   }
   protected def prefixReferenceP(prefix: String, reference: DoxReferenceLike) = {
-    nonBreakingSpace.`(`.textNoSpace(prefix).nonBreakingSpace.ref(reference).`)`
+    nonBreakingSpace.`(`.text(prefix).nonBreakingSpace.ref(reference).`)`
   }
 
   def list(callback: DoxBuilderList => DoxBuilderList): this.type = {
     val result = callback(DoxBuilderList(Seq.empty))
-    list(result.args.map(_.in))
+    internalList(result.args.map(_.in))
     this
   }
 
   def citet(key: DoxBibKey): this.type = {
     bibliography.append(key)
     nonBreakingSpace
-    citet(key.name)
+    internalCiteT(key.name)
     this
   }
   def citep(key: DoxBibKey): this.type = {
     bibliography.append(key)
     nonBreakingSpace
-    citep(key.name)
+    internalCiteP(key.name)
     this
   }
   def cite(key: DoxBibKey): this.type = {
     bibliography.append(key)
     nonBreakingSpace
-    cite(key.name)
+    internalCite(key.name)
     this
   }
 
   def `(` = {
-    this.textNoSpace("(")
+    this.text("(")
   }
 
   def `)` = {
-    this.textNoSpace(")")
+    this.text(")")
   }
 
   def dot = {
-    this.textNoSpace(".")
+    this.text(".")
   }
-  
+
   def break = {
-    this.text("\n\n")
-  }
-  
-
-  def textNoSpace(in: String): this.type = {
-    this.text(in.fulltrim)
+    this.plain("\n\n")
   }
 
-  def plainNoSpace(in: String): this.type = {
-    this.plain(in.fulltrim)
+  def text(in: String): this.type = {
+    internalText(in.fulltrim)
+    this
+  }
+
+  def plain(in: String): this.type = {
+    internalPlain(in)
+    this
   }
 
   def label(reference: DoxReferenceLike): this.type
@@ -106,32 +107,32 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def nonBreakingSpace: this.type
 
-  def text(in: String): this.type
   def textItalic(in: String): this.type
-
-  def plain(in: String): this.type
 
   def ref(reference: DoxReferenceLike): this.type
   def table(in: DoxTable): this.type
   def clearpage(): this.type
 
-  def svg(callback: DoxBuilderSVG.type => DoxSVGFigureSet): this.type = {
-    val data = callback(DoxBuilderSVG)
-    this.svg(data)
+  def svg(callback: DoxBuilderSvg.type => DoxSvgFigureSet): this.type = {
+    val data = callback(DoxBuilderSvg)
+    internalSvg(data)
     this
   }
 
-  protected def svg(imageSetSequence: Seq[DoxSVGFigureSet]): this.type = {
+  protected def svg(imageSetSequence: Seq[DoxSvgFigureSet]): this.type = {
     for (sequence <- imageSetSequence) {
-      this.svg(sequence)
+      internalSvg(sequence)
     }
     this
   }
 
-  protected def citet(key: String): Unit
-  protected def citep(key: String): Unit
-  protected def cite(key: String): Unit
-  protected def svg(imageSet: DoxSVGFigureSet): Unit
-  protected def list(itemSeq: Seq[String]): Unit
+  protected def internalText(in: String): Unit
+  protected def internalPlain(in: String): Unit
+
+  protected def internalCiteT(key: String): Unit
+  protected def internalCiteP(key: String): Unit
+  protected def internalCite(key: String): Unit
+  protected def internalSvg(imageSet: DoxSvgFigureSet): Unit
+  protected def internalList(itemSeq: Seq[String]): Unit
 
 }

@@ -2,19 +2,20 @@ package com.github.rehei.scala.dox.control.tex
 
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxLikeSVG
-import com.github.rehei.scala.dox.model.DoxSVGFigureSet
+import com.github.rehei.scala.dox.model.DoxLikeSvg
+import com.github.rehei.scala.dox.model.DoxSvgFigureSet
 import com.github.rehei.scala.dox.control.DoxRenderingBase
-import com.github.rehei.scala.dox.control.DoxHandleSVG
+import com.github.rehei.scala.dox.control.DoxHandleSvg
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceEquation
+import com.github.rehei.scala.dox.control.DoxRenderingDelegate
 
 class TexRendering(
   baseAST:        TexAST,
   indexKeyConfig: DoxTableKeyConfig,
-  svgHandle:      DoxHandleSVG,
+  svgHandle:      DoxHandleSvg,
   i18n:           DoxI18N,
   bibHandle:      DoxBibKeyRendering) extends DoxRenderingBase(i18n, bibHandle) {
 
@@ -43,11 +44,6 @@ class TexRendering(
     this
   }
 
-  def plain(input: String) = {
-    \ plain (input)
-    this
-  }
-
   def section(name: String) = {
     \ section & { escape(name) }
     this
@@ -65,11 +61,6 @@ class TexRendering(
 
   def subsubsection(name: String) = {
     \ subsubsection & { escape(name) }
-    this
-  }
-
-  def text(in: String) = {
-    \ plain { escape(in) }
     this
   }
 
@@ -94,19 +85,7 @@ class TexRendering(
     this
   }
 
-  override def svg(svgSet: DoxSVGFigureSet) {
-    \ FloatBarrier;
-    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
-      \ centering;
-      for (image <- svgSet.images) {
-        appendPDF(image)
-      }
-      \ caption & { escape(svgSet.config.caption) }
-    }
-    \ FloatBarrier;
-  }
-
-  protected def appendPDF(image: DoxLikeSVG) {
+  protected def appendPDF(image: DoxLikeSvg) {
     val filename = svgHandle.serialize(image).toString()
 
     \ includegraphics & { filename }
@@ -121,24 +100,44 @@ class TexRendering(
     }
   }
 
-  protected def citet(key: String) {
+  protected def internalSvg(svgSet: DoxSvgFigureSet) {
+    \ FloatBarrier;
+    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
+      \ centering;
+      for (image <- svgSet.images) {
+        appendPDF(image)
+      }
+      \ caption & { escape(svgSet.config.caption) }
+    }
+    \ FloatBarrier;
+  }
+
+  protected def internalCiteT(key: String) {
     \ citet { key }
   }
 
-  protected def citep(key: String) {
+  protected def internalCiteP(key: String) {
     \ citep { key }
   }
 
-  protected def cite(key: String) {
+  protected def internalCite(key: String) {
     \ cite { key }
   }
 
-  def list(itemSeq: Seq[String]) {
+  protected def internalList(itemSeq: Seq[String]) {
     $ { _ itemize } {
       for (item <- itemSeq) {
         \ item & { escape(item) }
       }
     }
+  }
+
+  protected def internalText(in: String) {
+    \ plain { escape(in) }
+  }
+
+  protected def internalPlain(input: String) {
+    \ plain (input)
   }
 
 }
