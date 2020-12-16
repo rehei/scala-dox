@@ -68,6 +68,11 @@ class TexRendering(
     \ textit { escape(in) }
     this
   }
+  
+  def textRed(in: String) = {
+    \ textcolor & {"red"} { escape(in) }
+    this
+  }
 
   def nonBreakingSpace = {
     \ plain { "~" }

@@ -34,6 +34,7 @@ class TexBuilderCommand(ast: TexAST) {
   object end extends TexMarkupObject(false)
   
   object textit extends TexMarkupObject(true)
+  object textcolor extends TexMarkupObject(true)
   object item extends TexMarkupObject(true)
   object ref extends TexMarkupObject(true)
 

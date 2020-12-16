@@ -84,15 +84,15 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def dot = {
     this.text(".")
   }
-  
+
   def space = {
     this.text(" ")
   }
-  
+
   def dash = {
     this.nonBreakingSpace.text("--").space
   }
-  
+
   def cf = {
     this.text("cf.")
   }
@@ -100,7 +100,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def break = {
     this.plain("\n\n")
   }
-  
+
   def breakline = {
     this.plain("\\")
   }
@@ -110,6 +110,10 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
+  def textItalic(in: String): this.type
+
+  def textRed(in: String): this.type
+  
   def plain(in: String): this.type = {
     internalPlain(in)
     this
@@ -122,8 +126,6 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def subsubsection(name: String): this.type
 
   def nonBreakingSpace: this.type
-
-  def textItalic(in: String): this.type
 
   def ref(reference: DoxReferenceLike): this.type
   def table(in: DoxTable): this.type

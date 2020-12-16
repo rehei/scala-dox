@@ -16,6 +16,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   def subsubsection(name: String) = this
 
   def textItalic(in: String) = this
+  def textRed(in: String) = this
 
   def ref(reference: DoxReferenceLike) = this
   def table(in: DoxTable) = this
