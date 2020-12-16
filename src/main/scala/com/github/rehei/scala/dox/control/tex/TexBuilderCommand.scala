@@ -2,44 +2,45 @@ package com.github.rehei.scala.dox.control.tex
 
 class TexBuilderCommand(ast: TexAST) {
 
-  protected class TexMarkupObject extends TexCommand(ast, TexSeq(Seq.empty)) {
+  protected abstract class TexMarkupObject(inline: Boolean) extends TexCommand(inline, ast, TexSeq(Seq.empty)) {
     def name = {
       this.getClass.getName.replace("$$", "*").stripSuffix("$").split("\\$").last
     }
   }
 
-  object FloatBarrier extends TexMarkupObject
-  object centering extends TexMarkupObject
-  object toprule extends TexMarkupObject
-  object midrule extends TexMarkupObject
-  object bottomrule extends TexMarkupObject
-  object includegraphics extends TexMarkupObject
-  object caption extends TexMarkupObject
-  object chapter extends TexMarkupObject
-  object chapter$ extends TexMarkupObject
-  object section extends TexMarkupObject
-  object section$ extends TexMarkupObject
-  object subsection extends TexMarkupObject
-  object subsection$ extends TexMarkupObject
-  object subsubsection extends TexMarkupObject
-  object subsubsection$ extends TexMarkupObject
+  object FloatBarrier extends TexMarkupObject(false)
+  object centering extends TexMarkupObject(false)
+  object toprule extends TexMarkupObject(false)
+  object midrule extends TexMarkupObject(false)
+  object bottomrule extends TexMarkupObject(false)
+  object includegraphics extends TexMarkupObject(false)
+  object caption extends TexMarkupObject(false)
+  object chapter extends TexMarkupObject(false)
+  object chapter$ extends TexMarkupObject(false)
+  object section extends TexMarkupObject(false)
+  object section$ extends TexMarkupObject(false)
+  object subsection extends TexMarkupObject(false)
+  object subsection$ extends TexMarkupObject(false)
+  object subsubsection extends TexMarkupObject(false)
+  object subsubsection$ extends TexMarkupObject(false)
 
-  object textit extends TexMarkupObject
+  object clearpage extends TexMarkupObject(false)
+  object newpage extends TexMarkupObject(false)
+  object label extends TexMarkupObject(false)
 
-  object item extends TexMarkupObject
-  object clearpage extends TexMarkupObject
-  object newpage extends TexMarkupObject
-  object label extends TexMarkupObject
-  object ref extends TexMarkupObject
-  object usepackage extends TexMarkupObject
+  object usepackage extends TexMarkupObject(false)
 
-  object cite extends TexMarkupObject
+  object begin extends TexMarkupObject(false)
+  object end extends TexMarkupObject(false)
+  
+  object textit extends TexMarkupObject(true)
+  object item extends TexMarkupObject(true)
+  object ref extends TexMarkupObject(true)
 
-  object citep extends TexMarkupObject
-  object citet extends TexMarkupObject
+  object cite extends TexMarkupObject(true)
+  object citep extends TexMarkupObject(true)
+  object citet extends TexMarkupObject(true)
 
-  object begin extends TexMarkupObject
-  object end extends TexMarkupObject
 
   object plain {
     def apply(_name: String) = {
