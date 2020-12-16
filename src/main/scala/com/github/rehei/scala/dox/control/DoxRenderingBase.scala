@@ -54,13 +54,13 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  def citet(key: DoxBibKey): this.type = {
+  def citeT(key: DoxBibKey): this.type = {
     bibliography.append(key)
     nonBreakingSpace
     internalCiteT(key.name)
     this
   }
-  def citep(key: DoxBibKey): this.type = {
+  def citeP(key: DoxBibKey): this.type = {
     bibliography.append(key)
     nonBreakingSpace
     internalCiteP(key.name)
@@ -83,6 +83,10 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def dot = {
     this.text(".")
+  }
+  
+  def cf = {
+    this.text("cf.")
   }
 
   def break = {

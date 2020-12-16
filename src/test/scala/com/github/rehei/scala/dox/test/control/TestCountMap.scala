@@ -59,19 +59,19 @@ class TestCountMap {
     rendering.cite(Test.X)
     testing(map).x(2).y(0)
 
-    rendering.citet(Test.X)
+    rendering.citeT(Test.X)
     testing(map).x(3).y(0)
 
-    rendering.citep(Test.X)
+    rendering.citeP(Test.X)
     testing(map).x(4).y(0)
 
     rendering.cite(Test.Y)
     testing(map).x(4).y(1)
 
-    rendering.citet(Test.Y)
+    rendering.citeT(Test.Y)
     testing(map).x(4).y(2)
 
-    rendering.citep(Test.Y)
+    rendering.citeP(Test.Y)
     testing(map).x(4).y(3)
   }
 

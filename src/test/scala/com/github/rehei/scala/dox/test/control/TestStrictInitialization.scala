@@ -52,12 +52,12 @@ class TestStrictInitialization {
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCiteP() = {
-    testStrictInitExceptionByCallback(_.citep(Test.X))
+    testStrictInitExceptionByCallback(_.citeP(Test.X))
   }
 
   @Test(expected = classOf[DoxBibKeyCountStrictException])
   def testStrictInitExceptionCiteT() = {
-    testStrictInitExceptionByCallback(_.citet(Test.X))
+    testStrictInitExceptionByCallback(_.citeT(Test.X))
   }
 
   protected def testStrictInitExceptionByCallback(callback: TexRendering => Unit) = {
