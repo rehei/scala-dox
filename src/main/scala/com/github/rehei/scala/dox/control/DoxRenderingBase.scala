@@ -85,6 +85,14 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this.text(".")
   }
   
+  def space = {
+    this.text(" ")
+  }
+  
+  def dash = {
+    this.nonBreakingSpace.text("--").space
+  }
+  
   def cf = {
     this.text("cf.")
   }
@@ -92,9 +100,13 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def break = {
     this.plain("\n\n")
   }
+  
+  def breakline = {
+    this.plain("\\")
+  }
 
   def text(in: String): this.type = {
-    internalText(in.fulltrim)
+    internalText(in)
     this
   }
 
