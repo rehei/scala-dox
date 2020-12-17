@@ -23,7 +23,7 @@ abstract class AbstractTexCommand[T <: AbstractTexCommand[_]](inline: Boolean, a
   }
 
   def generate() = {
-    "\\" + name + args.generate() + extension()
+    extension() + "\\" + name + args.generate() + extension()
   }
 
   protected def extension() = {

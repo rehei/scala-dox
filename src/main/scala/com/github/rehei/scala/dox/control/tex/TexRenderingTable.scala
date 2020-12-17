@@ -5,7 +5,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 
-class TexRenderingTable(baseAST: TexAST, model: DoxTable) {
+class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
@@ -13,7 +13,9 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable) {
   protected val POSITIONING_TABLE = "H"
 
   def create() {
-    \ FloatBarrier;
+    if (!floating) {
+      \ FloatBarrier;
+    }
     $ { _ table & { ###(POSITIONING_TABLE) } } {
       \ centering;
       $ { _ tabularx & { \\textwidth } { getTableConfig() } } {
@@ -23,10 +25,12 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable) {
         \ midrule;
         appendTableBody()
         \ bottomrule;
-        \ caption & { markup.escape(model.caption()) }
       }
+      \ caption & { markup.escape(model.caption()) }
     }
-    \ FloatBarrier;
+    if (!floating) {
+      \ FloatBarrier;
+    }
 
   }
 
@@ -41,7 +45,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable) {
       config.alignment match {
         case DoxTableAlignment.LEFT  => "l"
         case DoxTableAlignment.RIGHT => "r"
-        case _                        => "c"
+        case _                       => "c"
       }
     }
   }

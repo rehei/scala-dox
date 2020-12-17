@@ -102,7 +102,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   }
 
   def breakline = {
-    this.plain("\\")
+    this
   }
 
   def text(in: String): this.type = {

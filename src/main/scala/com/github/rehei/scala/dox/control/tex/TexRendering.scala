@@ -14,6 +14,7 @@ import com.github.rehei.scala.dox.control.DoxRenderingDelegate
 
 class TexRendering(
   baseAST:        TexAST,
+  floating:       Boolean,
   indexKeyConfig: DoxTableKeyConfig,
   svgHandle:      DoxHandleSvg,
   i18n:           DoxI18N,
@@ -68,9 +69,9 @@ class TexRendering(
     \ textit { escape(in) }
     this
   }
-  
+
   def textRed(in: String) = {
-    \ textcolor & {"red"} { escape(in) }
+    \ textcolor & { "red" } { escape(in) }
     this
   }
 
@@ -86,7 +87,7 @@ class TexRendering(
 
   def table(model: DoxTable) = {
     model.withIndex(Some(indexKeyConfig))
-    new TexRenderingTable(baseAST, model).create()
+    new TexRenderingTable(baseAST, floating, model).create()
     this
   }
 
@@ -99,14 +100,16 @@ class TexRendering(
   def eqnarray(label: DoxReferenceEquation) = new {
     def expression(expression: String) {
       $ { _.eqnarray } {
-        \ plain { expression }
+        \ plain { expression } 
         \ label { label.referenceID }
       }
     }
   }
 
   protected def internalSvg(svgSet: DoxSvgFigureSet) {
-    \ FloatBarrier;
+    if (!floating) {
+      \ FloatBarrier;
+    }
     $ { _ figure & { ###(POSITIONING_FIGURE) } } {
       \ centering;
       for (image <- svgSet.images) {
@@ -114,7 +117,9 @@ class TexRendering(
       }
       \ caption & { escape(svgSet.config.caption) }
     }
-    \ FloatBarrier;
+    if (!floating) {
+      \ FloatBarrier;
+    }
   }
 
   protected def internalCiteT(key: String) {

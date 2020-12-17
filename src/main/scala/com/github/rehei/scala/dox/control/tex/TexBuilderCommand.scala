@@ -26,7 +26,7 @@ class TexBuilderCommand(ast: TexAST) {
 
   object clearpage extends TexMarkupObject(false)
   object newpage extends TexMarkupObject(false)
-  object label extends TexMarkupObject(false)
+  object label extends TexMarkupObject(true)
 
   object usepackage extends TexMarkupObject(false)
 
