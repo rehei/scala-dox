@@ -113,7 +113,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def textItalic(in: String): this.type
 
   def textRed(in: String): this.type
-  
+
   def plain(in: String): this.type = {
     internalPlain(in)
     this
@@ -128,7 +128,9 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def nonBreakingSpace: this.type
 
   def ref(reference: DoxReferenceLike): this.type
-  def table(in: DoxTable): this.type
+  def table(reference: DoxReferenceTable, in: DoxTable): this.type
+  def eqnarray(label: DoxReferenceEquation, expression: String): this.type
+
   def clearpage(): this.type
 
   def svg(callback: DoxBuilderSvg.type => DoxSvgFigureSet): this.type = {

@@ -11,5 +11,6 @@ class TexBuilderCommandInline(ast: TexAST) {
   object cmidrule extends TexMarkupObject
   object multicolumn extends TexMarkupObject
   object textwidth extends TexMarkupObject
+  object hsize extends TexMarkupObject
 
 }

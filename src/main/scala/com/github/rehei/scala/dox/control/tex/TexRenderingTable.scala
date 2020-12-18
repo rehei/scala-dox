@@ -4,19 +4,18 @@ import scala.collection.mutable.ArrayBuffer
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
+import com.github.rehei.scala.dox.model.DoxReferenceTable
 
-class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable) {
+class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable, reference: DoxReferenceTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
-
-  protected val POSITIONING_TABLE = "H"
 
   def create() {
     if (!floating) {
       \ FloatBarrier;
     }
-    $ { _ table & { ###(POSITIONING_TABLE) } } {
+    $ { _ table & { ###("H") } } {
       \ centering;
       $ { _ tabularx & { \\textwidth } { getTableConfig() } } {
         \ toprule;
@@ -27,6 +26,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable) {
         \ bottomrule;
       }
       \ caption & { markup.escape(model.caption()) }
+      \ label { reference.referenceID }
     }
     if (!floating) {
       \ FloatBarrier;

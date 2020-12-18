@@ -8,7 +8,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
 
     protected class SomeTexEnvironment extends TexEnvironment(TexSeq(Seq.empty)) {
       override def name() = {
-        this.getClass.getName.stripSuffix("$").split("\\$").last
+        this.getClass.getName.replace("$$","*").stripSuffix("$").split("\\$").last
       }
     }
 
@@ -17,6 +17,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
     object figure extends SomeTexEnvironment
     object center extends SomeTexEnvironment
     object tabularx extends SomeTexEnvironment
+    object tabular$ extends SomeTexEnvironment
     object eqnarray extends SomeTexEnvironment
 
   }

@@ -11,6 +11,8 @@ import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.control.DoxRenderingDelegate
+import com.github.rehei.scala.dox.model.DoxReferenceTable
+import com.github.rehei.scala.dox.control.DoxReferenceFactory
 
 class TexRendering(
   baseAST:        TexAST,
@@ -85,9 +87,9 @@ class TexRendering(
     this
   }
 
-  def table(model: DoxTable) = {
+  def table(reference: DoxReferenceTable, model: DoxTable) = {
     model.withIndex(Some(indexKeyConfig))
-    new TexRenderingTable(baseAST, floating, model).create()
+    new TexRenderingTable(baseAST, floating, model, reference).create()
     this
   }
 
@@ -97,13 +99,12 @@ class TexRendering(
     \ includegraphics & { filename }
   }
 
-  def eqnarray(label: DoxReferenceEquation) = new {
-    def expression(expression: String) {
-      $ { _.eqnarray } {
-        \ plain { expression } 
-        \ label { label.referenceID }
-      }
+  def eqnarray(label: DoxReferenceEquation, expression: String) = {
+    $ { _.eqnarray } {
+      \ plain { expression }
+      \ label { label.referenceID }
     }
+    this
   }
 
   protected def internalSvg(svgSet: DoxSvgFigureSet) {
