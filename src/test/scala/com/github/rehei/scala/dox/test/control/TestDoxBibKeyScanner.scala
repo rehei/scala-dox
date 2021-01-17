@@ -3,11 +3,12 @@ package com.github.rehei.scala.dox.test.control
 import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyFinalException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFoundException
 
 class TestDoxBibKeyScanner {
 
-  @Test(expected = classOf[DoxBibKeyNotFinalException])
+  @Test(expected = classOf[DoxBibKeyFinalException])
   def testKeyFinal() {
 
     object TestRepositoryKeyFinal extends DoxBibKeyEnum {

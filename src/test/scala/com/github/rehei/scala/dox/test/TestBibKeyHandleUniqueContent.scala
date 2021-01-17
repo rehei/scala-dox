@@ -5,14 +5,15 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import java.nio.file.Files
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyContentUniqueException
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyValueRAW
 
-class TestUniqueBibKeyHandle {
+class TestBibKeyHandleUniqueContent {
 
-  @Test(expected = classOf[DoxBibKeyNotUniqueException])
+  @Test(expected = classOf[DoxBibKeyContentUniqueException])
   def testUniquePlain() {
 
     object Example extends DoxBibKeyEnum {
@@ -47,7 +48,7 @@ class TestUniqueBibKeyHandle {
     handle.append(Example.plain2)
   }
 
-  @Test(expected = classOf[DoxBibKeyNotUniqueException])
+  @Test(expected = classOf[DoxBibKeyContentUniqueException])
   def testUniquePOI() {
 
     object Example extends DoxBibKeyEnum {

@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model.bibliography
 
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFinalException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyFinalException
 import scala.reflect.runtime.universe._
 import com.github.rehei.scala.dox.util.ReflectUtils
 
@@ -46,7 +46,7 @@ case class DoxBibKeyScanner(any: AnyRef) {
   protected def traverseSetter(method: MethodSymbol) = {
     val keyname = method.fullName.stripSuffix("_$eq")
 
-    throw new DoxBibKeyNotFinalException("The key " + keyname + " must not be variable.")
+    throw new DoxBibKeyFinalException("The key " + keyname + " must not be variable.")
   }
 
 }

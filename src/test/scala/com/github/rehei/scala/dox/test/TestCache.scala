@@ -4,7 +4,7 @@ import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyContentUniqueException
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import java.nio.file.Path
 import java.nio.file.Files
@@ -112,12 +112,12 @@ class TestCache {
     val path = fileSystem.getPath("/tmp/dox-bib-cache-test/")
     val cache1 = DoxBibKeyCache(path)
     val map1 = DoxBibKeyCountMap(DoxBibKeyScanner(Test).list())
-    val handle1 = DoxBibKeyRendering(cache1, map1)
+    val handle1 = DoxBibKeyRendering(cache1, map1, Seq.empty)
 
     val cache2 = DoxBibKeyCache(path)
     val map2 = DoxBibKeyCountMap(DoxBibKeyScanner(Test).list())
 
-    val handle2 = DoxBibKeyRendering(cache2, map2)
+    val handle2 = DoxBibKeyRendering(cache2, map2, Seq.empty)
 
     handle1.append(Test.Example.REINHARDT_2019)
 

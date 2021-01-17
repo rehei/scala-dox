@@ -6,8 +6,6 @@ case class DoxBibKeyValueDOI(protected val _name: String, protected val _doi: Do
   
   def name = _name 
   
-  def canonicalName = "inline-doi-" + _name 
-
   def documentID = Some(_doi)
   
   def lookup = new DoxBibKeyLookupDOI(_name, _doi, None, None, None)

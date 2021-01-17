@@ -9,7 +9,7 @@ object DoxBibKeyCountMap {
   }
 }
 
-case class DoxBibKeyCountMap protected (protected val sequence: Seq[DoxBibKey], protected val strict: Boolean) {
+case class DoxBibKeyCountMap private (protected val sequence: Seq[DoxBibKey], protected val strict: Boolean) {
 
   protected val map = HashMap[DoxBibKey, Int]()
 

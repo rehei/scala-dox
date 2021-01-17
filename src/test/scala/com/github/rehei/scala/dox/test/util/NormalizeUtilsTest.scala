@@ -5,13 +5,16 @@ import org.jbibtex.StringUtil
 import com.github.rehei.scala.dox.util.IOUtils
 import com.github.rehei.scala.dox.util.NormalizeUtils
 import org.junit.Assert
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyValueRAW
+import com.github.rehei.scala.dox.model.DoxValueRAW
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameAsciiException
 
 class NormalizeUtilsTest {
 
-  case class $(scala: String, tex: String, normalized: String)
-
   @Test
   def test() {
+    case class $(scala: String, tex: String, normalized: String)
+
     val testBase = Seq(
       $("ò", "{\\`{o}}", "o"),
       $("ó", "{\\'{o}}", "o"),

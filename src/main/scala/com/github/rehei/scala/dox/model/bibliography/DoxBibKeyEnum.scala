@@ -14,11 +14,7 @@ trait DoxBibKeyEnum extends DoxIndexedRepository {
       friendlyEnumerationValueName() + "-" + friendlyCaseExtension()
     }
 
-    def canonicalName = {
-      enumerationValueName()
-    }
-
-    protected def friendlyCaseExtension() = {
+     protected def friendlyCaseExtension() = {
       val sb = new StringBuilder()
       for (character <- friendlyEnumerationValueName().split("-").last) {
         character match {

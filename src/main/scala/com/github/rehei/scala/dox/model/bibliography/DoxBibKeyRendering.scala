@@ -5,21 +5,38 @@ import java.nio.file.Path
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Map
 
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotUniqueException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyContentUniqueException
 import com.github.rehei.scala.dox.util.IOUtils
 import java.io.Writer
 import org.apache.commons.lang3.StringUtils
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyValueBlankException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameAsciiException
+import com.github.rehei.scala.dox.model.validation.IDoxBibKeyValidation
+import com.github.rehei.scala.dox.model.validation.IDoxBibKeyValidation
+import com.github.rehei.scala.dox.model.validation.IDoxBibKeyValidation
+import com.github.rehei.scala.dox.model.validation.DoxBibKeyValidationNameAscii
+import com.github.rehei.scala.dox.model.validation.DoxBibKeyValidationNameRequired
 
-case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
+object DoxBibKeyRendering {
+  def apply(cache: DoxBibKeyCache, map: DoxBibKeyCountMap): DoxBibKeyRendering = {
+    DoxBibKeyRendering(cache, map,
+      Seq(new DoxBibKeyValidationNameAscii(), new DoxBibKeyValidationNameRequired()))
+  }
+}
+
+case class DoxBibKeyRendering private (cache: DoxBibKeyCache, map: DoxBibKeyCountMap, protected val validationSeq: Seq[IDoxBibKeyValidation]) {
 
   protected val keys = HashSet[DoxBibKey]()
   protected val inverseKeyLookup = Map[String, String]()
 
+  def validateUsing(validation: IDoxBibKeyValidation) = {
+    this.copy(validationSeq = validationSeq :+ validation)
+  }
+
   def append(key: DoxBibKey) {
 
-    if (StringUtils.isBlank(key.name)) {
-      throw new DoxBibKeyValueBlankException("Name of key should not be blank.")
+    for (validation <- validationSeq) {
+      validation.validate(key)
     }
 
     map.increase(key)
@@ -31,7 +48,7 @@ case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
       referenceKey =>
         {
           if (key.name != referenceKey) {
-            throw new DoxBibKeyNotUniqueException("LookupKeys should be referenced uniquely")
+            throw new DoxBibKeyContentUniqueException("LookupKeys should be referenced uniquely")
           }
         }
     } getOrElse {
@@ -39,6 +56,7 @@ case class DoxBibKeyRendering(cache: DoxBibKeyCache, map: DoxBibKeyCountMap) {
     }
 
     keys.add(key)
+
   }
 
   def write(writer: Writer) = {

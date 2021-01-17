@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox.util
 import scala.collection.mutable
 import scala.collection.Seq
 import scala.reflect.runtime.universe._
-import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotValidException
+import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFoundException
 
 abstract class DoxIndexedRepository {
 
@@ -51,7 +51,7 @@ abstract class DoxIndexedRepository {
 
   protected def get(index: String) = {
     populateMap()
-    map.get(index).getOrElse(throw new DoxBibKeyNotValidException("No mapping found for key"))
+    map.get(index).getOrElse(throw new DoxBibKeyNotFoundException("No mapping found for key"))
   }
 
   protected def traverse() {
@@ -71,7 +71,7 @@ abstract class DoxIndexedRepository {
   }
 
   protected def traverseMethod(prefix: String, model: Any, method: MethodSymbol) {
-
+    
     for (result <- scala.util.Try(ReflectUtils.applyGetMethodConstant(model, method)).toOption.flatten) {
 
       result match {
