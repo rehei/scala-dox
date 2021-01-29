@@ -1,9 +1,8 @@
-package datax.model.view
+package com.github.rehei.scala.dox.control.xml
 
 import scala.collection.mutable.ListBuffer
 import scala.xml.NodeSeq
 
-import com.github.rehei.scala.dox.control.xml.XMLMarkupFactory
 import com.github.rehei.scala.dox.model.DoxLikeSvg
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment

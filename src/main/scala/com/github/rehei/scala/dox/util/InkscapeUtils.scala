@@ -5,7 +5,7 @@ import java.nio.file.Path
 import scala.collection.Seq
 import scala.sys.process.Process
 
-class InkscapeUtils(protected val baseDirectory: Path) {
+class InkscapeUtils(protected val mode: SvgMode, protected val baseDirectory: Path) {
   /*
    * Some inkscape examples for your convenience:
    * inkscape -D -z --file=" + basePath + ".svg --export-pdf=" + baseName + ".pdf									 // generates pdf vector image
@@ -17,7 +17,7 @@ class InkscapeUtils(protected val baseDirectory: Path) {
    *  -z => --without-gui
    */
 
-  def generatePDFs() {
+  def transform() {
     Process(executable, baseDirectory.toFile()).!
   }
 
@@ -33,7 +33,7 @@ class InkscapeUtils(protected val baseDirectory: Path) {
     val processors = Math.max((Runtime.getRuntime().availableProcessors() * 0.9).toInt, 1)
 
     Seq(
-      "for f in *.svg; do echo --file=${f} --export-pdf=${f%.*}.pdf >> inkscape.command.txt",
+      "for f in *.svg; do echo --file=${f} " + mode.command("f") + " >> inkscape.command.txt",
       "done",
       "cat inkscape.command.txt | xargs -P" + processors + " -L1 inkscape --without-gui").mkString("\n")
   }

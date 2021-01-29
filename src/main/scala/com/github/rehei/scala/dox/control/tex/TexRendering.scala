@@ -93,12 +93,6 @@ class TexRendering(
     this
   }
 
-  protected def appendPDF(image: DoxLikeSvg) {
-    val filename = svgHandle.serialize(image).toString()
-
-    \ includegraphics & { filename }
-  }
-
   def eqnarray(label: DoxReferenceEquation, expression: String) = {
     $ { _.eqnarray } {
       \ plain { expression }
@@ -114,7 +108,7 @@ class TexRendering(
     $ { _ figure & { ###(POSITIONING_FIGURE) } } {
       \ centering;
       for (image <- svgSet.images) {
-        appendPDF(image)
+        appendTransformableSVG(image)
       }
       \ caption & { escape(svgSet.config.caption) }
     }
@@ -149,6 +143,12 @@ class TexRendering(
 
   protected def internalPlain(input: String) {
     \ plain (input)
+  }
+
+  protected def appendTransformableSVG(image: DoxLikeSvg) {
+    val filename = svgHandle.serialize(image).toString()
+
+    \ includegraphics & { filename }
   }
 
 }
