@@ -13,6 +13,7 @@ class InkscapeUtils(protected val mode: SvgMode, protected val baseDirectory: Pa
    * inkscape -D -z --file=" + basePath + ".svg --export-png=" + baseName + ".png									 // generates png raster image
    *
    * acronyms:
+   *  -C => --export-area-page
    *  -D => --export-area-drawing
    *  -z => --without-gui
    */
@@ -33,7 +34,7 @@ class InkscapeUtils(protected val mode: SvgMode, protected val baseDirectory: Pa
     val processors = Math.max((Runtime.getRuntime().availableProcessors() * 0.9).toInt, 1)
 
     Seq(
-      "for f in *.svg; do echo --file=${f} " + mode.command("f") + " -D >> inkscape.command.txt",
+      "for f in *.svg; do echo --file=${f} " + mode.command("f") + " -C >> inkscape.command.txt",
       "done",
       "cat inkscape.command.txt | xargs -P" + processors + " -L1 inkscape --without-gui").mkString("\n")
   }
