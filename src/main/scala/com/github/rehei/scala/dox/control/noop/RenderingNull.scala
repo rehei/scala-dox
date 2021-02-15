@@ -1,14 +1,12 @@
 package com.github.rehei.scala.dox.control.noop
 
 import com.github.rehei.scala.dox.control.DoxRenderingBase
-import com.github.rehei.scala.dox.model.DoxSvgFigureSet
+import com.github.rehei.scala.dox.model.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.DoxReferenceLike
+import com.github.rehei.scala.dox.model.DoxReferenceTable
+import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxReferenceLike
-import com.github.rehei.scala.dox.control.DoxRenderingDelegate
-import com.github.rehei.scala.dox.model.DoxReferenceTable
-import com.github.rehei.scala.dox.model.DoxReferenceEquation
-import com.github.rehei.scala.dox.control.DoxReferenceFactory
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
@@ -34,7 +32,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   protected def internalCiteT(key: String) = Unit
   protected def internalCiteP(key: String) = Unit
   protected def internalCite(key: String) = Unit
-  protected def internalSvg(imageSet: DoxSvgFigureSet) = Unit
+  protected def internalSvg(image: DoxSvgFigure) = Unit
   protected def internalList(itemSeq: Seq[String]) = Unit
 
 }

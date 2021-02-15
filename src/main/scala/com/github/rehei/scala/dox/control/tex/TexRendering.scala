@@ -1,18 +1,16 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxLikeSvg
-import com.github.rehei.scala.dox.model.DoxSvgFigureSet
-import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.control.DoxHandleSvg
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.DoxReferenceLike
+import com.github.rehei.scala.dox.model.DoxLikeSvg
 import com.github.rehei.scala.dox.model.DoxReferenceEquation
-import com.github.rehei.scala.dox.control.DoxRenderingDelegate
+import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceTable
-import com.github.rehei.scala.dox.control.DoxReferenceFactory
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 class TexRendering(
   baseAST:        TexAST,
@@ -101,16 +99,14 @@ class TexRendering(
     this
   }
 
-  protected def internalSvg(svgSet: DoxSvgFigureSet) {
+  protected def internalSvg(svg: DoxSvgFigure) {
     if (!floating) {
       \ FloatBarrier;
     }
     $ { _ figure & { ###(POSITIONING_FIGURE) } } {
       \ centering;
-      for (image <- svgSet.images) {
-        appendTransformableSVG(image)
-      }
-      \ caption & { escape(svgSet.config.caption) }
+      appendTransformableSVG(svg.image)
+      \ caption & { escape(svg.config.caption) }
     }
     if (!floating) {
       \ FloatBarrier;

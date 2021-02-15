@@ -1,6 +1,5 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.model.DoxSvgFigureSet
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
@@ -11,6 +10,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxDelegate
+import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -133,13 +133,13 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def clearpage(): this.type
 
-  def svg(callback: DoxBuilderSvg.type => DoxSvgFigureSet): this.type = {
+  def svg(callback: DoxBuilderSvg.type => DoxSvgFigure): this.type = {
     val data = callback(DoxBuilderSvg)
     internalSvg(data)
     this
   }
 
-  protected def svg(imageSetSequence: Seq[DoxSvgFigureSet]): this.type = {
+  protected def svg(imageSetSequence: Seq[DoxSvgFigure]): this.type = {
     for (sequence <- imageSetSequence) {
       internalSvg(sequence)
     }
@@ -152,7 +152,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteT(key: String): Unit
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
-  protected def internalSvg(imageSet: DoxSvgFigureSet): Unit
+  protected def internalSvg(imageSet: DoxSvgFigure): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }
