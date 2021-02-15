@@ -105,7 +105,7 @@ class TexRendering(
     }
     $ { _ figure & { ###(POSITIONING_FIGURE) } } {
       \ centering;
-      appendTransformableSVG(svg.image)
+      appendTransformableSVG(svg)
       \ caption & { escape(svg.config.caption) }
     }
     if (!floating) {
@@ -141,8 +141,8 @@ class TexRendering(
     \ plain (input)
   }
 
-  protected def appendTransformableSVG(image: DoxLikeSvg) {
-    val filename = svgHandle.serialize(image).toString()
+  protected def appendTransformableSVG(figure: DoxSvgFigure) {
+    val filename = svgHandle.serialize(figure).toString()
 
     \ includegraphics & { filename }
   }

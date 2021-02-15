@@ -19,9 +19,9 @@ object DoxBuilderSvg {
 
   protected def create(_caption: String) = new {
     def label(_labelOption: Option[DoxReferenceFigure]) = new {
-      def file(_fileOption: Option[String]) = new {
+      def file(_fileOption: Option[DoxFile]) = new {
         def data(_data: DoxLikeSvg) = {
-          DoxSvgFigure(DoxFigure(_caption, _labelOption, _fileOption.map(DoxFile(_))), _data)
+          DoxSvgFigure(DoxFigure(_caption, _labelOption, _fileOption), _data)
         }
       }
     }

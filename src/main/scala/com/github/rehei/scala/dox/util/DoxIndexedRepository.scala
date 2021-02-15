@@ -73,7 +73,6 @@ abstract class DoxIndexedRepository {
   protected def traverseMethod(prefix: String, model: Any, method: MethodSymbol) {
     
     for (result <- scala.util.Try(ReflectUtils.applyGetMethodConstant(model, method)).toOption.flatten) {
-
       result match {
         case model: DoxIndexedHandle => traverseMethodValue(prefix, model, method)
         case model                   => traverseMethodRecursive(prefix, model, method)

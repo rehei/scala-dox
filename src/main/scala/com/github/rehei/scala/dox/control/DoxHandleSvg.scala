@@ -6,6 +6,7 @@ import com.github.rehei.scala.dox.util.InkscapeUtils
 import org.apache.commons.io.FilenameUtils
 import com.github.rehei.scala.dox.util.Svg2File
 import com.github.rehei.scala.dox.util.SvgMode
+import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
@@ -18,8 +19,8 @@ case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
   protected val svgFileGen = new Svg2File(targetTexSVG)
 
-  def serialize(image: DoxLikeSvg): String = {
-    val nameSVG = svgFileGen.generate(image).getFileName.toString()
+  def serialize(figure: DoxSvgFigure): String = {
+    val nameSVG = svgFileGen.generate(figure).getFileName.toString()
     val name = FilenameUtils.removeExtension(nameSVG)
 
     targetTex.relativize(targetTexSVG.resolve(mode.file(name))).toString()
