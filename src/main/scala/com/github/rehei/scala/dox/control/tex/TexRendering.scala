@@ -3,14 +3,13 @@ package com.github.rehei.scala.dox.control.tex
 import com.github.rehei.scala.dox.control.DoxHandleSvg
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.DoxLikeSvg
 import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceTable
+import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 class TexRendering(
   baseAST:        TexAST,

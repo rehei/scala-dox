@@ -1,13 +1,12 @@
 package com.github.rehei.scala.dox.util
 
-import java.io.File
-import java.nio.charset.StandardCharsets
 import java.nio.file.Path
-import com.github.rehei.scala.dox.model.DoxLikeSvg
+
+import scala.collection.mutable.HashMap
 import scala.xml.Xhtml
+
 import com.github.rehei.scala.dox.control.DoxReferenceFactory
 import com.github.rehei.scala.dox.model.DoxSvgFigure
-import scala.collection.mutable.HashMap
 
 class Svg2File(protected val baseDirectory: Path) {
 
@@ -23,7 +22,7 @@ class Svg2File(protected val baseDirectory: Path) {
   }
 
   protected def write(path: Path, figure: DoxSvgFigure) = {
-    val content = Xhtml.toXhtml(figure.image.generateSvg())
+    val content = Xhtml.toXhtml(figure.image)
     IOUtils.writeString(path, content)
   }
 

@@ -1,3 +1,5 @@
 package com.github.rehei.scala.dox.model
 
-case class DoxSvgFigure(config: DoxFigure, val image: DoxLikeSvg)
+import scala.xml.NodeSeq
+
+case class DoxSvgFigure(config: DoxFigure, val image: NodeSeq)

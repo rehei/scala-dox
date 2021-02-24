@@ -3,7 +3,6 @@ package com.github.rehei.scala.dox.control.xml
 import scala.collection.mutable.ListBuffer
 import scala.xml.NodeSeq
 
-import com.github.rehei.scala.dox.model.DoxLikeSvg
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
@@ -16,8 +15,8 @@ class XMLRendering(indexKeyConfig: DoxTableKeyConfig) extends XMLMarkupFactory {
   def text(in: String) = {
     append(<p>{ in }</p>)
   }
-  def svg(image: DoxLikeSvg) = {
-    append(image.generateSvg())
+  def svg(image: NodeSeq) = {
+    append(image)
   }
   def chapter(name: String) = {
     append { H1(name) }

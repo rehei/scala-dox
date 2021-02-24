@@ -1,12 +1,13 @@
 package com.github.rehei.scala.dox.control
 
 import java.nio.file.Path
-import com.github.rehei.scala.dox.model.DoxLikeSvg
-import com.github.rehei.scala.dox.util.InkscapeUtils
+
 import org.apache.commons.io.FilenameUtils
+
+import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.Svg2File
 import com.github.rehei.scala.dox.util.SvgMode
-import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
