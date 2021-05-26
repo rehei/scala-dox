@@ -25,6 +25,18 @@ object SvgMode {
     }
 
   }
+  
+  object EPS extends SvgMode {
+
+    def command(variable: String) = {
+      "--export-eps=${" + variable + "%.*}.eps"
+    }
+
+    def file(name: String) = {
+      name + ".eps"
+    }
+
+  }
 
 }
 
