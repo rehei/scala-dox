@@ -9,7 +9,7 @@ class DoxFileEnumTest {
   @Test
   def test() {
 
-    object Repository extends DoxFileEnum {
+    object Repository extends DoxFileEnum(None) {
       val foo = unique
     }
 

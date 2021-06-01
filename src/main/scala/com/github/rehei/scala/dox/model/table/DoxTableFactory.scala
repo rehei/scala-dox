@@ -20,7 +20,7 @@ case class DoxTableFactory[T <: AnyRef](
   val head = keys.map(_.config)
   val data = ListBuffer[Seq[String]]()
 
-  def addAll(elementSeq: Seq[T]) {
+  def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
       add(element)
     }
