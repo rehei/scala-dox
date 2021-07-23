@@ -1,7 +1,9 @@
 package com.github.rehei.scala.dox.model.table
 
+import com.github.rehei.scala.dox.text.TextAST
+
 case class DoxTableKeyConfig(
-  name:           String,
+  text:           TextAST,
   alignment:      DoxTableAlignment,
   dynamic:        Boolean,
   rendering:      DoxTableStringConversion,

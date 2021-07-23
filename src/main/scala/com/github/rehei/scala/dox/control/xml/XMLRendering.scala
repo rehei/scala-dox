@@ -6,6 +6,7 @@ import scala.xml.NodeSeq
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.text.util.Text2XML
 
 class XMLRendering(indexKeyConfig: DoxTableKeyConfig) extends XMLMarkupFactory {
 
@@ -40,7 +41,7 @@ class XMLRendering(indexKeyConfig: DoxTableKeyConfig) extends XMLMarkupFactory {
         <thead>
           {
             for (element <- model.head) yield {
-              <th style={ getStyle(element) }>{ element.name }</th>
+              <th style={ getStyle(element) }>{ Text2XML.generate(element.text) }</th>
             }
           }
         </thead>

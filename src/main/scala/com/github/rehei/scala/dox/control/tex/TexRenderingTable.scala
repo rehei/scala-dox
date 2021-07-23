@@ -5,6 +5,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.DoxReferenceTable
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
 class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable, reference: DoxReferenceTable) {
 
@@ -93,7 +94,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable, ref
   }
 
   protected def appendTableHead() {
-    \ plain { model.head.map(config => escape(config.name)).mkString(" & ") + "\\\\" }
+    \ plain { model.head.map(config => escape(Text2TEX.generate(config.text))).mkString(" & ") + "\\\\" }
   }
 
   protected def appendTableBody() {
