@@ -86,6 +86,8 @@ class DoxTableRecTest {
         listing.append(DoxConfigCounter(ancestor, 1))
       }
     }
+    println(listing.map(_.config.name))
+    println(listing.map(_.counter))
     listSeq.append(listing)
     listIgnore.appendAll(listing)
     listing.clear()
