@@ -94,7 +94,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable, ref
   }
 
   protected def appendTableHead() {
-    \ plain { model.head.map(config => escape(Text2TEX.generate(config.text))).mkString(" & ") + "\\\\" }
+    \ plain { model.head.map(config => Text2TEX.generate(config.text)).mkString(" & ") + "\\\\" }
   }
 
   protected def appendTableBody() {
