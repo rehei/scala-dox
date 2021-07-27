@@ -5,16 +5,15 @@ import scala.collection.mutable.ListBuffer
 import org.junit.Test
 
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
-import com.github.rehei.scala.dox.model.test.DoxTableKeyConfig_test
 import com.github.rehei.scala.dox.model.table.DoxTableStringConversion
-
-import com.github.rehei.scala.dox.model.test.DoxTreeItem
+import com.github.rehei.scala.dox.model.test.DoxTableKeyConfig_test
 import com.github.rehei.scala.dox.model.test.MakeDoxTree
+import com.github.rehei.scala.dox.model.test.MakeSomeLatex
 
 class DoxTableRecTest {
   case class DoxConfigCounter(config: DoxTableKeyConfig_test, var counter: Int)
   case class StationSetup(station: String, capacityMin: Int, capacityMax: Int, time: String)
-  
+
   protected val configs = getDummys()
 
   @Test
@@ -23,7 +22,7 @@ class DoxTableRecTest {
     //ataExample(workpiece: String, station: String, timestamp: String)
     val petersTree = MakeDoxTree.treeHead("StationSetup")
     //    petersTree.addNode("asd").addC
-    val blub = petersTree
+    petersTree
       .addLeaf("Station", "station")
       .addNode("Kapazität")
       .addChildren(
@@ -32,17 +31,9 @@ class DoxTableRecTest {
           .addLeaf("max", "somemax"))
       .addLeaf("T", "time")
 
-    println(blub.doxTreeHeadSeq.map(_.baseLabel))
-    println(blub.doxTreeHeadSeq)
-
-    //    val bla = petersTree
-    //      .addLeaf("Station", "station")
-    //      .addNode("Kapazität")
-    //        .addLeaf("min", "somevalue")
-    //      .addLeaf("max", "somemaxvalue")
-    //      .addLeaf("T", "time")
-    //      .doxTreeHeadSeq
-    //      petersTree.addNode("bla").addChildItems().add
+    println(petersTree.doxTreeHeadSeq.map(_.baseLabel))
+    println(petersTree.doxTreeHeadSeq)
+    println(MakeSomeLatex.makeItSo(petersTree))
 
     //      println(bla)
     //  case class StationSetup(station: String, capacityMin: Int, capacityMax: Int, time: String)
@@ -62,21 +53,6 @@ class DoxTableRecTest {
     //    println(getDemConfigs.map(_.map(_.map(_.name).getOrElse("Emptyspot"))))
   }
 
-//    override def create() {
-//    
-//    $ { _ table & { ###("H!") } } {
-//      \ centering;
-//      $ { _ tabularx & { \\hsize } { getTableConfig() } } {
-//        \ hline;
-//
-//        \ hline;
-//        \ hline;
-//      }
-//      \ caption & { markup.escape(model.caption()) }
-//      \ label { reference.referenceID }
-//    }
-//  }
-    
   protected def getDummys() = {
     (for (i <- 1 to 10) yield {
       dummyConfig(i, Some(parentDummyConfig(i)))

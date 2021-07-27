@@ -80,6 +80,27 @@ abstract class MakeDoxTree() {
 
 }
 
+object MakeSomeLatex {
+  def makeItSo(doxTree:MakeDoxTree) = {
+     """\begin{table}
+        \centering;
+        \begin{tabularx}{\textwidth } {"""+doxTree.doxTreeHeadSeq.map(_ => " c ")+"""} {
+        \toprule
+        """+  
+        doxTree.doxTreeHeadSeq.map(_.baseLabel+" &").mkString(" ")+
+        """
+        \midrule
+        """+
+        //appendTableBody()
+        """
+          \bottomrule
+        }
+      }
+      """
+  }
+}
+  
+    
 //object SupportDoxTree {
 //
 //  
