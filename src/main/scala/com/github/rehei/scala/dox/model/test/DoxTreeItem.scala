@@ -28,13 +28,13 @@ abstract class DoxTreeItem(val baseLabel: String) {
     }
   }
 
-//  override def toString() = {
-//    this match {
-//      case leaf @ DoxLeaf(_, _) => "Leaf:" + leaf.label + ", " + leaf.value
-//      case node @ DoxNode(_, _) => "Node:" + node.label + "," + node.children.map(_.toString())
-//      case _                    => throw new Exception("Neither Node nor Leaf")
-//    }
-//  }
+  //  override def toString() = {
+  //    this match {
+  //      case leaf @ DoxLeaf(_, _) => "Leaf:" + leaf.label + ", " + leaf.value
+  //      case node @ DoxNode(_, _) => "Node:" + node.label + "," + node.children.map(_.toString())
+  //      case _                    => throw new Exception("Neither Node nor Leaf")
+  //    }
+  //  }
   //  protected def setParent(parent:DoxTreeItem) = {
   //
   //  }
@@ -77,22 +77,37 @@ abstract class MakeDoxTree() {
     }
 
   }
+  def leaves() = {
+    getLeaves(doxTreeHeadSeq)
+  }
+
+  protected def getLeaves(treeItems: Seq[DoxTreeItem]): Seq[DoxTreeItem] = {
+    if (treeItems.isEmpty) {
+      Seq.empty
+    } else {
+      if (!treeItems.head.isLeaf()) {
+        getLeaves(treeItems.head.getChildren()) ++ getLeaves(treeItems.drop(1))
+      } else {
+        treeItems.takeWhile(_.isLeaf()) ++ getLeaves(treeItems.dropWhile(_.isLeaf()))
+      }
+    }
+  }
 
 }
 
 object MakeSomeLatex {
-  def makeItSo(doxTree:MakeDoxTree) = {
-     """\begin{table}
+  def makeItSo(doxTree: MakeDoxTree) = {
+    """\begin{table}
         \centering;
-        \begin{tabularx}{\textwidth } {"""+doxTree.doxTreeHeadSeq.map(_ => " c ")+"""} {
+        \begin{tabularx}{\textwidth } {""" + doxTree.leaves().map(_ => "c").mkString(" ") + """} {
         \toprule
-        """+  
-        doxTree.doxTreeHeadSeq.map(_.baseLabel+" &").mkString(" ")+
-        """
+        """ +
+      doxTree.doxTreeHeadSeq.map(_.baseLabel + " &").mkString(" ") +
+      """
         \midrule
-        """+
-        //appendTableBody()
-        """
+        """ +
+      //appendTableBody()
+      """
           \bottomrule
         }
       }

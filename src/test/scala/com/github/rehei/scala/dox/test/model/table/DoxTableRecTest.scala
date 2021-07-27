@@ -27,12 +27,14 @@ class DoxTableRecTest {
       .addNode("Kapazität")
       .addChildren(
         _
-          .addLeaf("min", "somemin")
-          .addLeaf("max", "somemax"))
+          .addLeaf("max", "somemax")
+          .addLeaf("min", "somemin"))
+
       .addLeaf("T", "time")
 
     println(petersTree.doxTreeHeadSeq.map(_.baseLabel))
     println(petersTree.doxTreeHeadSeq)
+    println(petersTree.leaves())
     println(MakeSomeLatex.makeItSo(petersTree))
 
     //      println(bla)
