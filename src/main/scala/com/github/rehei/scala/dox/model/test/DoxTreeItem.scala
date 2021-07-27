@@ -2,7 +2,8 @@ package com.github.rehei.scala.dox.model.test
 
 import scala.collection.mutable.ListBuffer
 
-abstract class DoxTreeItem(label: String /*, textSettings: DoxTableKeyConfig_test*/ ) {
+abstract class DoxTreeItem(val baseLabel: String) {
+
   def isLeaf() = {
     this match {
       case leaf @ DoxLeaf(_, _) => true
@@ -27,17 +28,23 @@ abstract class DoxTreeItem(label: String /*, textSettings: DoxTableKeyConfig_tes
     }
   }
 
-  override def toString() = {
-    this match {
-      case leaf @ DoxLeaf(_, _) => "Leaf:" + leaf.label + ", " + leaf.value
-      case node @ DoxNode(_, _) => "Node:" + node.label + "," + node.children.map(_.toString())
-      case _                    => throw new Exception("Neither Node nor Leaf")
-    }
-  }
+//  override def toString() = {
+//    this match {
+//      case leaf @ DoxLeaf(_, _) => "Leaf:" + leaf.label + ", " + leaf.value
+//      case node @ DoxNode(_, _) => "Node:" + node.label + "," + node.children.map(_.toString())
+//      case _                    => throw new Exception("Neither Node nor Leaf")
+//    }
+//  }
+  //  protected def setParent(parent:DoxTreeItem) = {
+  //
+  //  }
 }
 
-case class DoxLeaf(label: String, /*textSettings: DoxTableKeyConfig_test,*/ value: String) extends DoxTreeItem(label /*, textSettings*/ )
-case class DoxNode(label: String, /*textSettings: DoxTableKeyConfig_test, */ children: Seq[DoxTreeItem]) extends DoxTreeItem(label /*, textSettings*/ )
+case class DoxLeaf(label: String, value: String) extends DoxTreeItem(label) {
+
+}
+case class DoxNode(label: String, children: Seq[DoxTreeItem]) extends DoxTreeItem(label) {
+}
 
 object MakeDoxTree {
 
@@ -49,23 +56,35 @@ object MakeDoxTree {
 
 abstract class MakeDoxTree() {
 
-  val doxTree = ListBuffer[DoxTreeItem]()
-  def leaf(label: String, value: String) = {
-    doxTree.append(DoxLeaf(label, value))
-    this
-  }
-//  def node(label: String, children: Seq[DoxTreeItem]) = {
-//    doxTree.append(DoxNode(label, children))
-//    this
-//  }
-  def node(label: String) = new MakeDoxTree{
+  val doxTreeHeadSeq = ListBuffer[DoxTreeItem]()
 
-    def get() = {
-      DoxNode(label,this.doxTree)
-    }
+  val instance = this
+
+  def addLeaf(label: String, value: String) = {
+    doxTreeHeadSeq.append(DoxLeaf(label, value))
+    instance
   }
+
+  def addNode(label: String) = new {
+    val currentNode = DoxNode(label, Seq.empty)
+    def addChildren(callback: MakeDoxTree => MakeDoxTree) = {
+      val somasd = callback(MakeDoxTree.treeHead(label)).doxTreeHeadSeq
+      if (somasd.isEmpty) {
+        throw new Exception("Node has to have Children")
+      }
+      doxTreeHeadSeq.append(currentNode.copy(children = somasd))
+      instance
+    }
+
+  }
+
 }
 
+//object SupportDoxTree {
+//
+//  
+//  def createNode(label:String,)
+//}
 //  case class DataExample(workpiece: String, station: String, timestamp: String)
 //
 //  protected val key = new DoxTableKeyConfigSupport(MyDoxTableStringConversion(true))

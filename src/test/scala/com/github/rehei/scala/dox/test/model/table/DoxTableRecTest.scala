@@ -13,7 +13,8 @@ import com.github.rehei.scala.dox.model.test.MakeDoxTree
 
 class DoxTableRecTest {
   case class DoxConfigCounter(config: DoxTableKeyConfig_test, var counter: Int)
-
+  case class StationSetup(station: String, capacityMin: Int, capacityMax: Int, time: String)
+  
   protected val configs = getDummys()
 
   @Test
@@ -21,14 +22,29 @@ class DoxTableRecTest {
     //    println(petersTree.doxTree.toSeq.length)
     //ataExample(workpiece: String, station: String, timestamp: String)
     val petersTree = MakeDoxTree.treeHead("StationSetup")
-    val bla = petersTree
-      .leaf("Station", "station")
-      .node("Kapazität")
-      .leaf("min", "somevalue")
-      .leaf("max", "somemaxvalue")
-      .leaf("T", "time")
+    //    petersTree.addNode("asd").addC
+    val blub = petersTree
+      .addLeaf("Station", "station")
+      .addNode("Kapazität")
+      .addChildren(
+        _
+          .addLeaf("min", "somemin")
+          .addLeaf("max", "somemax"))
+      .addLeaf("T", "time")
 
-      println(bla)
+    println(blub.doxTreeHeadSeq.map(_.baseLabel))
+    println(blub.doxTreeHeadSeq)
+
+    //    val bla = petersTree
+    //      .addLeaf("Station", "station")
+    //      .addNode("Kapazität")
+    //        .addLeaf("min", "somevalue")
+    //      .addLeaf("max", "somemaxvalue")
+    //      .addLeaf("T", "time")
+    //      .doxTreeHeadSeq
+    //      petersTree.addNode("bla").addChildItems().add
+
+    //      println(bla)
     //  case class StationSetup(station: String, capacityMin: Int, capacityMax: Int, time: String)
     //
     //  def generate() = {
@@ -46,6 +62,21 @@ class DoxTableRecTest {
     //    println(getDemConfigs.map(_.map(_.map(_.name).getOrElse("Emptyspot"))))
   }
 
+//    override def create() {
+//    
+//    $ { _ table & { ###("H!") } } {
+//      \ centering;
+//      $ { _ tabularx & { \\hsize } { getTableConfig() } } {
+//        \ hline;
+//
+//        \ hline;
+//        \ hline;
+//      }
+//      \ caption & { markup.escape(model.caption()) }
+//      \ label { reference.referenceID }
+//    }
+//  }
+    
   protected def getDummys() = {
     (for (i <- 1 to 10) yield {
       dummyConfig(i, Some(parentDummyConfig(i)))
