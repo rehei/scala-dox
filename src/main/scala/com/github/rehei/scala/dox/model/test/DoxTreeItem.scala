@@ -28,6 +28,13 @@ abstract class DoxTreeItem(val baseLabel: String) {
     }
   }
 
+  def getLeaves() = {
+    this match {
+      case leaf @ DoxLeaf(_, _) => Seq(leaf)
+      case node @ DoxNode(_, _) => node.leafChildren()
+      case _                    => throw new Exception("Neither Node nor Leaf")
+    }
+  }
   //  override def toString() = {
   //    this match {
   //      case leaf @ DoxLeaf(_, _) => "Leaf:" + leaf.label + ", " + leaf.value
@@ -44,6 +51,17 @@ case class DoxLeaf(label: String, value: String) extends DoxTreeItem(label) {
 
 }
 case class DoxNode(label: String, children: Seq[DoxTreeItem]) extends DoxTreeItem(label) {
+  def leafChildren(treeItems: Seq[DoxTreeItem] = children): Seq[DoxTreeItem] = {
+    if (treeItems.isEmpty) {
+      Seq.empty
+    } else {
+      if (!treeItems.head.isLeaf()) {
+        leafChildren(treeItems.head.getChildren()) ++ leafChildren(treeItems.drop(1))
+      } else {
+        treeItems.takeWhile(_.isLeaf()) ++ leafChildren(treeItems.dropWhile(_.isLeaf()))
+      }
+    }
+  }
 }
 
 object MakeDoxTree {
@@ -65,44 +83,39 @@ abstract class MakeDoxTree() {
     instance
   }
 
+  //TODO: force addChildren call
   def addNode(label: String) = new {
     val currentNode = DoxNode(label, Seq.empty)
     def addChildren(callback: MakeDoxTree => MakeDoxTree) = {
-      val somasd = callback(MakeDoxTree.treeHead(label)).doxTreeHeadSeq
-      if (somasd.isEmpty) {
+      val nodeChildren = callback(MakeDoxTree.treeHead(label)).doxTreeHeadSeq
+      if (nodeChildren.isEmpty) {
         throw new Exception("Node has to have Children")
       }
-      doxTreeHeadSeq.append(currentNode.copy(children = somasd))
+      doxTreeHeadSeq.append(currentNode.copy(children = nodeChildren))
       instance
     }
 
   }
   def leaves() = {
-    getLeaves(doxTreeHeadSeq)
-  }
-
-  protected def getLeaves(treeItems: Seq[DoxTreeItem]): Seq[DoxTreeItem] = {
-    if (treeItems.isEmpty) {
-      Seq.empty
-    } else {
-      if (!treeItems.head.isLeaf()) {
-        getLeaves(treeItems.head.getChildren()) ++ getLeaves(treeItems.drop(1))
-      } else {
-        treeItems.takeWhile(_.isLeaf()) ++ getLeaves(treeItems.dropWhile(_.isLeaf()))
-      }
-    }
+    doxTreeHeadSeq.flatMap(_.getLeaves())
   }
 
 }
 
 object MakeSomeLatex {
+
   def makeItSo(doxTree: MakeDoxTree) = {
+    val compareList = ListBuffer[DoxTreeItem]()
     """\begin{table}
         \centering;
         \begin{tabularx}{\textwidth } {""" + doxTree.leaves().map(_ => "c").mkString(" ") + """} {
         \toprule
-        """ +
-      doxTree.doxTreeHeadSeq.map(_.baseLabel + " &").mkString(" ") +
+        """ + {
+      //          for(treeItem <- doxTree.doxTreeHeadSeq) yield{
+      //
+      //          }
+      doxTree.doxTreeHeadSeq.map(_.baseLabel + " &").mkString(" ")
+    } +
       """
         \midrule
         """ +
@@ -112,6 +125,21 @@ object MakeSomeLatex {
         }
       }
       """
+  }
+  def checkAndAppend(list: ListBuffer[DoxTreeItem], item: DoxTreeItem):String = {
+    if (item.isLeaf()) {
+      if (list.exists(_ == item)) {
+        "  &"
+      } else {
+        list.append(item)
+        item.baseLabel + " &"
+      }
+    } else {
+      val multiSize = item.getLeaves().length
+
+      "test"
+    }
+
   }
 }
   
