@@ -3,10 +3,6 @@ package com.github.rehei.scala.dox.model.test
 import scala.collection.mutable.ListBuffer
 
 case class DoxNode(label: String, children: Seq[DoxTreeItem]) extends DoxTreeItem(label) {
-
-  case class DoxTreeRow(doxTreeRowEntries: Seq[DoxTreeRowEntry])
-  case class DoxTreeRowEntry(doxTreeItem: DoxTreeItem, columns: Int)
-
   case class Rows(currentRowString: Seq[DoxTreeItem], nextRowSeq: ListBuffer[DoxTreeItem])
 
   def leafChildren(treeItems: Seq[DoxTreeItem] = children): Seq[DoxTreeItem] = {
