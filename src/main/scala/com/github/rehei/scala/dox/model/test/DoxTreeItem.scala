@@ -1,6 +1,7 @@
 package com.github.rehei.scala.dox.model.test
 
 import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.Queue
 
 abstract class DoxTreeItem(val baseLabel: String) {
 
@@ -35,6 +36,14 @@ abstract class DoxTreeItem(val baseLabel: String) {
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
+
+  //  def getSubTreeDepth() = {
+  //    this match {
+  //      case leaf @ DoxLeaf(_, _) => throw new Exception("Only Nodes have a subtree")
+  //      case node @ DoxNode(_, _) => node.subTreeDepth()
+  //      case _                    => throw new Exception("Neither Node nor Leaf")
+  //    }
+  //  }
   //  override def toString() = {
   //    this match {
   //      case leaf @ DoxLeaf(_, _) => "Leaf:" + leaf.label + ", " + leaf.value
@@ -62,6 +71,14 @@ case class DoxNode(label: String, children: Seq[DoxTreeItem]) extends DoxTreeIte
       }
     }
   }
+
+  //  def subTreeDepth(treeItems: Seq[DoxTreeItem] = children, counter: Int = 0): Int = {
+  //    if (treeItems.isEmpty) {
+  //      counter
+  //    } else {
+  //      subTreeDepth(treeItems.dropWhile(_.isLeaf()), counter + 1)
+  //    }
+  //  }
 }
 
 object MakeDoxTree {
@@ -94,8 +111,8 @@ abstract class MakeDoxTree() {
       doxTreeHeadSeq.append(currentNode.copy(children = nodeChildren))
       instance
     }
-
   }
+
   def leaves() = {
     doxTreeHeadSeq.flatMap(_.getLeaves())
   }
@@ -106,43 +123,102 @@ object MakeSomeLatex {
 
   def makeItSo(doxTree: MakeDoxTree) = {
     val compareList = ListBuffer[DoxTreeItem]()
+    val leavesList = doxTree.doxTreeHeadSeq.map(_.getLeaves())
     """\begin{table}
         \centering;
         \begin{tabularx}{\textwidth } {""" + doxTree.leaves().map(_ => "c").mkString(" ") + """} {
         \toprule
-        """ + {
-      //          for(treeItem <- doxTree.doxTreeHeadSeq) yield{
-      //
-      //          }
-      doxTree.doxTreeHeadSeq.map(_.baseLabel + " &").mkString(" ")
-    } +
-      """
         \midrule
-        """ +
-      //appendTableBody()
+        """ + getRows(doxTree.doxTreeHeadSeq).mkString("\n") +
       """
           \bottomrule
         }
       }
       """
   }
-  def checkAndAppend(list: ListBuffer[DoxTreeItem], item: DoxTreeItem):String = {
-    if (item.isLeaf()) {
-      if (list.exists(_ == item)) {
-        "  &"
-      } else {
-        list.append(item)
-        item.baseLabel + " &"
-      }
+
+  def getRows(doxTree: Seq[DoxTreeItem], addedLeavesList: ListBuffer[DoxTreeItem] = ListBuffer.empty): Seq[String] = {
+    val nextRow = ListBuffer[DoxTreeItem]()
+    //    println("---")
+    //    println(doxTree.flatMap(_.getLeaves()))
+    //    println(addedLeavesList.flatMap(_.getLeaves()))
+    //    println(doxTree)
+    //    println(addedLeavesList)
+    if (doxTree.isEmpty || (doxTree.flatMap(_.getLeaves()).length == addedLeavesList.flatMap(_.getLeaves()).length)) {
+      Seq.empty
     } else {
-      val multiSize = item.getLeaves().length
-
-      "test"
+      val rowString = (for (treeItem <- doxTree) yield {
+        if (treeItem.isLeaf()) {
+          nextRow.append(treeItem)
+          if (addedLeavesList.exists(_ == treeItem)) {
+            "  "
+          } else {
+            addedLeavesList.append(treeItem)
+            treeItem.baseLabel
+          }
+        } else {
+          nextRow.appendAll(treeItem.getChildren())
+          "\\multicolumn{" + treeItem.getLeaves().length + "}{c}{" + treeItem.baseLabel + "}"
+        }
+      }).mkString(" & ")
+      //            println(nextRow)
+      Seq(rowString+"\\\\ ") ++ getRows(nextRow, addedLeavesList)
     }
-
   }
 }
-  
+//  val queue = Queue[DoxTreeItem]()
+//
+//  val compareList = ListBuffer[DoxTreeItem]()
+//
+//  def rows(doxTree: ListBuffer[DoxTreeItem]) = {
+//    // doxTree baselist
+//    // newlist for subiterations
+//    for ((treeItem, index) <- doxTree.zipWithIndex) yield {
+//      //first add all items to comparelist which are not already appended and add them to the string
+//
+//      if (!compareList.exists(_ == treeItem)) {
+//        compareList.append(treeItem)
+//        // add multi for nodes
+//        treeItem.baseLabel + " &"
+//      } else {
+//        if (treeItem.isLeaf()) {
+//          queue.enqueue(treeItem)
+//          " &"
+//        } else {
+//          treeItem.getChildren().map(queue.enqueue(_))
+//          // doxTree.remove(index)
+//        }
+//      }
+//    }
+//
+//    while (!queue.isEmpty) {
+//
+//      val queueItem = queue.dequeue()
+//
+//      if (compareList.exists(_ == queueItem)) {
+//        " &"
+//      }
+//    }
+//
+//  }
+
+//  def checkAndAppend(list: ListBuffer[DoxTreeItem], item: DoxTreeItem): String = {
+//    if (item.isLeaf()) {
+//      if (list.exists(_ == item)) {
+//        "  &"
+//      } else {
+//        list.append(item)
+//        item.baseLabel + " &"
+//      }
+//    } else {
+//      val multiSize = item.getLeaves().length
+//
+//      "test"
+//    }
+//
+//  }
+//}
+//  
     
 //object SupportDoxTree {
 //

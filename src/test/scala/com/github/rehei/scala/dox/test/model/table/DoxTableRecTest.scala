@@ -32,11 +32,11 @@ class DoxTableRecTest {
 
       .addLeaf("T", "time")
 
-    println(petersTree.doxTreeHeadSeq.map(_.baseLabel))
-    println(petersTree.doxTreeHeadSeq)
-    println(petersTree.leaves())
+//    println(petersTree.doxTreeHeadSeq.map(_.baseLabel))
+//    println(petersTree.doxTreeHeadSeq)
+//    println(petersTree.leaves())
     println(MakeSomeLatex.makeItSo(petersTree))
-
+//MakeSomeLatex.makeItSo(petersTree)
     //      println(bla)
     //  case class StationSetup(station: String, capacityMin: Int, capacityMax: Int, time: String)
     //
