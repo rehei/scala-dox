@@ -5,7 +5,6 @@ import scala.collection.mutable.ListBuffer
 object DoxTableLatex {
 
   def makeItSo(doxTree: DoxNode) = {
-    println(doxTree.getRows())
     """\begin{table}
         \centering;
         \begin{tabularx}{\textwidth } {""" + doxTree.nodeChildren.flatMap(_.leaves()).map(_ => "c").mkString(" ") + """} {
