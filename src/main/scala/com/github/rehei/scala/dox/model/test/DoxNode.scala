@@ -6,7 +6,6 @@ object DoxNode {
   def apply(label: String) = new DoxNode(label, Seq.empty)
 }
 case class DoxNode(label: String, children: Seq[DoxTreeItem]) extends DoxTreeItem(label) with DoxTreeRows {
-  case class Rows(currentRowItemSeq: Seq[DoxTreeItem], nextRowItemBuffer: ListBuffer[DoxTreeItem])
 
   def leafChildren(treeItems: Seq[DoxTreeItem] = children): Seq[DoxTreeItem] = {
     if (treeItems.isEmpty) {
