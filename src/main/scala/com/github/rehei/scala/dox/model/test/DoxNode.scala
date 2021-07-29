@@ -3,18 +3,16 @@ package com.github.rehei.scala.dox.model.test
 import scala.collection.mutable.ListBuffer
 import com.sun.xml.internal.bind.v2.model.core.LeafInfo
 
-object DoxNode {
-  def apply(label: String) = new DoxNode(label, Seq.empty)
-}
-
-case class DoxNode(label: String, children: Seq[DoxTreeItem]) extends DoxTreeItem(label) with DoxTreeRows {
-
+case class DoxNode(label: String) extends DoxTreeItem(label) with DoxTreeRows {
+  val children = ListBuffer[DoxTreeItem]()
+  
   def leafChildren(): Seq[DoxTreeItem] = {
     leafChildren(children)
   }
 
-  def append(doxTreeItem: DoxTreeItem*) {
-    this.copy(children = children ++ doxTreeItem)
+  def addNode(doxTreeItem: DoxTreeItem*) = {
+    children.appendAll(doxTreeItem)
+    this
   }
 
   def treeRows(): ListBuffer[Seq[DoxTreeItem]] = {

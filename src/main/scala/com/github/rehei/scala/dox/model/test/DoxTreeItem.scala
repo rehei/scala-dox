@@ -8,7 +8,7 @@ abstract class DoxTreeItem(val baseLabel: String) {
   def isLeaf() = {
     this match {
       case leaf @ DoxLeaf(_, _) => true
-      case node @ DoxNode(_, _) => false
+      case node @ DoxNode(_) => false
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
@@ -16,7 +16,7 @@ abstract class DoxTreeItem(val baseLabel: String) {
   def nodeChildren() = {
     this match {
       case leaf @ DoxLeaf(_, _) => throw new Exception("Leaves do not have children")
-      case node @ DoxNode(_, _) => node.children
+      case node @ DoxNode(_) => node.children
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
@@ -24,7 +24,7 @@ abstract class DoxTreeItem(val baseLabel: String) {
   def leafProperty() = {
     this match {
       case leaf @ DoxLeaf(_, _) => leaf.property
-      case node @ DoxNode(_, _) => throw new Exception("Nodes do not have values")
+      case node @ DoxNode(_) => throw new Exception("Nodes do not have values")
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
@@ -32,7 +32,7 @@ abstract class DoxTreeItem(val baseLabel: String) {
   def leaves() = {
     this match {
       case leaf @ DoxLeaf(_, _) => Seq(leaf)
-      case node @ DoxNode(_, _) => node.leafChildren()
+      case node @ DoxNode(_) => node.leafChildren()
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }

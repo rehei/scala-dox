@@ -18,16 +18,15 @@ class DoxTableRecTest {
   @Test
   def test() {
 
-    val tree = DoxNode(
-      "StationSetup",
-      Seq(
-        DoxLeaf("Station", "station"),
-        DoxNode(
-          "Kapazität",
-          Seq(
-            DoxLeaf("max", "capacityMin"),
-            DoxLeaf("min", "capacityMax"))),
-        DoxLeaf("T", "time")))
+    val tree =
+      DoxNode("StationSetup")
+        .addNode(
+          DoxLeaf("Station", "station"),
+          DoxNode("Kapazität")
+            .addNode(
+              DoxLeaf("max", "capacityMin"),
+              DoxLeaf("min", "capacityMax")),
+          DoxLeaf("T", "time"))
 
     println(DoxTableLatex.makeItSo(tree))
   }
