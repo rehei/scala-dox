@@ -3,10 +3,16 @@ package com.github.rehei.scala.dox.model.test
 import scala.collection.mutable.ListBuffer
 
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.table.DoxTableConfig
 
-case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem(config.text) with DoxTreeRows {
+case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig] = None) extends DoxTreeItem(config.text, config) with DoxTreeRows {
+
   val children = ListBuffer[DoxTreeItem]()
 
+  def withTableConfig(tableConfig: DoxTableConfig) = {
+    this.copy(rootConfig = Some(tableConfig))
+  }
+  
   def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)
     this

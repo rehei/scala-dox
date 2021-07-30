@@ -6,4 +6,4 @@ import com.github.rehei.scala.macros.Query
 object DoxLeaf {
   val NONE = DoxLeaf(DoxTableKeyConfig.NONE, null)
 }
-case class DoxLeaf(config: DoxTableKeyConfig, property: Query[_]) extends DoxTreeItem(config.text) 
+case class DoxLeaf(config: DoxTableKeyConfig, propertyQuery: Query[_]) extends DoxTreeItem(config.text,config) 

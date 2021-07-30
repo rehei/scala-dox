@@ -1,10 +1,11 @@
 package com.github.rehei.scala.dox.model.test
 
 import com.github.rehei.scala.dox.model.table.DoxTableConfig
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
 case class DoxTable_test(
   protected val _config: DoxTableConfig,
-  protected val _head:   Seq[DoxTableKeyConfig_test],
+  protected val _head:   Seq[Seq[DoxTableKeyConfig]],
   protected val _data:   Seq[Seq[String]]) {
 
   protected var index: Option[DoxTableKeyConfig_test] = None

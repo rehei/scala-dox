@@ -16,7 +16,7 @@ trait DoxTreeRows {
     for (treeItem <- doxTree) yield {
       treeItem match {
         case leaf @ DoxLeaf(_,_) => leafEntryCheck(leaf, traversedLeaves)
-        case node @ DoxNode(_) => node
+        case node @ DoxNode(_,_) => node
       }
     }
   }

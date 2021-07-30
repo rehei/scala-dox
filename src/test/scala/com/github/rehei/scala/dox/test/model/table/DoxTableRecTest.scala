@@ -49,7 +49,7 @@ class DoxTableRecTest {
           DoxLeaf(configDefault.name("T"), query.apply(_.time)))
 
     for (bla <- blub) {
-      val asd = doxTree.leafChildren().map(_.property)
+      val asd = doxTree.leafChildren().map(_.propertyQuery)
       for (as <- asd) {
         val value = new QReflection(bla).get(as)
         println(value)

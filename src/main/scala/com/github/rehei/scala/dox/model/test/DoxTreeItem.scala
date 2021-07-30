@@ -1,13 +1,14 @@
 package com.github.rehei.scala.dox.model.test
 
 import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-abstract class DoxTreeItem(val baseLabel: TextAST) {
+abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyConfig) {
 
   def isLeaf() = {
     this match {
       case leaf @ DoxLeaf(_, _) => true
-      case node @ DoxNode(_)    => false
+      case node @ DoxNode(_, _) => false
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
@@ -15,15 +16,15 @@ abstract class DoxTreeItem(val baseLabel: TextAST) {
   def nodeChildren() = {
     this match {
       case leaf @ DoxLeaf(_, _) => throw new Exception("Leaves do not have children")
-      case node @ DoxNode(_)    => node.children
+      case node @ DoxNode(_, _) => node.children
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
 
   def leafProperty() = {
     this match {
-      case leaf @ DoxLeaf(_, _) => leaf.property
-      case node @ DoxNode(_)    => throw new Exception("Nodes do not have values")
+      case leaf @ DoxLeaf(_, _) => leaf.propertyQuery
+      case node @ DoxNode(_, _) => throw new Exception("Nodes do not have values")
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
@@ -31,7 +32,7 @@ abstract class DoxTreeItem(val baseLabel: TextAST) {
   def leaves() = {
     this match {
       case leaf @ DoxLeaf(_, _) => Seq(leaf)
-      case node @ DoxNode(_)    => node.leafChildren()
+      case node @ DoxNode(_, _) => node.leafChildren()
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
