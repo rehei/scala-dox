@@ -38,7 +38,7 @@ class DoxTableRecTest {
   def test() {
     val config = new DoxTableKeyConfigSupport(Bla)
     val configDefault = config.apply(_.name("DEFAULT").alignment(_.CENTER).dynamic(false))
-
+println(configDefault)
     val query = new Query[StationSetup]
     val blub = StationSetup("a", 1, 2, "b")
 
@@ -56,6 +56,6 @@ class DoxTableRecTest {
 
     DoxTableConfigBuilder.caption("Asd").indexing(true)
     println(DoxTableConfigBuilder)
-    //    println(DoxTableLatex.makeItSo(tree))
+        println(DoxTableLatex.makeItSo(doxTree))
   }
 }

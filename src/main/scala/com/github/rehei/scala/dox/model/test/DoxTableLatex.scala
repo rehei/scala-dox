@@ -21,9 +21,11 @@ object DoxTableLatex  {
   }
 
   def getHeaders(doxTree: DoxNode) = {
-    (for (row <- doxTree.treeRows()) yield {
-      row.map(entry => columnHeader(entry)).mkString(" & ")
-    }).mkString("\\\\ \n") + "\\\\ "
+    println(doxTree.treeRows())
+//
+//    (for (row <- doxTree.treeRows()) yield {
+//      row.map(entry => columnHeader(entry)).mkString(" & ")
+//    }).mkString("\\\\ \n") + "\\\\ "
   }
 
   protected def columnHeader(entry: DoxTreeItem) = {
