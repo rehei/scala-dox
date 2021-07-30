@@ -6,7 +6,6 @@ import com.github.rehei.scala.dox.text.TextAST
 class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
 
   protected object DataTableKeyConfigBuilder {
-
     case class BuildingObject(text: TextAST) {
       def alignment(select: DoxTableAlignment.type => DoxTableAlignment) = new {
         def dynamic(isDynamic: Boolean) = {
@@ -19,10 +18,11 @@ class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
       }
     }
 
+    val NONE = name("").alignment(_.NONE).dynamic(false)
     def name(in: String) = BuildingObject(TextFactory.text(in))
 
     def name(text: TextAST) = BuildingObject(text)
-  
+
   }
 
   def apply(callback: DataTableKeyConfigBuilder.type => DoxTableKeyConfig) = {
