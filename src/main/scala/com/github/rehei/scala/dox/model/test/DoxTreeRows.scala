@@ -15,8 +15,8 @@ trait DoxTreeRows {
   protected def currentRow(doxTree: Seq[DoxTreeItem], traversedLeaves: ListBuffer[DoxLeaf]): Seq[DoxTreeItem] = {
     for (treeItem <- doxTree) yield {
       treeItem match {
-        case leaf @ DoxLeaf(_, _) => leafEntryCheck(leaf, traversedLeaves)
-        case node @ DoxNode(_) => node
+        case leaf : DoxLeaf => leafEntryCheck(leaf, traversedLeaves)
+        case node : DoxNode => node
       }
     }
   }
@@ -27,7 +27,7 @@ trait DoxTreeRows {
 
   protected def leafEntryCheck(leaf: DoxLeaf, traversedLeaves: ListBuffer[DoxLeaf]) = {
     if (traversedLeaves.exists(_ == leaf)) {
-      DoxLeaf("", "")
+      DoxLeaf(null, null)
     } else {
       traversedLeaves.append(leaf)
       leaf

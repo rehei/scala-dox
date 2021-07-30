@@ -2,7 +2,7 @@ package com.github.rehei.scala.dox.model.test
 
 import scala.collection.mutable.ListBuffer
 
-object DoxTableLatex {
+object DoxTableLatex  {
 
   def makeItSo(doxTree: DoxNode) = {
     """\begin{table}

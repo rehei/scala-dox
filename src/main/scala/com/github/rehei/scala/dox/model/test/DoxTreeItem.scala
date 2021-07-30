@@ -2,6 +2,7 @@ package com.github.rehei.scala.dox.model.test
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Queue
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
 abstract class DoxTreeItem(val baseLabel: String) {
 
@@ -35,6 +36,10 @@ abstract class DoxTreeItem(val baseLabel: String) {
       case node @ DoxNode(_) => node.leafChildren()
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
+  }
+  
+  def withConfig(config:DoxTableKeyConfig) = {
+       
   }
 
   //  def addLeaf(label: String, value: String) = {
