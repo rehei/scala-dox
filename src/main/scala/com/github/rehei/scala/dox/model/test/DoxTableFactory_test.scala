@@ -15,9 +15,9 @@ case class DoxTableFactory_test[T <: AnyRef](treeTable: DoxNode)(implicit clazzT
 
   protected val query = new Query[T]()
 
-  protected val tableConfig = treeTable.rootConfig.map(m => m).getOrElse(throw new Exception("Missing Table Config"))
+  val tableConfig = treeTable.rootConfig.map(m => m).getOrElse(throw new Exception("Missing Table Config"))
 
-  val head = treeTable.treeRows().map(_.map(_.nodeConfig))
+  val head = treeTable.treeRows()//.map(_.map(_.nodeConfig))
   val data = ListBuffer[Seq[String]]()
 
   def addAll(elementSeq: Iterable[T]) {
@@ -31,7 +31,7 @@ case class DoxTableFactory_test[T <: AnyRef](treeTable: DoxNode)(implicit clazzT
     data.append(treeTable.leafChildren().map(leaf => leaf.config.rendering.render(value.get(leaf.propertyQuery))))
   }
 
-  def get() = {
-    DoxTable_test(tableConfig, head, data)
-  }
+//  def get() = {
+//    DoxTable_test(tableConfig, head, data)
+//  }
 }

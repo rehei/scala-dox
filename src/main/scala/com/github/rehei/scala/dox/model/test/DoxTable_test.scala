@@ -34,11 +34,13 @@ case class DoxTable_test(
   }
 
   def head = {
-    index.map {
-      config => config +: _head
-    } getOrElse {
+//    index.map(_.)
+//    index.map {
+//      
+//      config => config +: _head
+//    } getOrElse {
       _head
-    }
+//    }
   }
 
 }
