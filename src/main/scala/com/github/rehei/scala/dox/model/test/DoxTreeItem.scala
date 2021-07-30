@@ -3,8 +3,9 @@ package com.github.rehei.scala.dox.model.test
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Queue
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.text.TextAST
 
-abstract class DoxTreeItem(val baseLabel: String) {
+abstract class DoxTreeItem(val baseLabel: TextAST) {
 
   def isLeaf() = {
     this match {
@@ -37,26 +38,5 @@ abstract class DoxTreeItem(val baseLabel: String) {
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
-  
-  def withConfig(config:DoxTableKeyConfig) = {
-       
-  }
-
-  //  def addLeaf(label: String, value: String) = {
-  //    this.copy(children = children ++ Seq(DoxLeaf(label, value)))
-  //  }
-  //
-  //  //TODO: force addChildren call
-  //  def addNode(label: String) = new {
-  //    val currentNode = DoxNode(label, Seq.empty)
-  //    def addChildren(callback: MakeDoxTree => MakeDoxTree) = {
-  //      val nodeChildren = callback(MakeDoxTree.treeHead(label)).doxTreeHeadSeq
-  //      if (nodeChildren.isEmpty) {
-  //        throw new Exception("Node has to have Children")
-  //      }
-  //      doxTreeHeadSeq.append(currentNode.copy(children = nodeChildren))
-  //      instance
-  //    }
-  //  }
 }
 

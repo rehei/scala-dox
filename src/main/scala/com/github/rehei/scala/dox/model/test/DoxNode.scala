@@ -4,7 +4,7 @@ import scala.collection.mutable.ListBuffer
 import com.sun.xml.internal.bind.v2.model.core.LeafInfo
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-case class DoxNode(config:DoxTableKeyConfig) extends DoxTreeItem(config.text.sequence.mkString(" ")) with DoxTreeRows {
+case class DoxNode(config:DoxTableKeyConfig) extends DoxTreeItem(config.text) with DoxTreeRows {
   val children = ListBuffer[DoxTreeItem]()
   
   def addNodes(doxTreeItem: DoxTreeItem*) = {
