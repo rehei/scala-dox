@@ -20,14 +20,6 @@ class DoxTableRecTest {
   case class DoxConfigCounter(config: DoxTableKeyConfig_test, var counter: Int)
   case class StationSetup(station: String, capacityMin: Int, capacityMax: Int, time: String)
 
-  object DoxTableConfigBuilder {
-    def caption(caption: String) = new {
-      def indexing(enableIndexing: Boolean) = {
-        DoxTableConfig(caption, enableIndexing)
-      }
-    }
-  }
-
   object Bla extends DoxTableStringConversion {
     def render(model: Any) = {
       "stringbla"
@@ -38,7 +30,6 @@ class DoxTableRecTest {
   def test() {
     val config = new DoxTableKeyConfigSupport(Bla)
     val configDefault = config.apply(_.name("DEFAULT").alignment(_.CENTER).dynamic(false))
-    println(configDefault)
     val query = new Query[StationSetup]
     val blub = Seq(
       StationSetup("a", 1, 2, "b"),
@@ -58,7 +49,7 @@ class DoxTableRecTest {
           DoxLeaf(configDefault.name("T"), query.apply(_.time)))
 
     for (bla <- blub) {
-      val asd = doxTree.leafChildren().map(_.leafProperty())
+      val asd = doxTree.leafChildren().map(_.property)
       for (as <- asd) {
         val value = new QReflection(bla).get(as)
         println(value)

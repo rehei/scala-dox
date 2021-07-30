@@ -4,34 +4,43 @@ import scala.collection.mutable.ListBuffer
 import com.sun.xml.internal.bind.v2.model.core.LeafInfo
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-case class DoxNode(config:DoxTableKeyConfig) extends DoxTreeItem(config.text) with DoxTreeRows {
+case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem(config.text) with DoxTreeRows {
   val children = ListBuffer[DoxTreeItem]()
-  
+
   def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)
     this
   }
 
   def withType[T]() = {
-    
+
   }
-  
+
   def treeRows(): ListBuffer[Seq[DoxTreeItem]] = {
     treeRows(children, ListBuffer[DoxLeaf](), ListBuffer[Seq[DoxTreeItem]](), leafChildren().length)
   }
 
-  def leafChildren(): Seq[DoxTreeItem] = {
+  def leafChildren(): Seq[DoxLeaf] = {
     leafChildren(children)
   }
 
-  protected def leafChildren(treeItems: Seq[DoxTreeItem]): Seq[DoxTreeItem] = {
+  protected def leafChildren(treeItems: Seq[DoxTreeItem]): Seq[DoxLeaf] = {
     if (treeItems.isEmpty) {
       Seq.empty
     } else {
+
       if (!treeItems.head.isLeaf()) {
         leafChildren(treeItems.head.nodeChildren()) ++ leafChildren(treeItems.drop(1))
       } else {
-        treeItems.takeWhile(_.isLeaf()) ++ leafChildren(treeItems.dropWhile(_.isLeaf()))
+        takeWhileLeaf(treeItems) ++ leafChildren(treeItems.dropWhile(_.isLeaf()))
+      }
+    }
+  }
+
+  protected def takeWhileLeaf(treeItems: Seq[DoxTreeItem]) = {
+    for (treeItem <- treeItems.takeWhile(_.isLeaf())) yield {
+      treeItem match {
+        case leaf: DoxLeaf => leaf
       }
     }
   }
