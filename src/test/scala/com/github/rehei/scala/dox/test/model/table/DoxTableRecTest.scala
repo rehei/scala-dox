@@ -36,20 +36,11 @@ class DoxTableRecTest {
 
   @Test
   def test() {
-    dataTest()
-
     val config = new DoxTableKeyConfigSupport(Bla)
-
     val configDefault = config.apply(_.name("DEFAULT").alignment(_.CENTER).dynamic(false))
 
     val query = new Query[StationSetup]
-    //    val asds = DoxTableFactoryKeySelection[StationSetup](stationSetupQuery)
-    //    asds.take(_.apply(_.capacityMax))
-    val maxProperty = query.apply(_.capacityMax)
-
     val blub = StationSetup("a", 1, 2, "b")
-    val value = new QReflection(blub).get(maxProperty)
-    DoxLeaf(configDefault, maxProperty)
 
     val doxTree =
       DoxNode(config.apply(_.NONE))
@@ -61,52 +52,10 @@ class DoxTableRecTest {
               DoxLeaf(configDefault.name("max"), query.apply(_.capacityMax))),
           DoxLeaf(configDefault.name("T"), query.apply(_.time)))
 
-    println(value)
     //    config.rendering.render(value)
-    //    val dummyConfig = DoxTableKeyConfigSupport(null)
-    //    val tree =
-    //      DoxNode("StationSetup")
-    //        .addNodes(
-    //          DoxLeaf("Station", "ASd"),
-    //          DoxNode("Kapazität")
-    //            .addNodes(
-    //              DoxLeaf("max", "capacityMin"),
-    //              DoxLeaf("min", "capacityMax")),
-    //          DoxLeaf("T", "time"))
 
     DoxTableConfigBuilder.caption("Asd").indexing(true)
     println(DoxTableConfigBuilder)
     //    println(DoxTableLatex.makeItSo(tree))
-
   }
-  //  case class DoxTableKeyConfig(
-  //  text:           TextAST,
-  //  alignment:      DoxTableAlignment,
-  //  dynamic:        Boolean,
-  //  rendering:      DoxTableStringConversion,
-  //  categoryOption: Option[DoxTableKeyCategory])
-
-  protected def dataTest() = {
-    val stationSetup = StationSetup("asd", 3, 5, "dsa")
-    stationSetup.getClass.getDeclaredFields foreach { f =>
-      f.setAccessible(true)
-      println(f.getName)
-      println(f.get(stationSetup))
-    }
-    stationSetup.getClass.getDeclaredFields.map(m => {
-      m.setAccessible(true)
-      println(m.getName)
-      println(m.get(stationSetup))
-    })
-  }
-
-  //
-  //    petersTree
-  //      .addLeaf("Station", "station")
-  //      .addNode("Kapazität")
-  //      .addChildren(
-  //        _
-  //          .addLeaf("max", "capacityMin")
-  //          .addLeaf("min", "capacityMax"))
-  //      .addLeaf("T", "time")
 }
