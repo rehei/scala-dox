@@ -20,8 +20,9 @@ object DoxTableLatex  {
       """
   }
 
+  
   def getHeaders(doxTree: DoxNode) = {
-    println(doxTree.treeRows())
+    println(doxTree.leafChildren().map(_.baseLabel))
 //
 //    (for (row <- doxTree.treeRows()) yield {
 //      row.map(entry => columnHeader(entry)).mkString(" & ")

@@ -38,9 +38,14 @@ class DoxTableRecTest {
   def test() {
     val config = new DoxTableKeyConfigSupport(Bla)
     val configDefault = config.apply(_.name("DEFAULT").alignment(_.CENTER).dynamic(false))
-println(configDefault)
+    println(configDefault)
     val query = new Query[StationSetup]
-    val blub = StationSetup("a", 1, 2, "b")
+    val blub = Seq(
+      StationSetup("a", 1, 2, "b"),
+      StationSetup("a2", 12, 21, "b2"),
+      StationSetup("a555", 561, 265, "b555"),
+      StationSetup("a44", 212, 244, "b44"),
+      StationSetup("a3", 154, 542, "b3"))
 
     val doxTree =
       DoxNode(config.apply(_.NONE))
@@ -48,14 +53,22 @@ println(configDefault)
           DoxLeaf(configDefault.name("Station"), query.apply(_.station)),
           DoxNode(configDefault.name("Kapazität"))
             .addNodes(
-              DoxLeaf(configDefault.name("min"), query.apply(_.capacityMin)),
-              DoxLeaf(configDefault.name("max"), query.apply(_.capacityMax))),
+              DoxLeaf(configDefault.name("max"), query.apply(_.capacityMax)),
+              DoxLeaf(configDefault.name("min"), query.apply(_.capacityMin))),
           DoxLeaf(configDefault.name("T"), query.apply(_.time)))
 
+    for (bla <- blub) {
+      val asd = doxTree.leafChildren().map(_.leafProperty())
+      for (as <- asd) {
+        val value = new QReflection(bla).get(as)
+        println(value)
+      }
+      println("---")
+    }
     //    config.rendering.render(value)
 
-    DoxTableConfigBuilder.caption("Asd").indexing(true)
-    println(DoxTableConfigBuilder)
-        println(DoxTableLatex.makeItSo(doxTree))
+    //    DoxTableConfigBuilder.caption("Asd").indexing(true)
+    //    println(DoxTableConfigBuilder)
+    println(DoxTableLatex.makeItSo(doxTree))
   }
 }

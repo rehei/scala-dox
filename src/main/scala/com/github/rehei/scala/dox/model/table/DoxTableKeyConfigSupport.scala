@@ -18,7 +18,7 @@ class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
       }
     }
 
-    val NONE = name("").alignment(_.NONE).dynamic(false)
+    val NONE = name(TextFactory.NONE).alignment(_.NONE).dynamic(false)
     def name(in: String) = BuildingObject(TextFactory.text(in))
 
     def name(text: TextAST) = BuildingObject(text)
