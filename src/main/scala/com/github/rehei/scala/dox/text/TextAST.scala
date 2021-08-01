@@ -12,9 +12,8 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
   }
 
-  def indented(in: String, space: Int) = {
-    this.copy(sequence = sequence :+ TextObjectSpace(in, space))
+  def indented(space: Int, in: String) = {
+    this.copy(sequence = sequence :+ TextObjectSpace(space, in))
   }
 
-  def isEmpty() = !sequence.exists(value => !value.isEmpty)
 }

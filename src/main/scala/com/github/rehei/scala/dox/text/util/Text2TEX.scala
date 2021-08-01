@@ -6,33 +6,82 @@ import com.github.rehei.scala.dox.text.TextObjectSpace
 import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.control.tex.TexEscape
+import scala.reflect.ClassTag
+import scala.collection.mutable.ArrayBuffer
 
 object Text2TEX {
+
+  case class ParseResult(var text: String, var count: Int) {
+
+    def append(result: ParseResult) {
+      text = text + result.text
+      count = count + result.count
+    }
+
+  }
 
   import TexEscape._
 
   def generate(element: TextAST) = {
-    element.sequence.map(asText(_)).mkString
+
+    val base = ParseResult("", 0)
+
+    asText(base, element.sequence)
   }
 
-  protected def asText(text: TextObject) = {
-    text match {
-      case m: TextObjectDefault   => textDefault(m)
-      case m: TextObjectSpace     => textSpace(m)
-      case m: TextObjectSubscript => textSubscript(m)
+  protected def asText(base: ParseResult, sequence: Seq[TextObject]) = {
+
+    while (base.count < sequence.size) {
+
+      println(base.count + "/" + sequence.size)
+      
+      base.append(textDefault(sequence.drop(base.count)))
+      base.append(textSpace(sequence.drop(base.count)))
+      base.append(textSubscript(sequence.drop(base.count)))
+
+    }
+    
+    base.text
+
+  }
+
+  protected def textDefault(sequence: Seq[TextObject]) = {
+    val collection = parse[TextObjectDefault](sequence)
+    val resultString = collection.map(text => escape(text.in)).mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textSpace(sequence: Seq[TextObject]) = {
+    val collection = parse[TextObjectSpace](sequence)
+    val resultString = collection.map(text => ("\\hspace*" * text.space) + text.text).mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textSubscript(sequence: Seq[TextObject]) = {
+    val collection = parse[TextObjectSubscript](sequence)
+    val result = textSubScriptExplicit(collection, 0)
+
+    ParseResult(result, collection.size)
+  }
+
+  protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
+    subscriptSeq.lift(index).map {
+      text => "_{" + escape(text.in) + textSubScriptExplicit(subscriptSeq, index + 1) + "}"
+    } getOrElse {
+      ""
     }
   }
 
-  protected def textDefault(text: TextObjectDefault) = {
-    escape(text.in)
+  protected def parse[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {
+
+    val subSequence = sequence.takeWhile(classTag.runtimeClass.isInstance(_))
+    subSequence.map(_.asInstanceOf[T])
   }
 
-  protected def textSpace(text: TextObjectSpace) = {
-    ("\\hspace*" * text.space) + " " + escape(text.in)
-  }
-
-  protected def textSubscript(text: TextObjectSubscript) = {
-    "_{" + escape(text.in) + "}"
-  }
+  //  protected def textSubScript(text: Seq[TextObjectSubscript]) = {
+  //    "_{" + escape(text.in) + "}"
+  //  }
 
 }
