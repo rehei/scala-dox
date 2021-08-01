@@ -33,8 +33,6 @@ object Text2TEX {
 
     while (base.count < sequence.size) {
 
-      println(base.count + "/" + sequence.size)
-      
       base.append(textDefault(sequence.drop(base.count)))
       base.append(textSpace(sequence.drop(base.count)))
       base.append(textSubscript(sequence.drop(base.count)))

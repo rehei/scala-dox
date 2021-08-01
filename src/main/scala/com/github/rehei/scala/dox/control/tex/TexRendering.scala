@@ -39,6 +39,18 @@ class TexRendering(
     this
   }
 
+  def bigskip() = {
+    \ bigskip;
+    this
+  }
+
+  def bigskip(count: Int) = {
+    for (i <- scala.Range.inclusive(1, count)) {
+      \ bigskip;
+    }
+    this
+  }
+
   def chapter(name: String) = {
     \ chapter & { escape(name) }
     this

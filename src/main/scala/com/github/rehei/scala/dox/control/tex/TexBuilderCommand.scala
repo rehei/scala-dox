@@ -27,13 +27,14 @@ class TexBuilderCommand(ast: TexAST) {
 
   object clearpage extends TexMarkupObject(false)
   object newpage extends TexMarkupObject(false)
+  object bigskip extends TexMarkupObject(false)
   object label extends TexMarkupObject(true)
 
   object usepackage extends TexMarkupObject(false)
 
   object begin extends TexMarkupObject(false)
   object end extends TexMarkupObject(false)
-  
+
   object textit extends TexMarkupObject(true)
   object textcolor extends TexMarkupObject(true)
   object item extends TexMarkupObject(true)
@@ -42,7 +43,6 @@ class TexBuilderCommand(ast: TexAST) {
   object cite extends TexMarkupObject(true)
   object citep extends TexMarkupObject(true)
   object citet extends TexMarkupObject(true)
-
 
   object plain {
     def apply(_name: String) = {
