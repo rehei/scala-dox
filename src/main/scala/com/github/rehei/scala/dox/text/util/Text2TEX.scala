@@ -44,21 +44,21 @@ object Text2TEX {
   }
 
   protected def textDefault(sequence: Seq[TextObject]) = {
-    val collection = parse[TextObjectDefault](sequence)
+    val collection = collect[TextObjectDefault](sequence)
     val resultString = collection.map(text => escape(text.in)).mkString
 
     ParseResult(resultString, collection.size)
   }
 
   protected def textSpace(sequence: Seq[TextObject]) = {
-    val collection = parse[TextObjectSpace](sequence)
+    val collection = collect[TextObjectSpace](sequence)
     val resultString = collection.map(text => ("\\hspace*" * text.space) + text.text).mkString
 
     ParseResult(resultString, collection.size)
   }
 
   protected def textSubscript(sequence: Seq[TextObject]) = {
-    val collection = parse[TextObjectSubscript](sequence)
+    val collection = collect[TextObjectSubscript](sequence)
     val result = textSubScriptExplicit(collection, 0)
 
     ParseResult(result, collection.size)
@@ -72,14 +72,9 @@ object Text2TEX {
     }
   }
 
-  protected def parse[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {
-
+  protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {
     val subSequence = sequence.takeWhile(classTag.runtimeClass.isInstance(_))
     subSequence.map(_.asInstanceOf[T])
   }
-
-  //  protected def textSubScript(text: Seq[TextObjectSubscript]) = {
-  //    "_{" + escape(text.in) + "}"
-  //  }
 
 }
