@@ -14,7 +14,6 @@ abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyCo
     this match {
       case leaf @ DoxLeaf(_, _) => true
       case node @ DoxNode(_, _) => false
-      case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
 
@@ -22,15 +21,12 @@ abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyCo
     this match {
       case leaf @ DoxLeaf(_, _) => Seq()
       case node @ DoxNode(_, _) => node.children
-      case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
 
   def leafProperty() = {
     this match {
       case leaf @ DoxLeaf(_, _) => leaf.propertyQuery
-      case node @ DoxNode(_, _) => throw new Exception("Nodes do not have values")
-      case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
 
@@ -38,7 +34,6 @@ abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyCo
     this match {
       case leaf @ DoxLeaf(_, _) => Seq(leaf)
       case node @ DoxNode(_, _) => node.leafChildrenSeq()
-      case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
 }
