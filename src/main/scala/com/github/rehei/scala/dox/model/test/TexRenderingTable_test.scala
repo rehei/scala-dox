@@ -24,19 +24,17 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
       \ centering;
       $ { _ tabularx & { \\textwidth } { getColumnConfig() } } {
         \ toprule;
-        //        appendTableHeadKey()
         appendTableHead()
         \ midrule;
         appendTableBody()
         \ bottomrule;
       }
-      \ caption & { markup.escape(model.tableConfig.caption) }
+      \ caption & { markup.escape(model.caption) }
       \ label { reference.referenceID }
     }
     if (!floating) {
       \ FloatBarrier;
     }
-
   }
 
   protected def getColumnConfig() = {
@@ -56,6 +54,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
       "\\multicolumn{" + entry.leaves().length + "}{" + getTexAlignment(entry.nodeConfig) + "}{" + Text2TEX.generate(entry.nodeConfig.text) + "}"
     }
   }
+  
   protected def appendTableBody() {
     for (row <- model.data) yield {
       \ plain { row.map(markup.escape(_)).mkString(" & ") + "\\\\" + "\n" }
