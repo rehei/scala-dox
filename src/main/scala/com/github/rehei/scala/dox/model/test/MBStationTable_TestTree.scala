@@ -1,9 +1,10 @@
 package com.github.rehei.scala.dox.model.test
 
-import com.github.rehei.scala.dox.model.table.DoxTableFactory
-import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.dox.model.table.DoxTableConfigBuilder
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigSupport
+import com.github.rehei.scala.macros.Query
+import com.github.rehei.scala.dox.model.tree.DoxNode
+import com.github.rehei.scala.dox.model.tree.DoxLeaf
 
 case class MBStationTable_TestTree() {
 
@@ -28,7 +29,7 @@ case class MBStationTable_TestTree() {
           DoxLeaf(configDefault.name("T"), query.apply(_.time)))
     }
 
-    val tableOverview = DoxTableFactory_test[StationSetup](treeTable)
+    val tableOverview = DoxTableNew[StationSetup](treeTable)
 
     val testSeq = Seq(
       StationSetup("a", 1, 2, "b"),

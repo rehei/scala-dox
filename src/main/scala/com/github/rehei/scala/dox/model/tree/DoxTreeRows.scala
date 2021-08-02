@@ -1,6 +1,7 @@
-package com.github.rehei.scala.dox.model.test
+package com.github.rehei.scala.dox.model.tree
 
 import scala.collection.mutable.ListBuffer
+import scala.collection.Seq
 
 trait DoxTreeRows {
   protected def treeRows(doxTree: Seq[DoxTreeItem], traversedLeaves: ListBuffer[DoxLeaf], rowBuffer: ListBuffer[Seq[DoxTreeItem]], maxLeaves: Int): ListBuffer[Seq[DoxTreeItem]] = {

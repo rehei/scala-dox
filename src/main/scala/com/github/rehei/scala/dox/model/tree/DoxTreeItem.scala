@@ -1,7 +1,8 @@
-package com.github.rehei.scala.dox.model.test
+package com.github.rehei.scala.dox.model.tree
 
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import scala.collection.Seq
 
 abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyConfig) {
 

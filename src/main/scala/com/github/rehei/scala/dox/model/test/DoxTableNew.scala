@@ -11,8 +11,9 @@ import com.github.rehei.scala.dox.model.table.DoxTableStringConversion
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.tree.DoxNode
 
-case class DoxTableFactory_test[T <: AnyRef](treeTable: DoxNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTableNew[T <: AnyRef](treeTable: DoxNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val query = new Query[T]()
   protected val _tableConfig = treeTable.rootConfig.map(m => m).getOrElse(throw new Exception("Missing Table Config"))
@@ -27,8 +28,8 @@ case class DoxTableFactory_test[T <: AnyRef](treeTable: DoxNode)(implicit clazzT
   }
 
   def add(element: T) {
-    val value = new QReflection(element)
-    _data.append(treeTable.leafChildren().map(leaf => leaf.config.rendering.render(value.get(leaf.propertyQuery))))
+    val elementApi = new QReflection(element)
+    _data.append(treeTable.leafChildren().map(leaf => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))))
   }
 
   def caption = _tableConfig.caption
@@ -47,9 +48,5 @@ case class DoxTableFactory_test[T <: AnyRef](treeTable: DoxNode)(implicit clazzT
     } else {
       _data
     }
-  }
-
-  def get() = {
-    DoxTable_test(head, data, caption)
   }
 }

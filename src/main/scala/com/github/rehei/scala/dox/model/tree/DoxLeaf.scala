@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.model.test
+package com.github.rehei.scala.dox.model.tree
 
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.macros.Query

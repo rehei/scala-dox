@@ -1,9 +1,11 @@
-package com.github.rehei.scala.dox.model.test
+package com.github.rehei.scala.dox.model.tree
 
+import scala.collection.Seq
 import scala.collection.mutable.ListBuffer
 
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTableConfig
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+
 
 case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig] = None) extends DoxTreeItem(config.text, config) with DoxTreeRows {
 

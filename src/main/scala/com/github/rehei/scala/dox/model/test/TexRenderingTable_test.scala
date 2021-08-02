@@ -1,16 +1,16 @@
 package com.github.rehei.scala.dox.model.test
 
-import scala.collection.mutable.ArrayBuffer
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.table.DoxTableAlignment
-import com.github.rehei.scala.dox.model.DoxReferenceTable
-import com.github.rehei.scala.dox.text.util.Text2TEX
+
+
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.tex.TexMarkupFactory
-import com.github.rehei.scala.dox.control.tex.TexTableCategory
+import com.github.rehei.scala.dox.model.DoxReferenceTable
+import com.github.rehei.scala.dox.model.table.DoxTableAlignment
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.model.tree.DoxTreeItem
 
-class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTableFactory_test[_], reference: DoxReferenceTable) {
+class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   protected val treeLeaves = model.treeTable.leafChildren()
