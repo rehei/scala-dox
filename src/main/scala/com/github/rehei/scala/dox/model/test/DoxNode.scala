@@ -12,14 +12,21 @@ case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig]
   def withTableConfig(tableConfig: DoxTableConfig) = {
     this.copy(rootConfig = Some(tableConfig))
   }
-  
+
   def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)
     this
   }
 
-  def treeRows(): ListBuffer[Seq[DoxTreeItem]] = {
-    treeRows(children, ListBuffer[DoxLeaf](), ListBuffer[Seq[DoxTreeItem]](), leafChildren().length)
+  def treeRows(index: Option[DoxTableKeyConfig] = None): ListBuffer[Seq[DoxTreeItem]] = {
+    val rows = treeRows(children, ListBuffer[DoxLeaf](), ListBuffer[Seq[DoxTreeItem]](), leafChildren().length)
+    if (index.isDefined) {
+      val indexedHeadRow = rows.headOption.map(headRow => DoxLeaf(index.get, null) +: headRow).getOrElse(Seq[DoxTreeItem]())
+      rows.drop(1)
+        .map(headRow => DoxLeaf.NONE +: headRow)
+        .prepend(indexedHeadRow)
+    }
+    rows
   }
 
   def leafChildren(): Seq[DoxLeaf] = {
