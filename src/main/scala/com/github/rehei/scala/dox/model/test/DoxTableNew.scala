@@ -29,7 +29,7 @@ case class DoxTableNew[T <: AnyRef](treeTable: DoxNode)(implicit clazzTag: Class
 
   def add(element: T) {
     val elementApi = new QReflection(element)
-    _data.append(treeTable.leafChildren().map(leaf => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))))
+    _data.append(treeTable.leafChildrenSeq().map(leaf => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))))
   }
 
   def caption = _tableConfig.caption
@@ -40,7 +40,7 @@ case class DoxTableNew[T <: AnyRef](treeTable: DoxNode)(implicit clazzTag: Class
     }
   }
 
-  def head = treeTable.treeRows(index)
+  def head = treeTable.treeRowsSeq(index)
 
   def data = {
     if (index.isDefined) {

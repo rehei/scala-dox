@@ -6,6 +6,10 @@ import scala.collection.Seq
 
 abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyConfig) {
 
+  //children verwalten
+  //doxrootnode
+  //doxplaceholder
+  
   def isLeaf() = {
     this match {
       case leaf @ DoxLeaf(_, _) => true
@@ -16,7 +20,7 @@ abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyCo
 
   def nodeChildren() = {
     this match {
-      case leaf @ DoxLeaf(_, _) => throw new Exception("Leaves do not have children")
+      case leaf @ DoxLeaf(_, _) => Seq()
       case node @ DoxNode(_, _) => node.children
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
@@ -33,7 +37,7 @@ abstract class DoxTreeItem(val baseLabel: TextAST, val nodeConfig: DoxTableKeyCo
   def leaves() = {
     this match {
       case leaf @ DoxLeaf(_, _) => Seq(leaf)
-      case node @ DoxNode(_, _) => node.leafChildren()
+      case node @ DoxNode(_, _) => node.leafChildrenSeq()
       case _                    => throw new Exception("Neither Node nor Leaf")
     }
   }
