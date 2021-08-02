@@ -6,7 +6,6 @@ import scala.collection.mutable.ListBuffer
 import com.github.rehei.scala.dox.model.table.DoxTableConfig
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-
 case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig] = None) extends DoxTreeItem(config.text, config) with DoxTreeRows {
 
   val children = ListBuffer[DoxTreeItem]()
@@ -20,8 +19,8 @@ case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig]
     this
   }
 
-  def treeRows(index: Option[DoxTableKeyConfig] = None): ListBuffer[Seq[DoxTreeItem]] = {
-    val rows = treeRows(children, ListBuffer[DoxLeaf](), ListBuffer[Seq[DoxTreeItem]](), leafChildren().length)
+  def treeRowsSeq(index: Option[DoxTableKeyConfig]) = {
+    val rows = treeRows(children, ListBuffer[DoxLeaf](), ListBuffer[Seq[DoxTreeItem]](), leafChildrenSeq().length)
     if (index.isDefined) {
       val indexedHeadRow = rows.headOption.map(headRow => DoxLeaf(index.get, null) +: headRow).getOrElse(Seq[DoxTreeItem]())
       rows.drop(1)
@@ -31,7 +30,7 @@ case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig]
     rows
   }
 
-  def leafChildren(): Seq[DoxLeaf] = {
+  def leafChildrenSeq() = {
     leafChildren(children)
   }
 
@@ -39,20 +38,13 @@ case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig]
     if (treeItems.isEmpty) {
       Seq.empty
     } else {
-
-      if (!treeItems.head.isLeaf()) {
-        leafChildren(treeItems.head.nodeChildren()) ++ leafChildren(treeItems.drop(1))
-      } else {
-        takeWhileLeaf(treeItems) ++ leafChildren(treeItems.dropWhile(_.isLeaf()))
-      }
+      (for (treeItem <- treeItems) yield {
+        treeItem match {
+          case leaf: DoxLeaf => Seq(leaf)
+          case node: DoxNode => leafChildren(node.children)
+        }
+      }).flatten
     }
   }
 
-  protected def takeWhileLeaf(treeItems: Seq[DoxTreeItem]) = {
-    for (treeItem <- treeItems.takeWhile(_.isLeaf())) yield {
-      treeItem match {
-        case leaf: DoxLeaf => leaf
-      }
-    }
-  }
 }
