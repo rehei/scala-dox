@@ -42,7 +42,9 @@ case class DoxTableFactory_test[T <: AnyRef](treeTable: DoxNode)(implicit clazzT
   def head = {
     if (index.isDefined) {
       val indexedHeadRow = _head.headOption.map(headRow => DoxLeaf(index.get, null) +: headRow).getOrElse(Seq[DoxTreeItem]())
-      _head.drop(1).prepend(indexedHeadRow)
+      _head.drop(1)
+        .map(headRow => DoxLeaf.NONE +: headRow)
+        .prepend(indexedHeadRow)
     }
     _head
   }

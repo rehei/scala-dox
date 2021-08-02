@@ -22,7 +22,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
     }
     $ { _ table & { ###("H") } } {
       \ centering;
-      $ { _ tabularx & { \\textwidth } { getTableConfig() } } {
+      $ { _ tabularx & { \\textwidth } { getColumnConfig() } } {
         \ toprule;
         //        appendTableHeadKey()
         appendTableHead()
@@ -39,65 +39,9 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
 
   }
 
-  protected def getTableConfig() = {
+  protected def getColumnConfig() = {
     treeLeaves.map(node => getTexAlignment(node.config)).mkString
-    //    model.head.map(config => getTexAlignment(config)).mkString
   }
-
-  protected def getTexAlignment(config: DoxTableKeyConfig) = {
-    if (config.dynamic) {
-      "X"
-    } else {
-      config.alignment match {
-        case DoxTableAlignment.LEFT  => "l"
-        case DoxTableAlignment.RIGHT => "r"
-        case _                       => "c"
-      }
-    }
-  }
-
-  //  protected def computeCategoryLookahead(index: Int) = {
-  //
-  //    var count = 1
-  ////    while (index + count < model.head.size && model.head(index).categoryOption.isDefined && model.head(index).categoryOption == model.head(index + count).categoryOption) {
-  //    while (index + count < treeLeaves.size && model.head(index).categoryOption.isDefined && model.head(index).categoryOption == model.head(index + count).categoryOption) {
-  //      count = count + 1
-  //    }
-  //    count
-  //  }
-
-  //  protected def appendTableHeadKey() {
-  //
-  //    val categories = model.head.flatMap(_.categoryOption)
-  //
-  //    if (categories.size > 0) {
-  //
-  //      var index = 0
-  //      val bufferContent = ArrayBuffer[TexTableCategory]()
-  //
-  //      while (index < model.head.size) {
-  //        val lookahead = computeCategoryLookahead(index)
-  //        val name = model.head(index).categoryOption.map(_.name).getOrElse("")
-  //
-  //        val mappedCategory = {
-  //
-  //          if (lookahead > 1) {
-  //            TexTableCategory(\\ multicolumn & { lookahead } { "c" } { markup.escape(name) }, Some(\\ cmidrule & { s"${index + 1}-${index + lookahead}" }))
-  //          } else {
-  //            TexTableCategory(\\ multicolumn & { lookahead } { "c" } { markup.escape(name) }, None)
-  //          }
-  //        }
-  //
-  //        bufferContent.append(mappedCategory)
-  //
-  //        index = index + lookahead
-  //      }
-  //
-  //      \ plain { bufferContent.map(_.content.generate()).mkString(" & ") + "\\\\" }
-  //      \ plain { bufferContent.flatMap(_.rule).map(_.generate()).mkString(" ") }
-  //    }
-  //
-  //  }
 
   protected def appendTableHead() {
     for (row <- model.head) {
@@ -109,12 +53,24 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
     if (entry.leaves().length <= 1) {
       Text2TEX.generate(entry.nodeConfig.text)
     } else {
-      "\\multicolumn{" + entry.leaves().length + "}{c}{" + Text2TEX.generate(entry.nodeConfig.text) + "}"
+      "\\multicolumn{" + entry.leaves().length + "}{" + getTexAlignment(entry.nodeConfig) + "}{" + Text2TEX.generate(entry.nodeConfig.text) + "}"
     }
   }
   protected def appendTableBody() {
     for (row <- model.data) yield {
       \ plain { row.map(markup.escape(_)).mkString(" & ") + "\\\\" + "\n" }
+    }
+  }
+
+  protected def getTexAlignment(config: DoxTableKeyConfig) = {
+    if (config.dynamic) {
+      "X"
+    } else {
+      config.alignment match {
+        case DoxTableAlignment.LEFT  => "l"
+        case DoxTableAlignment.RIGHT => "r"
+        case _                       => "c"
+      }
     }
   }
 
