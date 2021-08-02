@@ -30,7 +30,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
         appendTableBody()
         \ bottomrule;
       }
-            \ caption & { markup.escape(model.tableConfig.caption) }
+      \ caption & { markup.escape(model.tableConfig.caption) }
       \ label { reference.referenceID }
     }
     if (!floating) {
@@ -101,16 +101,8 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
 
   protected def appendTableHead() {
     for (row <- model.head) {
-      \ plain { row.map(entry => columnHeader(entry)).mkString(" & ") }
+      \ plain { row.map(entry => columnHeader(entry)).mkString(" & ") + "\\\\" + "\n" }
     }
-    //      \ plain { model..map(config => Text2TEX.generate(config.text)).mkString(" & ") + "\\\\" }
-  }
-  def getHeaders(doxTree: DoxNode) = {
-    println(doxTree.leafChildren().map(_.baseLabel))
-
-    (for (row <- doxTree.treeRows()) yield {
-      row.map(entry => columnHeader(entry)).mkString(" & ")
-    }).mkString("\\\\ \n") + "\\\\ "
   }
 
   protected def columnHeader(entry: DoxTreeItem) = {
@@ -122,7 +114,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
   }
   protected def appendTableBody() {
     for (row <- model.data) yield {
-      \ plain { row.map(markup.escape(_)).mkString(" & ") + "\\\\" }
+      \ plain { row.map(markup.escape(_)).mkString(" & ") + "\\\\" + "\n" }
     }
   }
 
