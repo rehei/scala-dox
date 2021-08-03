@@ -15,19 +15,23 @@ case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem() with DoxTree
 
   def treeRowsSeq(index: Option[DoxTableKeyConfig]) = {
     val rows = treeRows(children, ListBuffer[DoxTreeItem](), ListBuffer[Seq[DoxTreeItem]](), leafChildrenSeq().length)
-    if (index.isDefined) {
-      val indexedHeadRow = rows.headOption.map(headRow => DoxPlaceholder(index.get) +: headRow).getOrElse(Seq[DoxTreeItem]())
-      rows.drop(1)
-        .map(headRow => DoxPlaceholder() +: headRow)
-        .prepend(indexedHeadRow)
+    index match {
+      case Some(config) => indexTreeRows(rows, config)
+      case None         => rows
     }
-    rows
   }
 
   def leafChildrenSeq() = {
     leafChildren(children)
   }
 
+  protected def indexTreeRows(rows: ListBuffer[Seq[DoxTreeItem]], index: DoxTableKeyConfig) = {
+    val indexedHeadRow = rows.headOption.map(headRow => DoxPlaceholder(index) +: headRow).getOrElse(Seq[DoxTreeItem]())
+    rows.drop(1)
+      .map(headRow => DoxPlaceholder() +: headRow)
+      .prepend(indexedHeadRow)
+    rows
+  }
   protected def leafChildren(treeItems: Seq[DoxTreeItem]): Seq[DoxLeaf] = {
     (for (treeItem <- treeItems) yield {
       treeItem match {
