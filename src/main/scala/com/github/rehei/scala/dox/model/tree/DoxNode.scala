@@ -29,16 +29,12 @@ case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem() with DoxTree
   }
 
   protected def leafChildren(treeItems: Seq[DoxTreeItem]): Seq[DoxLeaf] = {
-    if (treeItems.isEmpty) {
-      Seq.empty
-    } else {
-      (for (treeItem <- treeItems) yield {
-        treeItem match {
-          case leaf: DoxLeaf => Seq(leaf)
-          case node: DoxNode => leafChildren(node.children)
-        }
-      }).flatten
-    }
+    (for (treeItem <- treeItems) yield {
+      treeItem match {
+        case leaf: DoxLeaf => Seq(leaf)
+        case node: DoxNode => leafChildren(node.children)
+      }
+    }).flatten
   }
 
 }
