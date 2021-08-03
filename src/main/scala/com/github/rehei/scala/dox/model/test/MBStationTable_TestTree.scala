@@ -5,6 +5,8 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigSupport
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.dox.model.tree.DoxNode
 import com.github.rehei.scala.dox.model.tree.DoxLeaf
+import com.github.rehei.scala.dox.model.tree.DoxRootNode
+import com.github.rehei.scala.dox.model.tree.DoxPlaceholder
 
 case class MBStationTable_TestTree() {
 
@@ -18,8 +20,7 @@ case class MBStationTable_TestTree() {
     val query = new Query[StationSetup]
 
     val treeTable = {
-      DoxNode(configRoot)
-        .withTableConfig(DoxTableConfigBuilder.caption("TEST").indexing(false))
+      new DoxRootNode(configRoot,DoxTableConfigBuilder.caption("TEST").indexing(false))
         .addNodes(
           DoxLeaf(configDefault.name("Station"), query.apply(_.station)),
           DoxNode(configDefault.name("Kapazität"))

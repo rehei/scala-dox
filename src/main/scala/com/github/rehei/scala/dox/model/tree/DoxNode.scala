@@ -6,13 +6,7 @@ import scala.collection.mutable.ListBuffer
 import com.github.rehei.scala.dox.model.table.DoxTableConfig
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig] = None) extends DoxTreeItem(config.text, config) with DoxTreeRows {
-
-  val children = ListBuffer[DoxTreeItem]()
-
-  def withTableConfig(tableConfig: DoxTableConfig) = {
-    this.copy(rootConfig = Some(tableConfig))
-  }
+case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem(config) with DoxTreeRows {
 
   def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)
@@ -20,11 +14,11 @@ case class DoxNode(config: DoxTableKeyConfig, rootConfig: Option[DoxTableConfig]
   }
 
   def treeRowsSeq(index: Option[DoxTableKeyConfig]) = {
-    val rows = treeRows(children, ListBuffer[DoxLeaf](), ListBuffer[Seq[DoxTreeItem]](), leafChildrenSeq().length)
+    val rows = treeRows(children, ListBuffer[DoxTreeItem](), ListBuffer[Seq[DoxTreeItem]](), leafChildrenSeq().length)
     if (index.isDefined) {
-      val indexedHeadRow = rows.headOption.map(headRow => DoxLeaf(index.get, null) +: headRow).getOrElse(Seq[DoxTreeItem]())
+      val indexedHeadRow = rows.headOption.map(headRow => DoxPlaceholder(index.get) +: headRow).getOrElse(Seq[DoxTreeItem]())
       rows.drop(1)
-        .map(headRow => DoxLeaf.NONE +: headRow)
+        .map(headRow => DoxPlaceholder() +: headRow)
         .prepend(indexedHeadRow)
     }
     rows

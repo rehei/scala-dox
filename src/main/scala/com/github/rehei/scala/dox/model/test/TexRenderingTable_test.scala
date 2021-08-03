@@ -48,10 +48,10 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
   }
 
   protected def columnHeader(entry: DoxTreeItem) = {
-    if (entry.leaves().length <= 1) {
+    if (entry.endPoints().length <= 1) {
       Text2TEX.generate(entry.nodeConfig.text)
     } else {
-      "\\multicolumn{" + entry.leaves().length + "}{" + getTexAlignment(entry.nodeConfig) + "}{" + Text2TEX.generate(entry.nodeConfig.text) + "}"
+      "\\multicolumn{" + entry.endPoints().length + "}{" + getTexAlignment(entry.nodeConfig) + "}{" + Text2TEX.generate(entry.nodeConfig.text) + "}"
     }
   }
   

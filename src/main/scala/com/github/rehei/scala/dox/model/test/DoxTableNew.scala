@@ -12,11 +12,11 @@ import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.tree.DoxNode
+import com.github.rehei.scala.dox.model.tree.DoxRootNode
 
-case class DoxTableNew[T <: AnyRef](treeTable: DoxNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTableNew[T <: AnyRef](treeTable: DoxRootNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val query = new Query[T]()
-  protected val _tableConfig = treeTable.rootConfig.map(m => m).getOrElse(throw new Exception("Missing Table Config"))
   protected val _data = ListBuffer[Seq[String]]()
 
   protected var index: Option[DoxTableKeyConfig] = None
@@ -32,10 +32,10 @@ case class DoxTableNew[T <: AnyRef](treeTable: DoxNode)(implicit clazzTag: Class
     _data.append(treeTable.leafChildrenSeq().map(leaf => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))))
   }
 
-  def caption = _tableConfig.caption
+  def caption = treeTable.rootConfig.caption
 
   def withIndex(indexConfig: Option[DoxTableKeyConfig]) = {
-    if (_tableConfig.enableIndexing) {
+    if (treeTable.rootConfig.enableIndexing) {
       index = indexConfig
     }
   }
