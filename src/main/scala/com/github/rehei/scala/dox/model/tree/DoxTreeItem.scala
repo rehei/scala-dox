@@ -5,15 +5,15 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import scala.collection.Seq
 import scala.collection.mutable.ListBuffer
 
-abstract class DoxTreeItem(val nodeConfig: DoxTableKeyConfig) {
+abstract class DoxTreeItem() {
 
+  val config: DoxTableKeyConfig
   val children = ListBuffer[DoxTreeItem]()
 
   def isLeaf() = {
     this match {
-      case leaf @ DoxLeaf(_, _)     => true
-      case node @ DoxNode(_)        => false
-      case node @ DoxPlaceholder(_) => false
+      case leaf @ DoxLeaf(_, _) => true
+      case _                    => false
     }
   }
 

@@ -6,7 +6,7 @@ import scala.collection.mutable.ListBuffer
 import com.github.rehei.scala.dox.model.table.DoxTableConfig
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem(config) with DoxTreeRows {
+case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem() with DoxTreeRows {
 
   def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)

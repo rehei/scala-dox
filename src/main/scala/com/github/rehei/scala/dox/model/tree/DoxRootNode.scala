@@ -11,6 +11,7 @@ object DoxRootNode{
 }
 
 class DoxRootNode(override val config: DoxTableKeyConfig, val rootConfig: DoxTableConfig) extends DoxNode(config) {
+  
   override def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)
     this

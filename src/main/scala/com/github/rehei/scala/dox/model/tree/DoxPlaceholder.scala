@@ -6,4 +6,4 @@ import com.github.rehei.scala.macros.Query
 object DoxPlaceholder {
   def apply() = new DoxPlaceholder(DoxTableKeyConfig.NONE)
 }
-case class DoxPlaceholder(config: DoxTableKeyConfig) extends DoxTreeItem(config) 
+case class DoxPlaceholder(config: DoxTableKeyConfig) extends DoxTreeItem() 
