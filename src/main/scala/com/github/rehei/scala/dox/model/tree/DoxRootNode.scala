@@ -1,17 +1,15 @@
 package com.github.rehei.scala.dox.model.tree
 
-import scala.collection.Seq
-import scala.collection.mutable.ListBuffer
-
 import com.github.rehei.scala.dox.model.table.DoxTableConfig
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.table.DoxTableStringConversion
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigSupport
 
-object DoxRootNode{
-  def apply(config:DoxTableKeyConfig, rootConfig: DoxTableConfig) = new DoxRootNode(config,rootConfig)
+object DoxRootNode {
+  def apply(rootConfig: DoxTableConfig) = new DoxRootNode(rootConfig)
 }
 
-class DoxRootNode(override val config: DoxTableKeyConfig, val rootConfig: DoxTableConfig) extends DoxNode(config) {
-  
+class DoxRootNode(val rootConfig: DoxTableConfig) extends DoxNode(DoxTableKeyConfigSupport.NONE) {
+
   override def addNodes(doxTreeItem: DoxTreeItem*) = {
     children.appendAll(doxTreeItem)
     this

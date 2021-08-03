@@ -15,12 +15,11 @@ case class MBStationTable_TestTree() {
   def generate() = {
 
     val config = new DoxTableKeyConfigSupport(TestDoxTableStringConversion(false))
-    val configRoot = config.apply(_.NONE)
     val configDefault = config.apply(_.name("PLACEHOLDER").alignment(_.RIGHT).dynamic(false))
     val query = new Query[StationSetup]
 
     val treeTable = {
-      DoxRootNode(configRoot, DoxTableConfigBuilder.caption("TEST").indexing(false))
+      DoxRootNode(DoxTableConfigBuilder.caption("TEST").indexing(false))
         .addNodes(
           DoxLeaf(configDefault.name("Station"), query.apply(_.station)),
           DoxNode(configDefault.name("Kapazität"))

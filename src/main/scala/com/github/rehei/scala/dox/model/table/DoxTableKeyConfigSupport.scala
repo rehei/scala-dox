@@ -3,6 +3,10 @@ package com.github.rehei.scala.dox.model.table
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.text.TextAST
 
+object DoxTableKeyConfigSupport {
+  val NONE = new DoxTableKeyConfigSupport(DoxTableStringConversion.NONE).apply(_.NONE)
+}
+
 class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
 
   protected object DataTableKeyConfigBuilder {
@@ -24,7 +28,6 @@ class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
     def name(text: TextAST) = BuildingObject(text)
 
   }
-
   def apply(callback: DataTableKeyConfigBuilder.type => DoxTableKeyConfig) = {
     callback(DataTableKeyConfigBuilder)
   }

@@ -32,6 +32,7 @@ case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem() with DoxTree
       .prepend(indexedHeadRow)
     rows
   }
+  
   protected def leafChildren(treeItems: Seq[DoxTreeItem]): Seq[DoxLeaf] = {
     (for (treeItem <- treeItems) yield {
       treeItem match {
