@@ -20,7 +20,7 @@ case class MBStationTable_TestTree() {
     val query = new Query[StationSetup]
 
     val treeTable = {
-      new DoxRootNode(configRoot,DoxTableConfigBuilder.caption("TEST").indexing(false))
+      DoxRootNode(configRoot, DoxTableConfigBuilder.caption("TEST").indexing(false))
         .addNodes(
           DoxLeaf(configDefault.name("Station"), query.apply(_.station)),
           DoxNode(configDefault.name("Kapazität"))
