@@ -7,6 +7,7 @@ import com.github.rehei.scala.dox.model.tree.DoxNode
 import com.github.rehei.scala.dox.model.tree.DoxLeaf
 import com.github.rehei.scala.dox.model.tree.DoxRootNode
 import com.github.rehei.scala.dox.model.tree.DoxPlaceholder
+import com.github.rehei.scala.dox.model.tree.DoxIndexNode
 
 case class MBStationTable_TestTree() {
 
@@ -21,7 +22,9 @@ case class MBStationTable_TestTree() {
     val treeTable = {
       DoxRootNode(DoxTableConfigBuilder.caption("TEST").indexing(false))
         .addNodes(
+
           DoxLeaf(configDefault.name("Station"), query.apply(_.station)),
+          DoxIndexNode(configDefault.name("#")),
           DoxNode(configDefault.name("Kapazität"))
             .addNodes(
               DoxLeaf(configDefault.name("min"), query.apply(_.capacityMin)),

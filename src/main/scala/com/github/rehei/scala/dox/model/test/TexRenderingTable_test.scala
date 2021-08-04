@@ -13,7 +13,7 @@ import com.github.rehei.scala.dox.model.tree.DoxTreeItem
 class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
-  protected val treeLeaves = model.treeTable.leafChildrenSeq()
+  protected val treeLeaves = model.treeTable.endpointsSeq()
   import markup._
 
   def create() {
@@ -48,10 +48,10 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
   }
 
   protected def columnHeader(entry: DoxTreeItem) = {
-    if (entry.endPoints().length <= 1) {
+    if (entry.endpoints().length <= 1) {
       Text2TEX.generate(entry.config.text)
     } else {
-      "\\multicolumn{" + entry.endPoints().length + "}{" + getTexAlignment(entry.config) + "}{" + Text2TEX.generate(entry.config.text) + "}"
+      "\\multicolumn{" + entry.endpoints().length + "}{" + getTexAlignment(entry.config) + "}{" + Text2TEX.generate(entry.config.text) + "}"
     }
   }
   

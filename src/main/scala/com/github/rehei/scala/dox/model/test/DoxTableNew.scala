@@ -13,14 +13,15 @@ import com.github.rehei.scala.macros.util.QReflection
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.tree.DoxNode
 import com.github.rehei.scala.dox.model.tree.DoxRootNode
+import com.github.rehei.scala.dox.model.tree.DoxLeaf
+import com.github.rehei.scala.dox.model.tree.DoxIndexNode
 
 case class DoxTableNew[T <: AnyRef](treeTable: DoxRootNode)(implicit clazzTag: ClassTag[T]) {
 
+  val data = ListBuffer[Seq[String]]()
+
   protected val query = new Query[T]()
-  protected val _data = ListBuffer[Seq[String]]()
-
-  protected var index: Option[DoxTableKeyConfig] = None
-
+  
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
       add(element)
@@ -29,24 +30,19 @@ case class DoxTableNew[T <: AnyRef](treeTable: DoxRootNode)(implicit clazzTag: C
 
   def add(element: T) {
     val elementApi = new QReflection(element)
-    _data.append(treeTable.leafChildrenSeq().map(leaf => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))))
+    val rowValues = {
+      for (leaf <- treeTable.endpointsSeq()) yield {
+        leaf match {
+          case leaf: DoxLeaf       => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))
+          case index: DoxIndexNode => (data.length + 1).toString()
+        }
+      }
+    }
+    data.append(rowValues)
   }
 
   def caption = treeTable.rootConfig.caption
 
-  def withIndex(indexConfig: Option[DoxTableKeyConfig]) = {
-    if (treeTable.rootConfig.enableIndexing) {
-      index = indexConfig
-    }
-  }
+  def head = treeTable.treeRowsSeq()
 
-  def head = treeTable.treeRowsSeq(index)
-
-  def data = {
-    if (index.isDefined) {
-      _data.zipWithIndex.map { case (dataRow, index) => (index + 1).toString() +: dataRow }
-    } else {
-      _data
-    }
-  }
 }

@@ -26,7 +26,6 @@ class DoxTableRecTest {
     val floating = false
     val baseAST = TexAST()
     val testRend = new TexRenderingTable_test(baseAST, floating, test.generate(), refTable).create()
-    
     println(baseAST.build())
   }
 }

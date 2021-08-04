@@ -10,10 +10,11 @@ abstract class DoxTreeItem() {
   val config: DoxTableKeyConfig
   val children = ListBuffer[DoxTreeItem]()
 
-  def isLeaf() = {
+  def isEndpoint() = {
     this match {
-      case leaf @ DoxLeaf(_, _) => true
-      case _                    => false
+      case leaf @ DoxLeaf(_, _)           => true
+      case index @ DoxIndexNode(_)        => true
+      case _                              => false
     }
   }
 
@@ -23,11 +24,12 @@ abstract class DoxTreeItem() {
     }
   }
 
-  def endPoints() = {
+  def endpoints() = {
     this match {
-      case leaf @ DoxLeaf(_, _)            => Seq(leaf)
-      case node @ DoxNode(_)               => node.leafChildrenSeq()
-      case placeholder @ DoxPlaceholder(_) => Seq(placeholder)
+      case leaf @ DoxLeaf(_, _)           => Seq(leaf)
+      case node @ DoxNode(_)              => node.endpointsSeq()
+      case placeholder @ DoxPlaceholder() => Seq(placeholder)
+      case index @ DoxIndexNode(_)        => Seq(index)
     }
   }
 }
