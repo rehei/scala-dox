@@ -11,7 +11,15 @@ object DoxRootNode {
 class DoxRootNode(val rootConfig: DoxTableConfig) extends DoxNode(DoxTableKeyConfigSupport.NONE) {
 
   override def addNodes(doxTreeItem: DoxTreeItem*) = {
-    children.appendAll(doxTreeItem)
+    children.appendAll(filterIndex(doxTreeItem))
     this
+  }
+
+  protected def filterIndex(doxTreeItem: Seq[DoxTreeItem]) = {
+    if (!rootConfig.enableIndexing) {
+      doxTreeItem.filter(!_.isInstanceOf[DoxIndexNode])
+    } else {
+      doxTreeItem
+    }
   }
 }
