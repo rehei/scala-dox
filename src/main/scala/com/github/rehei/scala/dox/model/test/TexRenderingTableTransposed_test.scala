@@ -83,11 +83,7 @@ class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model
     for (
       row <- model.head
     ) yield {
-      (for (entry <- row) yield {
-        (Seq(entry) ++ (for (i <- 1 to entry.children.length - 1) yield {
-          DoxPlaceholder()
-        }))
-      }).flatten
+      row.flatMap(entry => Seq(entry) ++ 0.until(entry.children.length - 1).map(_ => DoxPlaceholder()))
     }
   }
   protected def columnHeader(entry: DoxTreeItem) = {
