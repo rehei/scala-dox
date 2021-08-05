@@ -73,7 +73,7 @@ class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model
 
     for ((entries, low) <- adjustHead.transpose.zip(model.data.transpose)) {
       //      println(entries.map(entry => columnHeader(entry) + " & ") + low.mkString(" & ") + "\\\\" + "\n")
-      \ plain { entries.map(columnHeader).mkString(" & ") + low.mkString(" & ") + "\\\\" + "\n" }
+      \ plain { entries.map(columnHeader).mkString(" & ") + " & "+ low.mkString(" & ") + "\\\\" + "\n" }
       \ 
       //      \ plain {  columnHeader(entry).mkString(" & ") +  low.mkString(" & ") +"\\\\" + "\n" }
     }
