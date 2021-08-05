@@ -8,6 +8,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTableStringConversion
 import com.github.rehei.scala.dox.model.test.MBStationTable_TestTree
 import com.github.rehei.scala.dox.model.test.TexRenderingTable_test
+import com.github.rehei.scala.dox.model.test.TexRenderingTableTransposed_test
 
 class DoxTableRecTest {
   case class DoxConfigCounter(config: DoxTableKeyConfig, var counter: Int)
@@ -25,7 +26,7 @@ class DoxTableRecTest {
     val refTable = DoxReferenceTable("69")
     val floating = false
     val baseAST = TexAST()
-    val testRend = new TexRenderingTable_test(baseAST, floating, test.generate(), refTable).create()
+    val testRend = new TexRenderingTableTransposed_test(baseAST, floating, test.generate(), refTable).create()
     println(baseAST.build())
   }
 }

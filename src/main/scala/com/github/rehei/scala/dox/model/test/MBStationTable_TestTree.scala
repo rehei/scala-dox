@@ -39,6 +39,7 @@ case class MBStationTable_TestTree() {
       StationSetup("a2", 12, 21, "b2"),
       StationSetup("a555", 561, 265, "b555"),
       StationSetup("a44", 212, 244, "b44"),
+      StationSetup("a6", 654, 546, "b6"),
       StationSetup("a3", 154, 542, "b3"))
 
     testSeq.map(tableOverview.add)
