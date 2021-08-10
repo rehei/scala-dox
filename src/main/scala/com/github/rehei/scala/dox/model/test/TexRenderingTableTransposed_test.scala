@@ -6,14 +6,10 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.tree.DoxTreeItem
+import com.github.rehei.scala.dox.model.tree.MyDoxNode
 import scala.collection.mutable.ListBuffer
-import com.github.rehei.scala.dox.model.tree.DoxLeaf
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextObjectDefault
-import com.github.rehei.scala.dox.model.tree.DoxNode
-import com.github.rehei.scala.dox.model.tree.DoxIndexNode
-import com.github.rehei.scala.dox.model.tree.DoxPlaceholder
 
 class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
 

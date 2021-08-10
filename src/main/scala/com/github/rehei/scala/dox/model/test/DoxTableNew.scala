@@ -1,23 +1,14 @@
 package com.github.rehei.scala.dox.model.test
 
-import scala.collection.Seq
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
-import com.github.rehei.scala.dox.model.table.DoxTableAlignment
-import com.github.rehei.scala.dox.model.table.DoxTableConfig
-import com.github.rehei.scala.dox.model.table.DoxTableConfigBuilder
-import com.github.rehei.scala.dox.model.table.DoxTableStringConversion
+import com.github.rehei.scala.dox.model.tree.MyDoxNode
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.model.tree.DoxNode
-import com.github.rehei.scala.dox.model.tree.DoxRootNode
-import com.github.rehei.scala.dox.model.tree.DoxLeaf
-import com.github.rehei.scala.dox.model.tree.DoxIndexNode
-import scala.collection.mutable.ArrayBuffer
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
-case class DoxTableNew[T <: AnyRef](protected val root: DoxRootNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTableNew[T <: AnyRef](val root: MyDoxNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
   protected val _query = new Query[T]()
@@ -39,25 +30,19 @@ case class DoxTableNew[T <: AnyRef](protected val root: DoxRootNode)(implicit cl
   }
 
   def caption = {
-    root.caption
+    Text2TEX.generate(root.config.text)
   }
 
   def head = {
-    root.treeRowsSeq()
-  }
-  
-  def leaves() = {
-    root.endpointsSeq()
+    new DoxTableTreeHeadRepository(root)
   }
 
   protected def extract(element: T) = {
+
     val elementApi = new QReflection(element)
 
-    for (leaf <- root.endpointsSeq()) yield {
-      leaf match {
-        case leaf: DoxLeaf       => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))
-        case index: DoxIndexNode => (_data.length + 1).toString()
-      }
+    for (node <- root.leavesRecursive()) yield {
+      node.config.rendering.render(node.valueOf(0, element))
     }
   }
 

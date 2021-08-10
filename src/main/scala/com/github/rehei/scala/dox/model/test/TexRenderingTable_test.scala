@@ -8,12 +8,12 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.tree.DoxTreeItem
+import com.github.rehei.scala.dox.model.tree.MyDoxNode
 
 class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
-  protected val treeLeaves = model.leaves()
+
   import markup._
 
   def create() {
@@ -29,7 +29,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
         appendTableBody()
         \ hline;
       }
-      \ caption & { markup.escape(model.caption) }
+      \ caption & { model.caption }
       \ label { reference.referenceID }
     }
     if (!floating) {
@@ -38,20 +38,20 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
   }
 
   protected def getColumnConfig() = {
-    treeLeaves.map(node => getTexAlignment(node.config)).mkString
+    model.root.leavesRecursive().map(node => getTexAlignment(node.config)).mkString
   }
 
   protected def appendTableHead() {
-    for (row <- model.head) {
-      \ plain { row.map(entry => columnHeader(entry)).mkString(" & ") + "\\\\" + "\n" }
+    for (row <- model.head.list()) {
+      \ plain { row.values.map(entry => columnHeader(entry)).mkString(" & ") + "\\\\" + "\n" }
     }
   }
 
-  protected def columnHeader(entry: DoxTreeItem) = {
-    if (entry.endpoints().length <= 1) {
+  protected def columnHeader(entry: TableHeadRowKey) = {
+    if (!entry.isMultiColumn()) {
       Text2TEX.generate(entry.config.text)
     } else {
-      "\\multicolumn{" + entry.endpoints().length + "}{" + getTexAlignment(entry.config) + "}{" + Text2TEX.generate(entry.config.text) + "}"
+      "\\multicolumn{" + entry.size + "}{" + getTexAlignment(entry.config) + "}{" + Text2TEX.generate(entry.config.text) + "}"
     }
   }
   
