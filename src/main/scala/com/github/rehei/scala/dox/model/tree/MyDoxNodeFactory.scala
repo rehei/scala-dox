@@ -19,12 +19,6 @@ object MyDoxNodeFactory {
     }
   }
   
-  object Rule {
-    def apply() = {
-      new MyDoxNode(MyDoxNodeType.RULE, DoxTableKeyConfig.NONE.name("---RULE---"), Seq.empty) with Writeable
-    }
-  }
-
   object Whitespace {
     def apply() = {
       new MyDoxNode(MyDoxNodeType.WHITESPACE, DoxTableKeyConfig.NONE, Seq.empty)
