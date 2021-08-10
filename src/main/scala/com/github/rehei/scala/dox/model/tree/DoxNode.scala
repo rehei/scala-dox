@@ -8,11 +8,6 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
 case class DoxNode(config: DoxTableKeyConfig) extends DoxTreeItem() with DoxTreeRows {
 
-  def addNodes(doxTreeItem: DoxTreeItem*) = {
-    children.appendAll(doxTreeItem)
-    this
-  }
-
   def treeRowsSeq() = {
     treeRows(children, ListBuffer[DoxTreeItem](), ListBuffer[Seq[DoxTreeItem]](), endpointsSeq().length)
   }

@@ -17,8 +17,10 @@ import com.github.rehei.scala.dox.model.tree.DoxPlaceholder
 
 class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
 
+  /*
+  
   protected val markup = new TexMarkupFactory(baseAST)
-  protected val treeLeaves = model.treeTable.endpointsSeq()
+  protected val treeLeaves = model.leaves()
   import markup._
 
   def create() {
@@ -138,5 +140,7 @@ class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model
       }
     }
   }
+
+*/
 
 }

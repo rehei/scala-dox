@@ -12,15 +12,9 @@ abstract class DoxTreeItem() {
 
   def isEndpoint() = {
     this match {
-      case leaf @ DoxLeaf(_, _)           => true
-      case index @ DoxIndexNode(_)        => true
-      case _                              => false
-    }
-  }
-
-  def leafPropertyQuery() = {
-    this match {
-      case leaf @ DoxLeaf(_, _) => leaf.propertyQuery
+      case leaf @ DoxLeaf(_, _)    => true
+      case index @ DoxIndexNode(_) => true
+      case _                       => false
     }
   }
 
@@ -31,6 +25,11 @@ abstract class DoxTreeItem() {
       case placeholder @ DoxPlaceholder() => Seq(placeholder)
       case index @ DoxIndexNode(_)        => Seq(index)
     }
+  }
+
+  def addNodes(doxTreeItem: DoxTreeItem*) = {
+    children.appendAll(doxTreeItem)
+    this
   }
 }
 

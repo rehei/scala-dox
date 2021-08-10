@@ -13,7 +13,7 @@ import com.github.rehei.scala.dox.model.tree.DoxTreeItem
 class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
-  protected val treeLeaves = model.treeTable.endpointsSeq()
+  protected val treeLeaves = model.leaves()
   import markup._
 
   def create() {

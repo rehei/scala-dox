@@ -15,13 +15,13 @@ import com.github.rehei.scala.dox.model.tree.DoxNode
 import com.github.rehei.scala.dox.model.tree.DoxRootNode
 import com.github.rehei.scala.dox.model.tree.DoxLeaf
 import com.github.rehei.scala.dox.model.tree.DoxIndexNode
+import scala.collection.mutable.ArrayBuffer
 
-case class DoxTableNew[T <: AnyRef](treeTable: DoxRootNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTableNew[T <: AnyRef](protected val root: DoxRootNode)(implicit clazzTag: ClassTag[T]) {
 
-  val data = ListBuffer[Seq[String]]()
+  protected val _data = ArrayBuffer[T]()
+  protected val _query = new Query[T]()
 
-  protected val query = new Query[T]()
-  
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
       add(element)
@@ -29,20 +29,36 @@ case class DoxTableNew[T <: AnyRef](treeTable: DoxRootNode)(implicit clazzTag: C
   }
 
   def add(element: T) {
-    val elementApi = new QReflection(element)
-    val rowValues = {
-      for (leaf <- treeTable.endpointsSeq()) yield {
-        leaf match {
-          case leaf: DoxLeaf       => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))
-          case index: DoxIndexNode => (data.length + 1).toString()
-        }
-      }
-    }
-    data.append(rowValues)
+    _data.append(element)
   }
 
-  def caption = treeTable.rootConfig.caption
+  def data() = {
+    for (element <- _data) yield {
+      extract(element)
+    }
+  }
 
-  def head = treeTable.treeRowsSeq()
+  def caption = {
+    root.caption
+  }
+
+  def head = {
+    root.treeRowsSeq()
+  }
+  
+  def leaves() = {
+    root.endpointsSeq()
+  }
+
+  protected def extract(element: T) = {
+    val elementApi = new QReflection(element)
+
+    for (leaf <- root.endpointsSeq()) yield {
+      leaf match {
+        case leaf: DoxLeaf       => leaf.config.rendering.render(elementApi.get(leaf.propertyQuery))
+        case index: DoxIndexNode => (_data.length + 1).toString()
+      }
+    }
+  }
 
 }
