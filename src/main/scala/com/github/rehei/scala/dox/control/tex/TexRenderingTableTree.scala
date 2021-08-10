@@ -22,11 +22,11 @@ class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableT
     $ { _ table & { ###("H") } } {
       \ centering;
       $ { _ tabularx & { \\hsize } { getColumnConfig() } } {
-        \ hline;
+        \ toprule;
         appendTableHead()
-        \ hline;
+        \ midrule;
         appendTableBody()
-        \ hline;
+        \ bottomrule;
       }
       \ caption & { model.caption }
       \ label { reference.referenceID }
