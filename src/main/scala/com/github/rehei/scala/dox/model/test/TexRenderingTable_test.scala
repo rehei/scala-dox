@@ -22,12 +22,12 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
     }
     $ { _ table & { ###("H") } } {
       \ centering;
-      $ { _ tabularx & { \\textwidth } { getColumnConfig() } } {
-        \ toprule;
+      $ { _ tabularx & { \\hsize } { getColumnConfig() } } {
+        \ hline;
         appendTableHead()
-        \ midrule;
+        \ hline;
         appendTableBody()
-        \ bottomrule;
+        \ hline;
       }
       \ caption & { markup.escape(model.caption) }
       \ label { reference.referenceID }
