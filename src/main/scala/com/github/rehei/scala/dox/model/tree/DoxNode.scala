@@ -5,7 +5,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import scala.collection.Seq
 import scala.collection.mutable.ListBuffer
 
-case class MyDoxNode(nodeType: MyDoxNodeType, config: DoxTableKeyConfig, children: Seq[MyDoxNode]) {
+case class DoxNode(nodeType: DoxNodeType, config: DoxTableKeyConfig, children: Seq[DoxNode]) {
 
   def valueOf(index: Int, element: AnyRef) = {
     nodeType.valueOf(index, element)
@@ -23,7 +23,7 @@ case class MyDoxNode(nodeType: MyDoxNodeType, config: DoxTableKeyConfig, childre
     children.isEmpty
   }
 
-  def leavesRecursive(): Seq[MyDoxNode] = {
+  def leavesRecursive(): Seq[DoxNode] = {
     children.flatMap {
       child =>
         {

@@ -1,14 +1,15 @@
-package com.github.rehei.scala.dox.model.test
+package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.control.tex.TexMarkupFactory
 import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.tree.MyDoxNode
+import com.github.rehei.scala.dox.model.tree.DoxNode
+import com.github.rehei.scala.dox.model.table.tree.DoxTableTreeHeadRowKeyWithOffset
+import com.github.rehei.scala.dox.model.table.tree.DoxTableTreeHeadRowKey
+import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
 
-class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTableNew[_], reference: DoxReferenceTable) {
+class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableTree[_], reference: DoxReferenceTable) {
 
   protected val markup = new TexMarkupFactory(baseAST)
 
@@ -45,7 +46,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
     }
   }
 
-  protected def columnHeader(entry: TableHeadRowKey) = {
+  protected def columnHeader(entry: DoxTableTreeHeadRowKey) = {
     if (!entry.isMultiColumn()) {
       Text2TEX.generate(entry.config.text)
     } else {
@@ -53,16 +54,16 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
     }
   }
   
-  protected def withOffset(input: Seq[TableHeadRowKey]) = {
+  protected def withOffset(input: Seq[DoxTableTreeHeadRowKey]) = {
     var offset = 0
     for(Seq(first, second) <- input.sliding(2)) yield {
-      val result = TableHeadRowKeyWithOffset(offset, first)
+      val result = DoxTableTreeHeadRowKeyWithOffset(offset, first)
       offset = offset + first.size
       result
     }
   }
 
-  protected def cmidrule(entry: TableHeadRowKeyWithOffset) = {
+  protected def cmidrule(entry: DoxTableTreeHeadRowKeyWithOffset) = {
     if (entry.key.rule) {
       val offset = entry.offset
       val target = entry.offset + entry.key.size
