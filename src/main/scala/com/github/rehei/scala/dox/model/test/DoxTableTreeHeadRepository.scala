@@ -3,6 +3,7 @@ package com.github.rehei.scala.dox.model.test
 import com.github.rehei.scala.dox.model.tree.MyDoxNode
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.tree.MyDoxNodeFactory
+import com.github.rehei.scala.dox.model.tree.MyDoxNodeType
 
 class DoxTableTreeHeadRepository(root: MyDoxNode) {
 
@@ -10,7 +11,26 @@ class DoxTableTreeHeadRepository(root: MyDoxNode) {
 
     import MyDoxNodeFactory._
 
-    def withWhitespace(max: Int): MyDoxNode = {
+    def withRule(): MyDoxNode = {
+
+      if (base.children.isEmpty) {
+        base.copy()
+      } else {
+        if (base.nodeType == MyDoxNodeType.ROOT) {
+          base.copy(children = base.children.map(_.withRule()))
+        } else {
+          val rule = Rule().append(base.children.map(_.withRule()): _*)
+          base.copy(children = Seq(rule))
+        }
+      }
+
+    }
+
+    def withWhitespace() = {
+      withWhitespaceMax(base.depth())
+    }
+
+    protected def withWhitespaceMax(max: Int): MyDoxNode = {
 
       if (max > 0) {
 
@@ -22,7 +42,7 @@ class DoxTableTreeHeadRepository(root: MyDoxNode) {
           }
         }
 
-        base.copy(children = (base.children ++ extension).map(_.withWhitespace(max - 1)))
+        base.copy(children = (base.children ++ extension).map(_.withWhitespaceMax(max - 1)))
 
       } else {
         base.copy()
@@ -42,11 +62,11 @@ class DoxTableTreeHeadRepository(root: MyDoxNode) {
   }
 
   def list() = {
-    
-    val update = root.withWhitespace(root.depth())
-    
-    for (level <- Range.inclusive(1, root.depth())) yield {
-      TableHeadRow(update.byLevel(level).map(m => TableHeadRowKey(m.config, m.width())))
+
+    val transformedRoot = root.withRule().withWhitespace()
+
+    for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
+      TableHeadRow(transformedRoot.byLevel(level).map(m => TableHeadRowKey(m.config, m.width())))
     }
   }
 

@@ -8,7 +8,9 @@ object MyDoxNodeType {
   object INTERMEDIATE extends MyDoxNodeType
   object ROOT extends MyDoxNodeType
   object EMPTY extends MyDoxNodeType
-  
+  object RULE extends MyDoxNodeType
+
+
   object INDEX extends MyDoxNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       index.toString()
