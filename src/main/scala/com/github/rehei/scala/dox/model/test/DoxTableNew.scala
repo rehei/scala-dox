@@ -38,9 +38,6 @@ case class DoxTableNew[T <: AnyRef](val root: MyDoxNode)(implicit clazzTag: Clas
   }
 
   protected def extract(element: T) = {
-
-    val elementApi = new QReflection(element)
-
     for (node <- root.leavesRecursive()) yield {
       node.config.rendering.render(node.valueOf(0, element))
     }

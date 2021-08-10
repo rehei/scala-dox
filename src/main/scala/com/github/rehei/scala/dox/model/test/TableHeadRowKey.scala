@@ -2,7 +2,7 @@ package com.github.rehei.scala.dox.model.test
 
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-case class TableHeadRowKey(config: DoxTableKeyConfig, size: Int) {
+case class TableHeadRowKey(config: DoxTableKeyConfig, size: Int, rule: Boolean) {
   
   assume(size > 0) 
   

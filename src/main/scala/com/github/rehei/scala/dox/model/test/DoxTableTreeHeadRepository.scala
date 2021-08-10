@@ -10,43 +10,9 @@ class DoxTableTreeHeadRepository(root: MyDoxNode) {
   implicit class AbstractDoxNodeExt(base: MyDoxNode) {
 
     import MyDoxNodeFactory._
-
-    def withRule(): MyDoxNode = {
-
-      if (base.children.isEmpty) {
-        base.copy()
-      } else {
-        if (base.nodeType == MyDoxNodeType.ROOT) {
-          base.copy(children = base.children.map(_.withRule()))
-        } else {
-          val rule = Rule().append(base.children.map(_.withRule()): _*)
-          base.copy(children = Seq(rule))
-        }
-      }
-
-    }
-
-    def withWhitespace() = {
-      withWhitespaceMax(base.depth())
-    }
-
-    protected def withWhitespaceMax(max: Int): MyDoxNode = {
-
-      if (max > 0) {
-
-        val extension = {
-          if (base.children.isEmpty) {
-            Seq(Whitespace())
-          } else {
-            Seq.empty
-          }
-        }
-
-        base.copy(children = (base.children ++ extension).map(_.withWhitespaceMax(max - 1)))
-
-      } else {
-        base.copy()
-      }
+    
+    def hasNonWhitespaceChildren() = {
+      base.children.filterNot(_.nodeType == MyDoxNodeType.WHITESPACE).size > 0
     }
 
     def byLevel(level: Int): Seq[MyDoxNode] = {
@@ -59,14 +25,33 @@ class DoxTableTreeHeadRepository(root: MyDoxNode) {
 
     }
 
+    def withWhitespace() = {
+      withWhitespaceMax(base.depth())
+    }
+
+    protected def withWhitespaceMax(max: Int): MyDoxNode = {
+      if (max > 0) {
+        val extension = {
+          if (base.children.isEmpty) {
+            Seq(Whitespace())
+          } else {
+            Seq.empty
+          }
+        }
+        base.copy(children = (base.children ++ extension).map(_.withWhitespaceMax(max - 1)))
+      } else {
+        base.copy()
+      }
+    }
+
   }
 
   def list() = {
 
-    val transformedRoot = root.withRule().withWhitespace()
+    val transformedRoot = root.withWhitespace()
 
     for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
-      TableHeadRow(transformedRoot.byLevel(level).map(m => TableHeadRowKey(m.config, m.width())))
+      TableHeadRow(transformedRoot.byLevel(level).map(m => TableHeadRowKey(m.config, m.width(), m.hasNonWhitespaceChildren())))
     }
   }
 

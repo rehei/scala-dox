@@ -1,7 +1,5 @@
 package com.github.rehei.scala.dox.model.test
 
-
-
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.tex.TexMarkupFactory
 import com.github.rehei.scala.dox.model.DoxReferenceTable
@@ -43,7 +41,7 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
 
   protected def appendTableHead() {
     for (row <- model.head.list()) {
-      \ plain { row.values.map(entry => columnHeader(entry)).mkString(" & ") + "\\\\" + "\n" }
+      \ plain { row.values.map(columnHeader(_)).mkString(" & ") + "\\\\" + withOffset(row.values).map(cmidrule(_)).mkString(" ") + "\n" }
     }
   }
 
@@ -55,6 +53,25 @@ class TexRenderingTable_test(baseAST: TexAST, floating: Boolean, model: DoxTable
     }
   }
   
+  protected def withOffset(input: Seq[TableHeadRowKey]) = {
+    var offset = 0
+    for(Seq(first, second) <- input.sliding(2)) yield {
+      val result = TableHeadRowKeyWithOffset(offset, first)
+      offset = offset + first.size
+      result
+    }
+  }
+
+  protected def cmidrule(entry: TableHeadRowKeyWithOffset) = {
+    if (entry.key.rule) {
+      val offset = entry.offset
+      val target = entry.offset + entry.key.size
+      s"\\cmidrule{${offset}-${target}} "
+    } else {
+      ""
+    }
+  }
+
   protected def appendTableBody() {
     for (row <- model.data) yield {
       \ plain { row.map(markup.escape(_)).mkString(" & ") + "\\\\" + "\n" }

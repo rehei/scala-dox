@@ -27,7 +27,7 @@ object MyDoxNodeFactory {
 
   object Whitespace {
     def apply() = {
-      new MyDoxNode(MyDoxNodeType.EMPTY, DoxTableKeyConfig.NONE, Seq.empty)
+      new MyDoxNode(MyDoxNodeType.WHITESPACE, DoxTableKeyConfig.NONE, Seq.empty)
     }
   }
 
