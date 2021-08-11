@@ -9,7 +9,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
+import com.github.rehei.scala.dox.model.table.DoxTable
 
 class TexRendering(
   baseAST:        TexAST,
@@ -96,8 +96,8 @@ class TexRendering(
     this
   }
 
-  def table(reference: DoxReferenceTable, model: DoxTableTree[_]) = {
-    new TexRenderingTableTree(baseAST, floating, model, reference).create()
+  def table(reference: DoxReferenceTable, model: DoxTable[_]) = {
+    new TexRenderingTable(baseAST, floating, model, reference).create()
     this
   }
   

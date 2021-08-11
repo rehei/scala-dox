@@ -1,10 +1,8 @@
-package com.github.rehei.scala.dox.model.table.tree
+package com.github.rehei.scala.dox.model.table
 
 import scala.collection.Seq
 
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-
-case class DoxTableNode(nodeType: DoxTableNodeType, config: DoxTableKeyConfig, children: Seq[DoxTableNode]) {
+case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyConfig, children: Seq[DoxTableKeyNode]) {
 
   def valueOf(index: Int, element: AnyRef) = {
     nodeType.valueOf(index, element)
@@ -22,7 +20,7 @@ case class DoxTableNode(nodeType: DoxTableNodeType, config: DoxTableKeyConfig, c
     children.isEmpty
   }
 
-  def leavesRecursive(): Seq[DoxTableNode] = {
+  def leavesRecursive(): Seq[DoxTableKeyNode] = {
     children.flatMap {
       child =>
         {

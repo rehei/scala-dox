@@ -4,12 +4,12 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.table.tree.DoxTableNode
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTreeHeadRowKeyWithOffset
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTreeHeadRowKey
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
+import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
+import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
+import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
+import com.github.rehei.scala.dox.model.table.DoxTable
 
-class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableTree[_], reference: DoxReferenceTable) {
+class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: DoxReferenceTable) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
@@ -53,7 +53,7 @@ class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableT
 
   }
 
-  protected def asMappedTableHeadKey(value: DoxTableTreeHeadRowKeyWithOffset) = {
+  protected def asMappedTableHeadKey(value: DoxTableHeadRowKeyWithOffset) = {
     if (value.key.isMultiColumn()) {
 
       val offset = value.offset
@@ -69,10 +69,10 @@ class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableT
     }
   }
 
-  protected def withOffset(input: Seq[DoxTableTreeHeadRowKey]) = {
+  protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
     var offset = 0
     for (Seq(first, second) <- input.sliding(2)) yield {
-      val result = DoxTableTreeHeadRowKeyWithOffset(offset, first)
+      val result = DoxTableHeadRowKeyWithOffset(offset, first)
       offset = offset + first.size
       result
     }

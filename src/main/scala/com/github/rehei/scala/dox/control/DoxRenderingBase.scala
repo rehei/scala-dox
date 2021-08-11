@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxDelegate
 import com.github.rehei.scala.dox.model.DoxSvgFigure
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
+import com.github.rehei.scala.dox.model.table.DoxTable
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -128,7 +128,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def nonBreakingSpace: this.type
 
   def ref(reference: DoxReferenceLike): this.type
-  def table(reference: DoxReferenceTable, in: DoxTableTree[_]): this.type
+  def table(reference: DoxReferenceTable, in: DoxTable[_]): this.type
   def eqnarray(label: DoxReferenceEquation, expression: String): this.type
 
   def clearpage(): this.type

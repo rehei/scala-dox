@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
+import com.github.rehei.scala.dox.model.table.DoxTable
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
@@ -20,7 +20,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   def textRed(in: String) = this
 
   def ref(reference: DoxReferenceLike) = this
-  def table(reference: DoxReferenceTable, in: DoxTableTree[_]) = this
+  def table(reference: DoxReferenceTable, in: DoxTable[_]) = this
   def eqnarray(label: DoxReferenceEquation, expression: String) = this
   def clearpage() = this
 

@@ -1,12 +1,11 @@
-package com.github.rehei.scala.dox.model.table.tree
+package com.github.rehei.scala.dox.model.table
 
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 import com.github.rehei.scala.macros.Query
-import com.github.rehei.scala.macros.util.QReflection
 import com.github.rehei.scala.dox.text.util.Text2TEX
 
-case class DoxTableTree[T <: AnyRef](val root: DoxTableNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
   protected val _query = new Query[T]()
@@ -32,7 +31,7 @@ case class DoxTableTree[T <: AnyRef](val root: DoxTableNode)(implicit clazzTag: 
   }
 
   def head = {
-    new DoxTableTreeHeadRepository(root)
+    new DoxTableHeadRepository(root)
   }
 
   protected def extract(element: T) = {

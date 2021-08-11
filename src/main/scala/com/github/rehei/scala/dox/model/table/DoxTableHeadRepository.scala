@@ -1,17 +1,16 @@
-package com.github.rehei.scala.dox.model.table.tree
+package com.github.rehei.scala.dox.model.table
 
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+class DoxTableHeadRepository(root: DoxTableKeyNode) {
+  
+  import DoxTableKeyNodeFactory._
 
-class DoxTableTreeHeadRepository(root: DoxTableNode) {
-  import DoxTableNodeFactory._
-
-  implicit class AbstractDoxNodeExt(base: DoxTableNode) {
+  implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
     def hasNonWhitespaceChildren() = {
-      base.children.filterNot(_.nodeType == DoxTableNodeType.WHITESPACE).size > 0
+      base.children.filterNot(_.nodeType == DoxTableKeyNodeType.WHITESPACE).size > 0
     }
 
-    def byLevel(level: Int): Seq[DoxTableNode] = {
+    def byLevel(level: Int): Seq[DoxTableKeyNode] = {
 
       if (level == 0) {
         Seq(base)
@@ -25,7 +24,7 @@ class DoxTableTreeHeadRepository(root: DoxTableNode) {
       withWhitespaceMax(base.depth())
     }
 
-    protected def withWhitespaceMax(max: Int): DoxTableNode = {
+    protected def withWhitespaceMax(max: Int): DoxTableKeyNode = {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
@@ -47,7 +46,7 @@ class DoxTableTreeHeadRepository(root: DoxTableNode) {
     val transformedRoot = root.withWhitespace()
 
     for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
-      DoxTableTreeHeadRow(transformedRoot.byLevel(level).map(m => DoxTableTreeHeadRowKey(m.config, m.width(), m.hasNonWhitespaceChildren())))
+      DoxTableHeadRow(transformedRoot.byLevel(level).map(m => DoxTableHeadRowKey(m.config, m.width(), m.hasNonWhitespaceChildren())))
     }
   }
 

@@ -2,10 +2,7 @@ package com.github.rehei.scala.dox.model.table
 
 import scala.collection.mutable.ListBuffer
 import scala.reflect.ClassTag
-
 import com.github.rehei.scala.macros.Query
-import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
-import com.github.rehei.scala.dox.model.table.tree.DoxTableNodeFactory
 
 case class DoxTableFactory[T <: AnyRef](
     callbackConfig: DoxTableConfigBuilder.type => DoxTableConfig, 
@@ -21,13 +18,13 @@ case class DoxTableFactory[T <: AnyRef](
   
   def get() = {
     
-    import DoxTableNodeFactory._
+    import DoxTableKeyNodeFactory._
     
     val head = {
       Root(config.caption).appendAll(keys.map(m => Node(m.config).finalize(m.query)))
     }
     
-    DoxTableTree[T](head)
+    DoxTable[T](head)
   }
 
 }

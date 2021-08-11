@@ -1,16 +1,9 @@
-package com.github.rehei.scala.dox.model.table.tree
+package com.github.rehei.scala.dox.model.table
 
 import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.control.tex.TexMarkupFactory
 import com.github.rehei.scala.dox.model.DoxReferenceTable
-import com.github.rehei.scala.dox.model.table.DoxTableAlignment
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.text.util.Text2TEX
-import scala.collection.mutable.ListBuffer
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.text.TextObjectDefault
 
-class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model: DoxTableTree[_], reference: DoxReferenceTable) {
+class TexRenderingTableTransposed_test(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: DoxReferenceTable) {
 
   /*
   
