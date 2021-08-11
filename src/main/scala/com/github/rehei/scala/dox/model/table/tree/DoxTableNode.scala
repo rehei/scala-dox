@@ -1,11 +1,10 @@
-package com.github.rehei.scala.dox.model.tree
+package com.github.rehei.scala.dox.model.table.tree
 
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import scala.collection.Seq
-import scala.collection.mutable.ListBuffer
 
-case class DoxNode(nodeType: DoxNodeType, config: DoxTableKeyConfig, children: Seq[DoxNode]) {
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+
+case class DoxTableNode(nodeType: DoxTableNodeType, config: DoxTableKeyConfig, children: Seq[DoxTableNode]) {
 
   def valueOf(index: Int, element: AnyRef) = {
     nodeType.valueOf(index, element)
@@ -23,7 +22,7 @@ case class DoxNode(nodeType: DoxNodeType, config: DoxTableKeyConfig, children: S
     children.isEmpty
   }
 
-  def leavesRecursive(): Seq[DoxNode] = {
+  def leavesRecursive(): Seq[DoxTableNode] = {
     children.flatMap {
       child =>
         {

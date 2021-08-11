@@ -6,7 +6,6 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.tree.DoxNode
 import scala.collection.mutable.ListBuffer
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextObjectDefault

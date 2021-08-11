@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.tree.DoxNode
+import com.github.rehei.scala.dox.model.table.tree.DoxTableNode
 import com.github.rehei.scala.dox.model.table.tree.DoxTableTreeHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.tree.DoxTableTreeHeadRowKey
 import com.github.rehei.scala.dox.model.table.tree.DoxTableTree

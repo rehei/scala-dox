@@ -5,7 +5,7 @@ import scala.reflect.ClassTag
 
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
-import com.github.rehei.scala.dox.model.tree.DoxNodeFactory
+import com.github.rehei.scala.dox.model.table.tree.DoxTableNodeFactory
 
 case class DoxTableFactory[T <: AnyRef](
     callbackConfig: DoxTableConfigBuilder.type => DoxTableConfig, 
@@ -21,7 +21,7 @@ case class DoxTableFactory[T <: AnyRef](
   
   def get() = {
     
-    import DoxNodeFactory._
+    import DoxTableNodeFactory._
     
     val head = {
       Root(config.caption).appendAll(keys.map(m => Node(m.config).finalize(m.query)))

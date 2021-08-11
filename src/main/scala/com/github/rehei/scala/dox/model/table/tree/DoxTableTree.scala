@@ -2,13 +2,11 @@ package com.github.rehei.scala.dox.model.table.tree
 
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
-
-import com.github.rehei.scala.dox.model.tree.DoxNode
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 import com.github.rehei.scala.dox.text.util.Text2TEX
 
-case class DoxTableTree[T <: AnyRef](val root: DoxNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTableTree[T <: AnyRef](val root: DoxTableNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
   protected val _query = new Query[T]()

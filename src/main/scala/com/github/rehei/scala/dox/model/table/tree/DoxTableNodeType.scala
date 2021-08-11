@@ -1,23 +1,23 @@
-package com.github.rehei.scala.dox.model.tree
+package com.github.rehei.scala.dox.model.table.tree
 
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 
-object DoxNodeType {
+object DoxTableNodeType {
 
-  object INTERMEDIATE extends DoxNodeType
-  object ROOT extends DoxNodeType
-  object WHITESPACE extends DoxNodeType
-  object RULE extends DoxNodeType
+  object INTERMEDIATE extends DoxTableNodeType
+  object ROOT extends DoxTableNodeType
+  object WHITESPACE extends DoxTableNodeType
+  object RULE extends DoxTableNodeType
 
-  object INDEX extends DoxNodeType {
+  object INDEX extends DoxTableNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       index.toString()
     }
   }
 
   def key(query: Query[_]) = {
-    new DoxNodeType() {
+    new DoxTableNodeType() {
       override def valueOf(index: Int, element: AnyRef) = {
         new QReflection(element).get(query)
       }
@@ -26,7 +26,7 @@ object DoxNodeType {
 
 }
 
-abstract class DoxNodeType {
+abstract class DoxTableNodeType {
 
   def valueOf(index: Int, element: AnyRef): AnyRef = {
     throw new UnsupportedOperationException()

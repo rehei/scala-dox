@@ -1,21 +1,17 @@
 package com.github.rehei.scala.dox.model.table.tree
 
-import com.github.rehei.scala.dox.model.tree.DoxNode
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.model.tree.DoxNodeFactory
-import com.github.rehei.scala.dox.model.tree.DoxNodeType
 
-class DoxTableTreeHeadRepository(root: DoxNode) {
+class DoxTableTreeHeadRepository(root: DoxTableNode) {
+  import DoxTableNodeFactory._
 
-  implicit class AbstractDoxNodeExt(base: DoxNode) {
+  implicit class AbstractDoxNodeExt(base: DoxTableNode) {
 
-    import DoxNodeFactory._
-    
     def hasNonWhitespaceChildren() = {
-      base.children.filterNot(_.nodeType == DoxNodeType.WHITESPACE).size > 0
+      base.children.filterNot(_.nodeType == DoxTableNodeType.WHITESPACE).size > 0
     }
 
-    def byLevel(level: Int): Seq[DoxNode] = {
+    def byLevel(level: Int): Seq[DoxTableNode] = {
 
       if (level == 0) {
         Seq(base)
@@ -29,7 +25,7 @@ class DoxTableTreeHeadRepository(root: DoxNode) {
       withWhitespaceMax(base.depth())
     }
 
-    protected def withWhitespaceMax(max: Int): DoxNode = {
+    protected def withWhitespaceMax(max: Int): DoxTableNode = {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
