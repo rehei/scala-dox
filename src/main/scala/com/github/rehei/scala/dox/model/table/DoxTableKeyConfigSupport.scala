@@ -1,11 +1,7 @@
 package com.github.rehei.scala.dox.model.table
 
-import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.text.TextAST
-
-object DoxTableKeyConfigSupport {
-  val NONE = new DoxTableKeyConfigSupport(DoxTableStringConversion.NONE).apply(_.NONE)
-}
+import com.github.rehei.scala.dox.text.TextFactory
 
 class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
 
@@ -18,9 +14,7 @@ class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
       }
     }
 
-    val NONE = name(TextFactory.NONE).alignment(_.NONE).dynamic(false)
     def name(in: String) = BuildingObject(TextFactory.text(in))
-
     def name(text: TextAST) = BuildingObject(text)
 
   }
