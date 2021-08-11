@@ -11,6 +11,10 @@ object DoxNodeFactory {
       this.copy(children = children ++ additionalChildren)
     }
 
+    def appendAll(additionalChildren: Seq[DoxNode]) = {
+      this.copy(children = children ++ additionalChildren)
+    }
+
   }
 
   object Root {
@@ -18,7 +22,7 @@ object DoxNodeFactory {
       new DoxNode(DoxNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable
     }
   }
-  
+
   object Whitespace {
     def apply() = {
       new DoxNode(DoxNodeType.WHITESPACE, DoxTableKeyConfig.NONE, Seq.empty)

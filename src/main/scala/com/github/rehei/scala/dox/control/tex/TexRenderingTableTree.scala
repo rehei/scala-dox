@@ -21,7 +21,7 @@ class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableT
     if (!floating) {
       \ FloatBarrier;
     }
-    $ { _ table & { ###("H") } } {
+    $ { _ table & { ###("H!") } } {
       \ centering;
       $ { _ tabularx & { \\hsize } { getColumnConfig() } } {
         \ toprule;

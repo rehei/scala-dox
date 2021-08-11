@@ -8,7 +8,6 @@ import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
 
@@ -94,12 +93,6 @@ class TexRendering(
 
   def ref(reference: DoxReferenceLike) = {
     \ ref { reference.referenceID }
-    this
-  }
-
-  def table(reference: DoxReferenceTable, model: DoxTable) = {
-    model.withIndex(Some(indexKeyConfig))
-    new TexRenderingTable(baseAST, floating, model, reference).create()
     this
   }
 

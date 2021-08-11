@@ -4,6 +4,8 @@ import scala.collection.mutable.ListBuffer
 import scala.reflect.ClassTag
 
 import com.github.rehei.scala.macros.Query
+import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
+import com.github.rehei.scala.dox.model.tree.DoxNodeFactory
 
 case class DoxTableFactory[T <: AnyRef](
     callbackConfig: DoxTableConfigBuilder.type => DoxTableConfig, 
@@ -17,21 +19,15 @@ case class DoxTableFactory[T <: AnyRef](
 
   protected val config = callbackConfig(DoxTableConfigBuilder)
   
-  val head = keys.map(_.config)
-  val data = ListBuffer[Seq[String]]()
-
-  def addAll(elementSeq: Iterable[T]) {
-    for (element <- elementSeq) {
-      add(element)
-    }
-  }
-
-  def add(element: T) {
-    data.append(keys.map(key => key.getValueOf(element)))
-  }
-
   def get() = {
-    DoxTable(config, head, data)
+    
+    import DoxNodeFactory._
+    
+    val head = {
+      Root(config.caption).appendAll(keys.map(m => Node(m.config).finalize(m.query)))
+    }
+    
+    DoxTableTree[T](head)
   }
 
 }

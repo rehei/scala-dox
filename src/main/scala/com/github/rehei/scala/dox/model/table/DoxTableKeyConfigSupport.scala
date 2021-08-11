@@ -13,11 +13,7 @@ class DoxTableKeyConfigSupport(val conversion: DoxTableStringConversion) {
     case class BuildingObject(text: TextAST) {
       def alignment(select: DoxTableAlignment.type => DoxTableAlignment) = new {
         def dynamic(isDynamic: Boolean) = {
-          new DoxTableKeyConfig(text, select(DoxTableAlignment), isDynamic, conversion, None) {
-            def category(category: DoxTableKeyCategory) = {
-              this.copy(categoryOption = Some(category))
-            }
-          }
+          DoxTableKeyConfig(text, select(DoxTableAlignment), isDynamic, conversion)
         }
       }
     }

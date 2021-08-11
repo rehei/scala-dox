@@ -2,8 +2,6 @@ package com.github.rehei.scala.dox.control.xml
 
 import scala.collection.mutable.ListBuffer
 import scala.xml.NodeSeq
-
-import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.util.Text2XML
@@ -32,36 +30,6 @@ class XMLRendering(indexKeyConfig: DoxTableKeyConfig) extends XMLMarkupFactory {
     append { H4(name) }
   }
 
-  def table(model: DoxTable) = {
-
-    model.withIndex(Some(indexKeyConfig))
-
-    append {
-      <table style="width: 600px; margin: auto; table-layout: fixed;" class="table table-striped table-sm">
-        <thead>
-          {
-            for (element <- model.head) yield {
-              <th style={ getStyle(element) }>{ Text2XML.generate(element.text) }</th>
-            }
-          }
-        </thead>
-        <tbody>
-          {
-            for (row <- model.data) yield {
-              <tr>
-                {
-                  for ((element, index) <- row.zipWithIndex) yield {
-                    <td style={ getStyle(model.head(index)) }>{ element }</td>
-                  }
-                }
-              </tr>
-            }
-          }
-        </tbody>
-      </table>
-    }
-  }
-
   def generateHead() = {
     legend.map(_.renderHead())
   }
@@ -75,7 +43,7 @@ class XMLRendering(indexKeyConfig: DoxTableKeyConfig) extends XMLMarkupFactory {
     config.alignment match {
       case DoxTableAlignment.LEFT  => "text-align: left;"
       case DoxTableAlignment.RIGHT => "text-align: right;"
-      case _                        => "text-align: center;"
+      case _                       => "text-align: center;"
     }
 
   }

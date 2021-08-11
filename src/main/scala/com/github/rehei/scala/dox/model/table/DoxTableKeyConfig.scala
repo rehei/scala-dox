@@ -9,8 +9,7 @@ object DoxTableKeyConfig {
       TextFactory.NONE,
       DoxTableAlignment.NONE,
       false,
-      DoxTableStringConversion.NONE,
-      None)
+      DoxTableStringConversion.NONE)
   }
 }
 
@@ -18,8 +17,7 @@ case class DoxTableKeyConfig(
   text:           TextAST,
   alignment:      DoxTableAlignment,
   dynamic:        Boolean,
-  rendering:      DoxTableStringConversion,
-  categoryOption: Option[DoxTableKeyCategory]) {
+  rendering:      DoxTableStringConversion) {
 
   def name(in: String) = {
     this.copy(text = TextFactory.text(in))
