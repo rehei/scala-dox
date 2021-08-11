@@ -10,6 +10,7 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
 
 class TexRendering(
   baseAST:        TexAST,
@@ -102,6 +103,11 @@ class TexRendering(
     this
   }
 
+  def table(reference: DoxReferenceTable, model: DoxTableTree[_]) = {
+    new TexRenderingTableTree(baseAST, floating, model, reference).create()
+    this
+  }
+  
   def eqnarray(label: DoxReferenceEquation, expression: String) = {
     $ { _.eqnarray } {
       \ plain { expression }

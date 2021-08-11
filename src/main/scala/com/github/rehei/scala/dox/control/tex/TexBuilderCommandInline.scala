@@ -13,4 +13,6 @@ class TexBuilderCommandInline(ast: TexAST) {
   object textwidth extends TexMarkupObject
   object hsize extends TexMarkupObject
 
+  object plain extends TexMarkupObject
+  
 }

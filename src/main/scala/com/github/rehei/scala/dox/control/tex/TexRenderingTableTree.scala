@@ -11,6 +11,8 @@ import com.github.rehei.scala.dox.model.table.tree.DoxTableTree
 
 class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableTree[_], reference: DoxReferenceTable) {
 
+  case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
+
   protected val markup = new TexMarkupFactory(baseAST)
 
   import markup._
@@ -41,35 +43,38 @@ class TexRenderingTableTree(baseAST: TexAST, floating: Boolean, model: DoxTableT
   }
 
   protected def appendTableHead() {
-    for (row <- model.head.list()) {
-      \ plain { row.values.map(columnHeader(_)).mkString(" & ") + "\\\\" + withOffset(row.values).map(cmidrule(_)).mkString(" ") + "\n" }
+
+    for (row <- model.head.list()) yield {
+      val mappedHead = withOffset(row.values).map(asMappedTableHeadKey(_)).toSeq
+
+      \ plain { mappedHead.map(_.content.generate()).mkString(" & ") + "\\\\" }
+      \ plain { mappedHead.flatMap(_.ruleOption).map(_.generate()).mkString(" ") + "\n" }
+    }
+
+  }
+
+  protected def asMappedTableHeadKey(value: DoxTableTreeHeadRowKeyWithOffset) = {
+    if (value.key.isMultiColumn()) {
+
+      val offset = value.offset
+      val target = value.offset + value.key.size
+
+      MappedTableHeadKey(
+        \\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) },
+        Some(\\ cmidrule & { s"${value.offset}-${target}" }))
+    } else {
+      MappedTableHeadKey(
+        \\ plain { Text2TEX.generate(value.key.config.text) },
+        None)
     }
   }
 
-  protected def columnHeader(entry: DoxTableTreeHeadRowKey) = {
-    if (!entry.isMultiColumn()) {
-      Text2TEX.generate(entry.config.text)
-    } else {
-      "\\multicolumn{" + entry.size + "}{" + getTexAlignment(entry.config) + "}{" + Text2TEX.generate(entry.config.text) + "}"
-    }
-  }
-  
   protected def withOffset(input: Seq[DoxTableTreeHeadRowKey]) = {
     var offset = 0
-    for(Seq(first, second) <- input.sliding(2)) yield {
+    for (Seq(first, second) <- input.sliding(2)) yield {
       val result = DoxTableTreeHeadRowKeyWithOffset(offset, first)
       offset = offset + first.size
       result
-    }
-  }
-
-  protected def cmidrule(entry: DoxTableTreeHeadRowKeyWithOffset) = {
-    if (entry.key.rule) {
-      val offset = entry.offset
-      val target = entry.offset + entry.key.size
-      s"\\cmidrule{${offset}-${target}} "
-    } else {
-      ""
     }
   }
 
