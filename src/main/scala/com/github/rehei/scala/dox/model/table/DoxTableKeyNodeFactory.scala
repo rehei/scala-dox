@@ -2,8 +2,9 @@ package com.github.rehei.scala.dox.model.table
 
 import scala.collection.Seq
 import com.github.rehei.scala.macros.Query
+import scala.reflect.ClassTag
 
-object DoxTableKeyNodeFactory {
+case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
 
@@ -15,6 +16,12 @@ object DoxTableKeyNodeFactory {
       this.copy(children = children ++ additionalChildren)
     }
 
+  }
+
+  object Table {
+    def apply(node: DoxTableKeyNode) = {
+      DoxTable[T](node)
+    }
   }
 
   object Root {
@@ -38,7 +45,8 @@ object DoxTableKeyNodeFactory {
   object Node {
     def apply(config: DoxTableKeyConfig) = {
       new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, config, Seq.empty) with Writeable {
-        def finalize(query: Query[_]) = {
+        def finalize(callback: Query[T] => Query[_]) = {
+          val query = callback(new Query[T])
           DoxTableKeyNode(DoxTableKeyNodeType.key(query), config, Seq.empty)
         }
       }

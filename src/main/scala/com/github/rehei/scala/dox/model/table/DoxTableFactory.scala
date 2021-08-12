@@ -5,8 +5,14 @@ import scala.reflect.ClassTag
 import com.github.rehei.scala.macros.Query
 
 case class DoxTableFactory[T <: AnyRef](
-    callbackConfig: DoxTableConfigBuilder.type => DoxTableConfig, 
-    callbackSeq: (DoxTableFactoryKeySelection[T] => DoxTableFactoryKey)*)(implicit clazzTag: ClassTag[T]) {
+  callbackConfig: DoxTableConfigBuilder.type => DoxTableConfig,
+  callbackSeq:    (DoxTableFactoryKeySelection[T] => DoxTableFactoryKey)*)(implicit clazzTag: ClassTag[T]) {
+
+  implicit class DoxTableKeyNodeExt(base: DoxTableKeyNode) {
+    def query(query: Query[_]) = {
+      DoxTableKeyNode(DoxTableKeyNodeType.key(query), base.config, Seq.empty)
+    }
+  }
 
   protected val query = new Query[T]()
 
@@ -15,16 +21,17 @@ case class DoxTableFactory[T <: AnyRef](
   }
 
   protected val config = callbackConfig(DoxTableConfigBuilder)
-  
+
   def get() = {
-    
-    import DoxTableKeyNodeFactory._
-    
+
+    val factory = DoxTableKeyNodeFactory[T]()(clazzTag)
+    import factory._
+
     val head = {
-      Root(config.caption).appendAll(keys.map(m => Node(m.config).finalize(m.query)))
+      Root(config.caption).appendAll(keys.map(m => Node(m.config).query(query)))
     }
-    
-    DoxTable[T](head)
+
+    DoxTable[T](head)(clazzTag)
   }
 
 }
