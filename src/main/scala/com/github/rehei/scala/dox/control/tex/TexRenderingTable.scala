@@ -54,26 +54,26 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
   }
 
   protected def asMappedTableHeadKey(value: DoxTableHeadRowKeyWithOffset) = {
-    if (value.key.isMultiColumn()) {
 
-      val offset = value.offset
-      val target = value.offset + value.key.size - 1
+    val offset = value.offset
+    val target = value.offset + value.key.size - 1
 
-      MappedTableHeadKey(
-        \\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) },
-        Some(\\ cmidrule & { s"${value.offset}-${target}" }))
-    } else {
-      MappedTableHeadKey(
-        \\ plain { Text2TEX.generate(value.key.config.text) },
-        None)
+    val ruleOption = {
+      if (value.key.rule) {
+        Some(\\ cmidrule & { s"${value.offset}-${target}" })
+      } else { None }
     }
+
+    MappedTableHeadKey(
+      \\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) },
+      ruleOption)
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
     var offset = 1
-    for (Seq(first, second) <- input.sliding(2)) yield {
-      val result = DoxTableHeadRowKeyWithOffset(offset, first)
-      offset = offset + first.size
+    for (row <- input) yield {
+      val result = DoxTableHeadRowKeyWithOffset(offset, row)
+      offset = offset + row.size
       result
     }
   }

@@ -28,7 +28,7 @@ case class DoxTableFactory[T <: AnyRef](
     import factory._
 
     val head = {
-      Root(config.caption).appendAll(keys.map(m => Node(m.config).query(query)))
+      Root(config.caption).appendAll(keys.map(m => Node(m.config).query(m.query)))
     }
 
     DoxTable[T](head)(clazzTag)
