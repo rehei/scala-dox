@@ -57,7 +57,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     if (value.key.isMultiColumn()) {
 
       val offset = value.offset
-      val target = value.offset + value.key.size
+      val target = value.offset + value.key.size - 1
 
       MappedTableHeadKey(
         \\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) },
@@ -70,7 +70,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
-    var offset = 0
+    var offset = 1
     for (Seq(first, second) <- input.sliding(2)) yield {
       val result = DoxTableHeadRowKeyWithOffset(offset, first)
       offset = offset + first.size
