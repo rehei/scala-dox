@@ -19,7 +19,7 @@ object DoxTableKeyNodeType {
   def key(query: Query[_]) = {
     new DoxTableKeyNodeType() {
       override def valueOf(index: Int, element: AnyRef) = {
-        new QReflection(element).get(query)
+        new QReflection(element).get(query).toString()
       }
     }
   }
@@ -28,7 +28,7 @@ object DoxTableKeyNodeType {
 
 abstract class DoxTableKeyNodeType {
 
-  def valueOf(index: Int, element: AnyRef): AnyRef = {
+  def valueOf(index: Int, element: AnyRef): String = {
     throw new UnsupportedOperationException()
   }
 
