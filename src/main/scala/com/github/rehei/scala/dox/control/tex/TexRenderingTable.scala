@@ -61,12 +61,12 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     val ruleOption = {
       if (value.key.rule) {
         Some(\\ cmidrule & { s"${value.offset}-${target}" })
-      } else { None }
+      } else {
+        None
+      }
     }
 
-    MappedTableHeadKey(
-      \\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) },
-      ruleOption)
+    MappedTableHeadKey(\\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) }, ruleOption)
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
