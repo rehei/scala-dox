@@ -8,7 +8,6 @@ import com.github.rehei.scala.dox.text.util.Text2TEX
 case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
-  protected val _query = new Query[T]()
 
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
@@ -39,5 +38,5 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
       node.valueOf(0, element)
     }
   }
-
+  
 }
