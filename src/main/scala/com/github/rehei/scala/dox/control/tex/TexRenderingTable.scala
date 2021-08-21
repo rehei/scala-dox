@@ -80,7 +80,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   protected def appendTableBody() {
     for (row <- model.data) yield {
-      \ plain { row.map(markup.escape(_)).mkString(" & ") + "\\\\" + "\n" }
+      \ plain { row.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
     }
   }
 
