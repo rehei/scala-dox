@@ -50,10 +50,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
           val query = callback(new Query[T])
           DoxTableKeyNode(DoxTableKeyNodeType.key(query), config, Seq.empty)
         }
-        def finalizeMarkup(callback: Query[T] => Query[TextAST]) = {
-          val query = callback(new Query[T])
-          DoxTableKeyNode(DoxTableKeyNodeType.keyMarkup(query), config, Seq.empty)
-        }
       }
     }
   }

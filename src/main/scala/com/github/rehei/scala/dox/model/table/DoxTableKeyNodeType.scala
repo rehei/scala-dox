@@ -21,8 +21,12 @@ object DoxTableKeyNodeType {
   def key(query: Query[_]) = {
     new DoxTableKeyNodeType() {
       override def valueOf(index: Int, element: AnyRef) = {
-        val value = new QReflection(element).get(query).toString()
-        TextFactory.text(value)
+        val value = new QReflection(element).get(query)
+
+        value match {
+          case m: TextAST => m
+          case m          => TextFactory.text(m.toString())
+        }
       }
     }
   }
