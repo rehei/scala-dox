@@ -3,6 +3,7 @@ package com.github.rehei.scala.dox.model.table
 import scala.collection.Seq
 import com.github.rehei.scala.macros.Query
 import scala.reflect.ClassTag
+import com.github.rehei.scala.dox.text.TextAST
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
@@ -48,6 +49,10 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
         def finalize(callback: Query[T] => Query[_]) = {
           val query = callback(new Query[T])
           DoxTableKeyNode(DoxTableKeyNodeType.key(query), config, Seq.empty)
+        }
+        def finalizeMarkup(callback: Query[T] => Query[TextAST]) = {
+          val query = callback(new Query[T])
+          DoxTableKeyNode(DoxTableKeyNodeType.keyMarkup(query), config, Seq.empty)
         }
       }
     }

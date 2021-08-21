@@ -38,7 +38,7 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
 
   protected def extract(element: T) = {
     for (node <- root.leavesRecursive()) yield {
-      TextFactory.text(node.valueOf(0, element))
+      node.valueOf(0, element)
     }
   }
 
