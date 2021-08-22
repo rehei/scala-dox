@@ -66,7 +66,7 @@ object Text2TEX {
 
   protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
     subscriptSeq.lift(index).map {
-      text => "_{" + escape(text.in) + textSubScriptExplicit(subscriptSeq, index + 1) + "}"
+      text => "\\textsubscript{" + escape(text.in) + textSubScriptExplicit(subscriptSeq, index + 1) + "}"
     } getOrElse {
       ""
     }
