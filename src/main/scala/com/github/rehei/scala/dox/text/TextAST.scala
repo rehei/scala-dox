@@ -8,6 +8,10 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
+  def textSmall(in: String) = {
+    this.copy(sequence = sequence :+ TextObjectSmall(in))
+  }
+
   def subscript(in: String) = {
     this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
   }
