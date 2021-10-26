@@ -23,8 +23,8 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
   }
 
   def data() = {
-    for (element <- _data) yield {
-      extract(element)
+    for ((element, index) <- _data.zipWithIndex) yield {
+      extract(element, index + 1)
     }
   }
 
@@ -36,9 +36,9 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     new DoxTableHeadRepository(root)
   }
 
-  protected def extract(element: T) = {
+  protected def extract(element: T, index: Int) = {
     for (node <- root.leavesRecursive()) yield {
-      node.valueOf(0, element)
+      node.valueOf(index, element)
     }
   }
 
