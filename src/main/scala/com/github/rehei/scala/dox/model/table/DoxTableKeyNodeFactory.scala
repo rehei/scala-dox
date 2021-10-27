@@ -41,6 +41,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def apply() = {
       new DoxTableKeyNode(DoxTableKeyNodeType.INDEX, DoxTableKeyConfig.NONE, Seq.empty) with Writeable
     }
+    def apply(name: String) = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.INDEX, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable
+    }
   }
 
   object Node {
