@@ -23,13 +23,15 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     }
     $ { _ table & { ###("H!") } } {
       \ centering;
-      $ { _ tabularx & { \\hsize } { getColumnConfig() } } {
+//      $ { _ tabular$ & { \\ dimexpr { ___ { \\ tabcolsep +("*4") } {"+4cm"} } }  {"p{1cm}"}  {"p{2cm}"} } { //(tabcolsep*4)+4cm}{p{2cm}p{2cm}" } } {
+      $ { _ tabular$ { ("\\dimexpr(\\tabcolsep*4)+4cm}{p{1cm}p{2cm}")} } {
         \ toprule;
         appendTableHead()
         \ midrule;
         appendTableBody()
         \ bottomrule;
       }
+
       \ caption & { model.caption }
       \ label { reference.referenceID }
     }
@@ -37,9 +39,29 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
       \ FloatBarrier;
     }
   }
-
+  //  def create() {
+  //    if (!floating) {
+  //      \ FloatBarrier;
+  //    }
+  //    $ { _ table & { ###("H!") } } {
+  //      \ centering;
+  //      $ { _ tabularx & { \\hsize } { getColumnConfig() } } {
+  //        \ toprule;
+  //        appendTableHead()
+  //        \ midrule;
+  //        appendTableBody()
+  //        \ bottomrule;
+  //      }
+  //      \ caption & { model.caption }
+  //      \ label { reference.referenceID }
+  //    }
+  //    if (!floating) {
+  //      \ FloatBarrier;
+  //    }
+  //  }
   protected def getColumnConfig() = {
-    model.root.leavesRecursive().map(node => getTexAlignment(node.config)).mkString
+    //    model.root.leavesRecursive().map(node => getTexAlignment(node.config)).mkString
+    model.root.leavesRecursive().map(node => "s").mkString
   }
 
   protected def appendTableHead() {

@@ -12,6 +12,10 @@ abstract class TexEnvironment(val sequence: TexSeq) {
     copy(Seq(in))
   }
 
+  def apply(in:TexArgument) = {
+    copy(Seq(in))
+  }
+  
   def apply(in: String) = {
     copy(Seq(TexValue(in)))
   }

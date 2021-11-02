@@ -13,6 +13,11 @@ class TexBuilderCommandInline(ast: TexAST) {
   object textwidth extends TexMarkupObject
   object hsize extends TexMarkupObject
 
+  object dimexpr extends TexMarkupObject
+
+  object tabcolsep extends TexMarkupObject
+  object p extends TexMarkupObject
+
   object plain extends TexMarkupObject
-  
+
 }

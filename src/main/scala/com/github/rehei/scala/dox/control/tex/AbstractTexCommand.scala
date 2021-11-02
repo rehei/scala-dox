@@ -18,6 +18,10 @@ abstract class AbstractTexCommand[T <: AbstractTexCommand[_]](inline: Boolean, a
     this.create(TexSeq(Seq(option)))
   }
 
+  def apply(argument: TexArgument) = {
+    this.create(TexSeq(Seq(argument)))
+  }
+  
   def apply(in: TexSeq): T = {
     this.create(in)
   }
