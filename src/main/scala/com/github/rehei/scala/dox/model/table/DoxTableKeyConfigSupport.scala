@@ -8,8 +8,10 @@ class DoxTableKeyConfigSupport() {
   protected object DataTableKeyConfigBuilder {
     case class BuildingObject(text: TextAST) {
       def alignment(select: DoxTableAlignment.type => DoxTableAlignment) = new {
-        def dynamic(isDynamic: Boolean) = {
-          DoxTableKeyConfig(text, select(DoxTableAlignment), isDynamic)
+        def dynamic(isDynamic: Boolean) = new {
+          def columnSize(columnSize: Option[Int]) = {
+            DoxTableKeyConfig(text, select(DoxTableAlignment), isDynamic, columnSize)
+          }
         }
       }
     }

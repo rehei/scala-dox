@@ -5,11 +5,11 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 object DoxTableKeyConfig {
   val NONE = {
-    DoxTableKeyConfig(TextFactory.NONE, DoxTableAlignment.NONE, false)
+    DoxTableKeyConfig(TextFactory.NONE, DoxTableAlignment.NONE, false, None)
   }
 }
 
-case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, dynamic: Boolean) {
+case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, dynamic: Boolean, columnSize: Option[Int]) {
 
   def name(in: String) = {
     this.copy(text = TextFactory.text(in))

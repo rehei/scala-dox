@@ -13,6 +13,17 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
+  protected object ColumnType {
+    private val baseString = """\let\newline\\\arraybackslash\hspace{0pt}}m"""
+    def l(size: Int) = """>{\raggedright""" + baseString + sizeString(size)
+    def c(size: Int) = """>{\centering""" + baseString + sizeString(size)
+    def r(size: Int) = """>{\raggedleft""" + baseString + sizeString(size)
+
+    private def sizeString(size: Int) = "{" + size + "cm}"
+  }
+
+  protected val columnSizeDefault = 2
+
   protected val markup = new TexMarkupFactory(baseAST)
 
   import markup._
@@ -23,8 +34,8 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     }
     $ { _ table & { ###("H!") } } {
       \ centering;
-//      $ { _ tabular$ & { \\ dimexpr { ___ { \\ tabcolsep +("*4") } {"+4cm"} } }  {"p{1cm}"}  {"p{2cm}"} } { //(tabcolsep*4)+4cm}{p{2cm}p{2cm}" } } {
-      $ { _ tabular$ { ("\\dimexpr(\\tabcolsep*4)+4cm}{p{1cm}p{2cm}")} } {
+      //      $ { _ tabular$ & { \\ dimexpr { ___ { \\ tabcolsep +("*4") } {"+4cm"} } }  {"p{1cm}"}  {"p{2cm}"} } { //(tabcolsep*4)+4cm}{p{2cm}p{2cm}" } } {
+      $ { _ tabular$ { (colConfig()) } } {
         \ toprule;
         appendTableHead()
         \ midrule;
@@ -38,6 +49,16 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     if (!floating) {
       \ FloatBarrier;
     }
+  }
+
+  protected def colConfig() = {
+    val columnSizes = model.root.leavesRecursive().map(_.config.columnSize.map(size => size).getOrElse(columnSizeDefault))
+    val columns = model.root.leavesRecursive().map(column => getTexAlignment(column.config)).mkString
+    val tabColSeps = model.root.leavesRecursive().length * 2
+
+    //    val arrayLength = "+" + (length - 1) + "\\arrayrulewidth"
+
+    "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm}{" + columns
   }
   //  def create() {
   //    if (!floating) {
@@ -107,15 +128,16 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
   }
 
   protected def getTexAlignment(config: DoxTableKeyConfig) = {
-    if (config.dynamic) {
-      "X"
-    } else {
-      config.alignment match {
-        case DoxTableAlignment.LEFT  => "l"
-        case DoxTableAlignment.RIGHT => "r"
-        case _                       => "c"
-      }
+    //    if (config.dynamic) {
+    //      "X"
+    //    } else {
+    val size = config.columnSize.getOrElse(columnSizeDefault)
+    config.alignment match {
+      case DoxTableAlignment.LEFT  => ColumnType.l(size)
+      case DoxTableAlignment.RIGHT => ColumnType.r(size)
+      case _                       => ColumnType.c(size)
     }
+    //    }
   }
 
 }
