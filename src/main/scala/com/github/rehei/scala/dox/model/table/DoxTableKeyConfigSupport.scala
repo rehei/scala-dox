@@ -9,7 +9,7 @@ class DoxTableKeyConfigSupport() {
     case class BuildingObject(text: TextAST) {
       def alignment(select: DoxTableAlignment.type => DoxTableAlignment) = new {
         def dynamic(isDynamic: Boolean) = new {
-          def columnSize(columnSize: Option[Int]) = {
+          def columnSize(columnSize: Option[Double]) = {
             DoxTableKeyConfig(text, select(DoxTableAlignment), isDynamic, columnSize)
           }
         }

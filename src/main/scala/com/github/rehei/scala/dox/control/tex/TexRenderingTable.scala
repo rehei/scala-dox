@@ -15,14 +15,14 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   protected object ColumnType {
     private val baseString = """\let\newline\\\arraybackslash\hspace{0pt}}m"""
-    def l(size: Int) = """>{\raggedright""" + baseString + sizeString(size)
-    def c(size: Int) = """>{\centering""" + baseString + sizeString(size)
-    def r(size: Int) = """>{\raggedleft""" + baseString + sizeString(size)
+    def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
+    def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
+    def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
 
-    private def sizeString(size: Int) = "{" + size + "cm}"
+    private def sizeString(size: Double) = "{" + size + "cm}"
   }
 
-  protected val columnSizeDefault = 2
+  protected val columnSizeDefault = 2.0
 
   protected val markup = new TexMarkupFactory(baseAST)
 
