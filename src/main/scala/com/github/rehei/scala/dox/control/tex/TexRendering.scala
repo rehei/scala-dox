@@ -10,6 +10,8 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.control.DoxHandleTable
+import com.github.rehei.scala.dox.model.table.DoxTableFile
 
 class TexRendering(
   baseAST:        TexAST,
@@ -17,7 +19,8 @@ class TexRendering(
   indexKeyConfig: DoxTableKeyConfig,
   svgHandle:      DoxHandleSvg,
   i18n:           DoxI18N,
-  bibHandle:      DoxBibKeyRendering) extends DoxRenderingBase(i18n, bibHandle) {
+  bibHandle:      DoxBibKeyRendering,
+  tableHandle:    DoxHandleTable) extends DoxRenderingBase(i18n, bibHandle) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
@@ -97,10 +100,12 @@ class TexRendering(
   }
 
   def table(reference: DoxReferenceTable, model: DoxTable[_]) = {
-    new TexRenderingTable(baseAST, floating, model, reference).create()
+    val texTable = new TexRenderingTable(baseAST, floating, model, reference).createTableString()
+    val filename = tableHandle.serialize(DoxTableFile(texTable, None))
+    \ input { filename }
     this
   }
-  
+
   def eqnarray(label: DoxReferenceEquation, expression: String) = {
     $ { _.eqnarray } {
       \ plain { expression }
@@ -156,5 +161,4 @@ class TexRendering(
 
     \ includegraphics & { filename }
   }
-
 }

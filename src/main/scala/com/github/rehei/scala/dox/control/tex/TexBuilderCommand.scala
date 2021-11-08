@@ -47,6 +47,7 @@ class TexBuilderCommand(ast: TexAST) {
   object onecolumn extends TexMarkupObject(false)
   object twocolumn extends TexMarkupObject(false)
 
+  object input extends TexMarkupObject(false)
 
   object plain {
     def apply(_name: String) = {

@@ -24,11 +24,18 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   protected val columnSizeDefault = 2.0
 
-  protected val markup = new TexMarkupFactory(baseAST)
+  protected val tmpAST = new TexAST
+  protected val tmpMarkup = new TexMarkupFactory(tmpAST)
 
-  import markup._
+  import tmpMarkup._
 
-  def create() {
+  def createTableString() = {
+    create()
+    tmpAST.build()
+  }
+
+  protected def create() {
+
     if (!floating) {
       \ FloatBarrier;
     }
@@ -49,6 +56,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     if (!floating) {
       \ FloatBarrier;
     }
+
   }
 
   protected def colConfig() = {

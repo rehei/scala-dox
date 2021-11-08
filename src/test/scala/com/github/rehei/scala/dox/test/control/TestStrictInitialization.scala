@@ -74,7 +74,7 @@ class TestStrictInitialization {
     val bibCache = DoxBibKeyCache(path)
     val bibHandle = DoxBibKeyRendering(bibCache, map)
 
-    new TexRendering(TexAST(), true, null, null, null, bibHandle)
+    new TexRendering(TexAST(), true, null, null, null, bibHandle, null)
   }
 
 }
