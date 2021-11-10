@@ -20,8 +20,8 @@ case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path) {
 
   protected val tableFileGen = new TexTable2File(targetTexTable)
 
-  def serialize(figure: DoxTableFile): String = {
-    val nameTable = tableFileGen.generate(figure).getFileName.toString()
+  def serialize(table: DoxTableFile): String = {
+    val nameTable = tableFileGen.generate(table).getFileName.toString()
 
     targetTex.relativize(targetTexTable.resolve(nameTable)).toString()
   }

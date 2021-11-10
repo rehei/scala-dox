@@ -41,8 +41,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     }
     $ { _ table & { ###("H!") } } {
       \ centering;
-      //      $ { _ tabular$ & { \\ dimexpr { ___ { \\ tabcolsep +("*4") } {"+4cm"} } }  {"p{1cm}"}  {"p{2cm}"} } { //(tabcolsep*4)+4cm}{p{2cm}p{2cm}" } } {
-      $ { _ tabular$ { (colConfig()) } } {
+      $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
         \ toprule;
         appendTableHead()
         \ midrule;
@@ -59,38 +58,15 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   }
 
-  protected def colConfig() = {
+  protected def columnConfigTotalSize() = {
     val columnSizes = model.root.leavesRecursive().map(_.config.columnSize.map(size => size).getOrElse(columnSizeDefault))
-    val columns = model.root.leavesRecursive().map(column => getTexAlignment(column.config)).mkString
     val tabColSeps = model.root.leavesRecursive().length * 2
 
-    //    val arrayLength = "+" + (length - 1) + "\\arrayrulewidth"
-
-    "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm}{" + columns
+    "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
   }
-  //  def create() {
-  //    if (!floating) {
-  //      \ FloatBarrier;
-  //    }
-  //    $ { _ table & { ###("H!") } } {
-  //      \ centering;
-  //      $ { _ tabularx & { \\hsize } { getColumnConfig() } } {
-  //        \ toprule;
-  //        appendTableHead()
-  //        \ midrule;
-  //        appendTableBody()
-  //        \ bottomrule;
-  //      }
-  //      \ caption & { model.caption }
-  //      \ label { reference.referenceID }
-  //    }
-  //    if (!floating) {
-  //      \ FloatBarrier;
-  //    }
-  //  }
-  protected def getColumnConfig() = {
-    //    model.root.leavesRecursive().map(node => getTexAlignment(node.config)).mkString
-    model.root.leavesRecursive().map(node => "s").mkString
+
+  protected def columnConfigEachColumnSize() = {
+    model.root.leavesRecursive().map(column => getTexAlignment(column.config)).mkString
   }
 
   protected def appendTableHead() {
@@ -136,16 +112,12 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
   }
 
   protected def getTexAlignment(config: DoxTableKeyConfig) = {
-    //    if (config.dynamic) {
-    //      "X"
-    //    } else {
     val size = config.columnSize.getOrElse(columnSizeDefault)
     config.alignment match {
       case DoxTableAlignment.LEFT  => ColumnType.l(size)
       case DoxTableAlignment.RIGHT => ColumnType.r(size)
       case _                       => ColumnType.c(size)
     }
-    //    }
   }
 
 }
