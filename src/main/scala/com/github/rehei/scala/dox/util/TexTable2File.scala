@@ -20,20 +20,16 @@ class TexTable2File(protected val baseDirectory: Path) {
     file
   }
 
-  protected def write(path: Path, figure: DoxTableFile) = {
-    val content = figure.filecontent
-    IOUtils.writeString(path, content)
-  }
-
   protected def target(table: DoxTableFile) = {
-    val filename = table.filename.map(_ + ".tex").getOrElse(generateName)
-    assert(usage.get(filename).isEmpty)
+    val filename = table.filename + ".tex"
+//    assert(usage.get(filename).isEmpty)
     usage.put(filename, true)
     baseDirectory.resolve(filename)
   }
 
-  protected def generateName() = {
-    s"${prefix}_${nextID.filename().referenceID}.tex"
+  protected def write(path: Path, table: DoxTableFile) = {
+    val content = table.filecontent
+    IOUtils.writeString(path, content)
   }
 
 }

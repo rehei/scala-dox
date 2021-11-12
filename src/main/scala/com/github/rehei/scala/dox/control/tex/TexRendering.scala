@@ -12,6 +12,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.model.DoxLabelTable
 
 class TexRendering(
   baseAST:        TexAST,
@@ -99,11 +100,10 @@ class TexRendering(
     this
   }
 
-  def table(reference: DoxReferenceTable, model: DoxTable[_]) = {
-    val texTable = new TexRenderingTable(baseAST, floating, model, reference).createTableString()
-    val filename = tableHandle.serialize(DoxTableFile(texTable, None))
+  def internalTable(table: DoxLabelTable[_]) {
+    val texTable = new TexRenderingTable(baseAST, floating, table.model, table.label).createTableString()
+    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
     \ input { filename }
-    this
   }
 
   def eqnarray(label: DoxReferenceEquation, expression: String) = {

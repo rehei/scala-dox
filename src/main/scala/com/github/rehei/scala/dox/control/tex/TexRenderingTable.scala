@@ -9,7 +9,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTable
 
-class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: DoxReferenceTable) {
+class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: String) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
@@ -50,7 +50,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
       }
 
       \ caption & { model.caption }
-      \ label { reference.referenceID }
+      \ label { reference }
     }
     if (!floating) {
       \ FloatBarrier;

@@ -7,6 +7,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.DoxLabelTable
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
@@ -20,7 +21,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   def textRed(in: String) = this
 
   def ref(reference: DoxReferenceLike) = this
-  def table(reference: DoxReferenceTable, in: DoxTable[_]) = this
+
   def eqnarray(label: DoxReferenceEquation, expression: String) = this
   def clearpage() = this
 
@@ -32,6 +33,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   protected def internalCiteT(key: String) = Unit
   protected def internalCiteP(key: String) = Unit
   protected def internalCite(key: String) = Unit
+  protected def internalTable(labelTable: DoxLabelTable[_]) = Unit
   protected def internalSvg(image: DoxSvgFigure) = Unit
   protected def internalList(itemSeq: Seq[String]) = Unit
 

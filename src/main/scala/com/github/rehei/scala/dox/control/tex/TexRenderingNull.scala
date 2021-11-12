@@ -5,6 +5,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceLike
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.DoxLabelTable
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
@@ -18,7 +19,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def textRed(in: String) = this
 
   override def ref(reference: DoxReferenceLike) = this
-  override def table(reference: DoxReferenceTable, in: DoxTable[_]) = this 
+
   override def eqnarray(label: DoxReferenceEquation, expression: String) = this
   override def clearpage() = this
 
@@ -30,6 +31,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override protected def internalCiteT(key: String) = Unit
   override protected def internalCiteP(key: String) = Unit
   override protected def internalCite(key: String) = Unit
+  override def internalTable(labelTable: DoxLabelTable[_]) = Unit
   override protected def internalSvg(image: DoxSvgFigure) = Unit
   override protected def internalList(itemSeq: Seq[String]) = Unit
 

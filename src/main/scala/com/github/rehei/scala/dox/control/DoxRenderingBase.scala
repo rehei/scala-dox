@@ -1,15 +1,16 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import scala.collection.Seq
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+
 import com.github.rehei.scala.dox.i18n.DoxI18N
+import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.DoxReferenceFigure
 import com.github.rehei.scala.dox.model.DoxReferenceLike
-import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.DoxReferenceTable
-import com.github.rehei.scala.dox.model.DoxDelegate
 import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
@@ -128,7 +129,12 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def nonBreakingSpace: this.type
 
   def ref(reference: DoxReferenceLike): this.type
-  def table(reference: DoxReferenceTable, in: DoxTable[_]): this.type
+  def table(callback: DoxBuilderTable.type => DoxLabelTable[_]): this.type = {
+    val data = callback(DoxBuilderTable)
+    internalTable(data)
+    this
+  }
+
   def eqnarray(label: DoxReferenceEquation, expression: String): this.type
 
   def clearpage(): this.type
@@ -153,6 +159,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
   protected def internalSvg(imageSet: DoxSvgFigure): Unit
+  protected def internalTable(table: DoxLabelTable[_]): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }
