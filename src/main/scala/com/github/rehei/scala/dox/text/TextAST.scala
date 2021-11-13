@@ -4,22 +4,15 @@ import scala.xml.NodeSeq
 
 case class TextAST(val sequence: Seq[TextObject]) {
 
-  def title(in: String) = {
-    this.copy(sequence = sequence :+ TextObjectTitle(in))
-  }
 
   def text(in: String) = {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
-  def textSmall(in: String) = {
-    this.copy(sequence = sequence :+ TextObjectSmall(in))
-  }
-
   def subscript(in: String) = {
     this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
   }
-
+// rausnehmen oder drin lassen? - wird nie verwendet, aber Text2TEX behandelt es
   def indented(space: Int, in: String) = {
     this.copy(sequence = sequence :+ TextObjectSpace(space, in))
   }

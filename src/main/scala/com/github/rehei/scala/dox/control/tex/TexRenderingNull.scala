@@ -31,7 +31,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override protected def internalCiteT(key: String) = Unit
   override protected def internalCiteP(key: String) = Unit
   override protected def internalCite(key: String) = Unit
-  override def internalTable(labelTable: DoxLabelTable[_]) = Unit
+  override protected def internalTable(labelTable: DoxLabelTable[_]) = Unit
   override protected def internalSvg(image: DoxSvgFigure) = Unit
   override protected def internalList(itemSeq: Seq[String]) = Unit
 

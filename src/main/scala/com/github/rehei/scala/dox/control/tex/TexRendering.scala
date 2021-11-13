@@ -100,18 +100,18 @@ class TexRendering(
     this
   }
 
-  def internalTable(table: DoxLabelTable[_]) {
-    val texTable = new TexRenderingTable(baseAST, floating, table.model, table.label).createTableString()
-    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
-    \ input { filename }
-  }
-
   def eqnarray(label: DoxReferenceEquation, expression: String) = {
     $ { _.eqnarray } {
       \ plain { expression }
       \ label { label.referenceID }
     }
     this
+  }
+
+  protected def internalTable(table: DoxLabelTable[_]) {
+    val texTable = new TexRenderingTable(baseAST, floating, table.model, table.label).createTableString()
+    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+    \ input { filename }
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {
