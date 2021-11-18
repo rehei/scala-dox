@@ -12,9 +12,9 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 
 object DoxBuilderTable {
 
-  def label(_label: String) = new {
+  def label(_labelOption: Option[DoxFile]) = new {
     def table[T <: AnyRef](_data: DoxTable[T]) = {
-      DoxLabelTable(_label, _data)
+      DoxLabelTable(_labelOption, _data)
     }
   }
 

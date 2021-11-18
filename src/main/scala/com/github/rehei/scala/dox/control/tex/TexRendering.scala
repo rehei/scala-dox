@@ -13,6 +13,7 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.file.DoxFile
 
 class TexRendering(
   baseAST:        TexAST,
@@ -109,9 +110,14 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxLabelTable[_]) {
-    val texTable = new TexRenderingTable(baseAST, floating, table.model, table.label).createTableString()
+    val texTable = new TexRenderingTable(baseAST, floating, table.model, tableName(table.label)).createTableString()
     val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
     \ input { filename }
+  }
+
+  protected def tableName(label: Option[DoxFile]) = {
+//    label.map(_.name).getOrElse(throw new Exception("No Name for Table given"))
+    label.map(_.name).getOrElse("dummylabel")
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {

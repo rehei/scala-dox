@@ -14,7 +14,7 @@ class Svg2File(protected val baseDirectory: Path) {
   protected val prefix = "generated"
 
   protected val usage = HashMap[String, Boolean]()
-  
+
   def generate(image: DoxSvgFigure) = {
     val file = target(image)
     write(file, image)
@@ -27,12 +27,12 @@ class Svg2File(protected val baseDirectory: Path) {
   }
 
   protected def target(figure: DoxSvgFigure) = {
-    val filename = figure.config.file.map(_.name + ".svg").getOrElse(generateName)
+    val filename = figure.config.label.map(_.name + ".svg").getOrElse(generateName)
     assert(usage.get(filename).isEmpty)
     usage.put(filename, true)
     baseDirectory.resolve(filename)
   }
-  
+
   protected def generateName() = {
     s"${prefix}_${nextID.filename().referenceID}.svg"
   }

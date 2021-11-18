@@ -1,3 +1,5 @@
 package com.github.rehei.scala.dox.model.table
 
-case class DoxTableFile(filecontent: String, filename: String) 
+import com.github.rehei.scala.dox.model.file.DoxFile
+
+case class DoxTableFile(filecontent: String, label: Option[DoxFile]) 

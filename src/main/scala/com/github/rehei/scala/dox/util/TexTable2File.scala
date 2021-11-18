@@ -10,16 +10,18 @@ import com.github.rehei.scala.dox.model.table.DoxTableFile
 class TexTable2File(protected val baseDirectory: Path) {
 
   protected val usage = HashMap[String, Boolean]()
+  protected val prefix = "generated"
+  protected val nextID = DoxReferenceFactory("table")
 
   def generate(table: DoxTableFile) = {
     val file = target(table)
-      write(file, table)
+    write(file, table)
 
     file
   }
 
   protected def target(table: DoxTableFile) = {
-    val filename = table.filename + ".tex"
+    val filename = table.label.map(_.name + ".tex").getOrElse(generateName)
     assert(usage.get(filename).isEmpty)
     usage.put(filename, true)
     baseDirectory.resolve(filename)
@@ -30,4 +32,7 @@ class TexTable2File(protected val baseDirectory: Path) {
     IOUtils.writeString(path, content)
   }
 
+  protected def generateName() = {
+    s"${prefix}_${nextID.filename().referenceID}.tex"
+  }
 }
