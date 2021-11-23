@@ -1,9 +1,9 @@
 package com.github.rehei.scala.dox.model.table
 
 class DoxTableHeadRepository(root: DoxTableKeyNode) {
-  
+
   protected val factory = DoxTableKeyNodeFactory()
-  
+
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
     def hasNonWhitespaceChildren() = {
@@ -28,7 +28,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
-            Seq(factory.Whitespace())
+            Seq(factory.Whitespace(base.config.columnSize.getOrElse(2)))
           } else {
             Seq.empty
           }

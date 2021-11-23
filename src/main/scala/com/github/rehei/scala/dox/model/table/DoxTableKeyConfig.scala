@@ -17,5 +17,8 @@ case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, dynami
   def name(in: TextAST) = {
     this.copy(text = in)
   }
+  def setSize(in: Double) = {
+    this.copy(columnSize = Some(in))
+  }
 }
 

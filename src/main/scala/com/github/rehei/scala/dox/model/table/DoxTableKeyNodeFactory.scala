@@ -35,6 +35,15 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def apply() = {
       new DoxTableKeyNode(DoxTableKeyNodeType.WHITESPACE, DoxTableKeyConfig.NONE, Seq.empty)
     }
+    def apply(columnSize: Double) = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.WHITESPACE, DoxTableKeyConfig.NONE.setSize(columnSize), Seq.empty)
+    }
+  }
+
+  object Columnspace {
+    def apply() = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.COLUMNSPACE, DoxTableKeyConfig.NONE.setSize(0.1), Seq.empty)
+    }
   }
 
   object Index {

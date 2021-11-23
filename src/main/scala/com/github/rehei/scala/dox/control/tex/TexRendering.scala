@@ -110,7 +110,13 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxLabelTable[_]) {
-    val texTable = new TexRenderingTable(baseAST, floating, table.model, tableName(table.label)).createTableString()
+    
+    val texTable = {
+      table.transposed match {
+        case false => {new TexRenderingTable(baseAST, floating, table.model, tableName(table.label)).createTableString()}
+        case true => {new TexRenderingTable2(baseAST, floating, table.model, tableName(table.label)).createTableString()}
+      }
+    }
     val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
     \ input { filename }
   }
