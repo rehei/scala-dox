@@ -21,7 +21,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Table {
     def apply(node: DoxTableKeyNode) = {
-      DoxTable[T](node)
+      DoxTable[T](node).withColumnSpace
     }
   }
 
