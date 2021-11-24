@@ -16,14 +16,7 @@ object DoxBuilderTable {
   def label(_labelOption: Option[DoxFile]) = new {
     def table[T <: AnyRef](_table: DoxTable[T]) = new {
       def transposed(_transposed: Boolean) = {
-        val tableData = {
-          if (_transposed) {
-            _table.withoutColumnSpace
-          } else {
-            _table
-          }
-        }
-        DoxLabelTable(_labelOption, tableData, _transposed)
+        DoxLabelTable(_labelOption, _table, _transposed)
       }
     }
   }

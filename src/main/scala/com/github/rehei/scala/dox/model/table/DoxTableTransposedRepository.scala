@@ -63,8 +63,9 @@ class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[
     val currentLevel = parentLevel + 1
     if (node.isLeaf) {
       node.nodeType match {
-        case DoxTableKeyNodeType.TITLE => Seq()
-        case other                     => Seq(DoxTableTransposedRow(node.config.text, dataBuffer.dequeue, currentLevel))
+        case DoxTableKeyNodeType.TITLE       => Seq()
+        case DoxTableKeyNodeType.COLUMNSPACE => Seq()
+        case other                           => Seq(DoxTableTransposedRow(node.config.text, dataBuffer.dequeue, currentLevel))
       }
     } else {
       val currentRow = Seq(DoxTableTransposedRow(node.config.text, Seq(), currentLevel))

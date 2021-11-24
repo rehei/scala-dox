@@ -40,29 +40,6 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     new DoxTableTransposedRepository(root, data)
   }
 
-  def withoutColumnSpace = {
-    val filteredRoot = {
-//      println(root.children.length)
-      root.children.filterNot(childNode => {
-        childNode.nodeType match {
-          case m @ DoxTableKeyNodeType.COLUMNSPACE => true
-          case m @ other                           => false
-        }
-      })
-    }
-    //    println("a")
-    //    filteredRoot.map(asd => println(asd.nodeType))
-    //    println("b")
-    //    println("---")
-    //    println(filteredRoot.length)
-    filteredRoot.toList.map(node => println(node.children.length))
-    //    println(root.children.length)
-    root.children.toList.map(node => println(node.children.length))
-
-    this.copy(root = root.copy(children = filteredRoot))
-    this
-  }
-
   private[table] def withColumnSpace = {
     val factory = DoxTableKeyNodeFactory()
     val childrenWithColumnspace = {
@@ -80,7 +57,6 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     }
 
     this.copy(root = root.copy(children = childrenWithColumnspace))
-    this
   }
 
   protected def extract(element: T, index: Int) = {
