@@ -4,94 +4,82 @@ import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import scala.collection.mutable.ArrayBuffer
+import com.github.rehei.scala.dox.text.TextFactory
+import scala.collection.mutable.Queue
 
 class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]]) {
   case class DoxTableTransposedRow(head: TextAST, data: Seq[TextAST], columnDepth: Int)
 
-  protected val factory = DoxTableKeyNodeFactory()
-
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
-    def hasNonWhitespaceChildren() = {
-      base.children.filterNot(_.nodeType == DoxTableKeyNodeType.WHITESPACE).size > 0
+    val title = {
+      root.children.headOption.map(head => head.nodeType match {
+        case DoxTableKeyNodeType.TITLE => head.config.text
+        case other                     => TextFactory.NONE
+      }).getOrElse(TextFactory.NONE)
     }
 
-    def byLevel(level: Int): Seq[DoxTableKeyNode] = {
+    protected val noneTitleChildren = {
+      base.children.headOption.map(
+        head => head.nodeType match {
+          case DoxTableKeyNodeType.TITLE => base.children.drop(1)
+          case other                     => base.children
+        }).getOrElse(base.children)
 
-      if (level == 0) {
-        Seq(base)
-      } else {
-        base.children.flatMap(_.byLevel(level - 1))
+    }
+    def checkValidity() {
+      for (child <- noneTitleChildren) {
+        findInvalid(child)
       }
-
     }
-
-    def withWhitespace() = {
-      withWhitespaceMax(base.depth())
-    }
-
-    protected def withWhitespaceMax(max: Int): DoxTableKeyNode = {
-      if (max > 0) {
-        val extension = {
-          if (base.children.isEmpty) {
-            Seq(factory.Whitespace())
-          } else {
-            Seq.empty
-          }
-        }
-        base.copy(children = (base.children ++ extension).map(_.withWhitespaceMax(max - 1)))
-      } else {
-        base.copy()
+    protected def findInvalid(node: DoxTableKeyNode): Unit = {
+      checkNode(node)
+      for (child <- node.children) {
+        findInvalid(child)
       }
     }
 
+    protected def checkNode(node: DoxTableKeyNode) = {
+      node.nodeType match {
+        case DoxTableKeyNodeType.TITLE => throw new IllegalArgumentException("Title Node found, but not as first root node child.")
+        case other                     => true
+      }
+    }
   }
+
+  root.checkValidity()
+
+  val title = root.title
 
   def list() = {
-    val a = data.transpose
-    val b = root
-    var dataBuffer = a
-
-    (for (child <- b.children) yield {
-      val leavesSize = {
-        if (child.leavesRecursive().length > 0) {
-          child.leavesRecursive().length
-        } else {
-          1
-        }
-      }
-      val childrenRows = getTransposedRows(child, dataBuffer.take(leavesSize), Seq(), root.depth)
-      dataBuffer = dataBuffer.drop(leavesSize)
-      childrenRows
-    }).flatten
-
+    transposedStart()
   }
 
-  protected def getTransposedRows(node: DoxTableKeyNode, dataBuffer: ArrayBuffer[ArrayBuffer[TextAST]], transposed: Seq[DoxTableTransposedRow], maxDepth: Int): Seq[DoxTableTransposedRow] = {
+  protected def transposedStart() = {
+    transposedRowsInner(root.children, data.transpose.to[Queue], -1)
+  }
 
+  protected def transposedRows(node: DoxTableKeyNode, dataBuffer: Queue[ArrayBuffer[TextAST]], transposed: Seq[DoxTableTransposedRow], parentLevel: Int): Seq[DoxTableTransposedRow] = {
+    val currentLevel = parentLevel + 1
     if (node.isLeaf) {
-      Seq(DoxTableTransposedRow(node.config.text, dataBuffer.take(1).headOption.map(m => m).getOrElse(throw new Exception), maxDepth - node.depth()))
-
+      node.nodeType match {
+        case DoxTableKeyNodeType.TITLE => Seq()
+        case other                     => Seq(DoxTableTransposedRow(node.config.text, dataBuffer.dequeue, currentLevel))
+      }
     } else {
-      var buffer = dataBuffer
-      val dataRow = Seq(DoxTableTransposedRow(node.config.text, Seq(), maxDepth - node.depth()))
-
-      val test = (for (child <- node.children) yield {
-        val minLength = {
-          if (child.leavesRecursive().length > 0) {
-            child.leavesRecursive().length
-          } else {
-            1
-          }
-        }
-        val currentStuff = getTransposedRows(child, buffer.take(minLength), Seq(), maxDepth)
-        buffer = buffer.drop(minLength)
-        currentStuff
-
-      }).flatten
-      dataRow ++ test
+      val currentRow = Seq(DoxTableTransposedRow(node.config.text, Seq(), currentLevel))
+      val tailRows = transposedRowsInner(node.children, dataBuffer, currentLevel)
+      currentRow ++ tailRows
     }
+  }
 
+  protected def transposedRowsInner(children: Seq[DoxTableKeyNode], dataBuffer: Queue[ArrayBuffer[TextAST]], currentLevel: Int) = {
+    (for (child <- children) yield {
+      val minLength = Seq(1, child.leavesRecursive().length).max
+      val childData = (1 to minLength).map(_ => dataBuffer.dequeue).to[Queue]
+      transposedRows(child, childData, Seq(), currentLevel)
+
+    }).flatten
   }
 
 }

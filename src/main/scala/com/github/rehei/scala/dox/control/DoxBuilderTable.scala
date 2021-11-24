@@ -14,9 +14,16 @@ import com.github.rehei.scala.dox.model.DoxLabelTable
 object DoxBuilderTable {
 
   def label(_labelOption: Option[DoxFile]) = new {
-    def table[T <: AnyRef](_data: DoxTable[T]) = new {
+    def table[T <: AnyRef](_table: DoxTable[T]) = new {
       def transposed(_transposed: Boolean) = {
-        DoxLabelTable(_labelOption, _data, _transposed)
+        val tableData = {
+          if (_transposed) {
+            _table.withoutColumnSpace
+          } else {
+            _table
+          }
+        }
+        DoxLabelTable(_labelOption, tableData, _transposed)
       }
     }
   }

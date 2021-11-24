@@ -12,18 +12,23 @@ object DoxTableKeyNodeType {
   object WHITESPACE extends DoxTableKeyNodeType
   object RULE extends DoxTableKeyNodeType
 
+  object TITLE extends DoxTableKeyNodeType {
+    override def valueOf(index: Int, element: AnyRef) = {
+      TextFactory.NONE
+    }
+  }
   object INDEX extends DoxTableKeyNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.text(index.toString())
     }
   }
-  
+
   object COLUMNSPACE extends DoxTableKeyNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE
     }
   }
-  
+
   def key(query: Query[_]) = {
     new DoxTableKeyNodeType() {
       override def valueOf(index: Int, element: AnyRef) = {

@@ -19,6 +19,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   }
 
+
   object Table {
     def apply(node: DoxTableKeyNode) = {
       DoxTable[T](node).withColumnSpace
@@ -27,7 +28,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply(name: String) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable
+      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable 
     }
   }
 
@@ -43,6 +44,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Columnspace {
     def apply() = {
       new DoxTableKeyNode(DoxTableKeyNodeType.COLUMNSPACE, DoxTableKeyConfig.NONE.setSize(0.1), Seq.empty)
+    }
+  }
+
+  object Title {
+    def apply(name: String) = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.TITLE, DoxTableKeyConfig.NONE.name(name), Seq.empty)
     }
   }
 

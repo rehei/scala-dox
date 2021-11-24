@@ -12,7 +12,7 @@ class TexBuilderCommandInline(ast: TexAST) {
   object multicolumn extends TexMarkupObject
   object textwidth extends TexMarkupObject
   object hsize extends TexMarkupObject
-
+  object hspace extends TexMarkupObject
   object dimexpr extends TexMarkupObject
 
   object tabcolsep extends TexMarkupObject
