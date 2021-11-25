@@ -67,7 +67,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, config, Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
           val query = callback(new Query[T])
-          DoxTableKeyNode(DoxTableKeyNodeType.key(query), config, Seq.empty)
+          DoxTableKeyNode(DoxTableKeyNodeType.LEAF.key(query), config, Seq.empty)
         }
       }
     }

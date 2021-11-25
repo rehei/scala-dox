@@ -7,11 +7,9 @@ class DoxTableKeyConfigSupport() {
 
   protected object DataTableKeyConfigBuilder {
     case class BuildingObject(text: TextAST) {
-      def alignment(select: DoxTableAlignment.type => DoxTableAlignment) = new {
-        def dynamic(isDynamic: Boolean) = new {
-          def columnSize(columnSize: Option[Double]) = {
-            DoxTableKeyConfig(text, select(DoxTableAlignment), isDynamic, columnSize)
-          }
+      def alignment(selectAlignment: DoxTableAlignment.type => DoxTableAlignment) = new {
+        def columnSize(columnSize: Option[Double]) = {
+          DoxTableKeyConfig(text, selectAlignment(DoxTableAlignment), columnSize)
         }
       }
     }

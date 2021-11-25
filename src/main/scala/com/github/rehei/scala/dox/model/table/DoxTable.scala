@@ -40,23 +40,49 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     new DoxTableTransposedRepository(root, data)
   }
 
-  private[table] def withColumnSpace = {
-    val factory = DoxTableKeyNodeFactory()
-    val childrenWithColumnspace = {
-      if (root.children.length <= 1) {
-        root.children
-      } else {
-        val columnSpaced = {
-          (for (childrenSubgroup <- root.children.sliding(2)) yield {
+  def removeColumnSpaces() = {
+    this.copy(root = root.copy(children = removeObsoleteColumnSpace(root.children)))
+  }
 
-            Seq(childrenSubgroup.head, factory.Columnspace())
-          }).flatten.toSeq
-        }
-        columnSpaced ++ Seq(root.children.last)
+  private[table] def withColumnSpace = {
+    this.copy(root = root.copy(children = getChildrenSpaces()))
+  }
+
+  protected def getChildrenSpaces() = {
+    root.children.length match {
+      case x if (x <= 1) => root.children
+      case other         => spacedColumns()
+    }
+  }
+
+  protected def spacedColumns() = {
+    val factory = DoxTableKeyNodeFactory()
+    root.children.sliding(2).flatMap(children => Seq(children.head, factory.Columnspace())).toSeq ++ Seq(root.children.last)
+  }
+
+  protected def removeObsoleteColumnSpace(parentChildren: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
+    parentChildren.isEmpty match {
+      case true => Seq()
+      case false => {
+        val cleaned = cleanSides(parentChildren)
+        getCleanedChildren(cleaned) ++ getLastChild(cleaned.last)
       }
     }
+  }
 
-    this.copy(root = root.copy(children = childrenWithColumnspace))
+  protected def cleanSides(children: Seq[DoxTableKeyNode]) = {
+    children.dropWhile(_.nodeType == DoxTableKeyNodeType.COLUMNSPACE).reverse.dropWhile(_.nodeType == DoxTableKeyNodeType.COLUMNSPACE).reverse
+  }
+
+  protected def getCleanedChildren(parentChildren: Seq[DoxTableKeyNode]) = {
+    (parentChildren.sliding(2).map { case Seq(first, second) => first.copy(children = removeObsoleteColumnSpace(first.children)) }).toSeq
+  }
+
+  protected def getLastChild(child: DoxTableKeyNode) = {
+    (child.nodeType match {
+      case DoxTableKeyNodeType.COLUMNSPACE => Seq()
+      case other                           => Seq(child.copy(children = removeObsoleteColumnSpace(child.children)))
+    }).toSeq
   }
 
   protected def extract(element: T, index: Int) = {

@@ -68,7 +68,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
   protected def columnConfigEachColumnSize() = {
     model.root.leavesRecursive().map(column => getTexAlignment(column.config)).mkString
   }
-  
+
   protected def appendTableHead() {
 
     for (row <- model.head.list()) yield {
