@@ -15,7 +15,7 @@ object DoxTableKeyNodeType {
   object ROOT extends DoxTableKeyNodeType("ROOT")
   object WHITESPACE extends DoxTableKeyNodeType("WHITESPACE")
   object RULE extends DoxTableKeyNodeType("RULE")
-  object LEAF extends DoxTableKeyNodeType("LEAF") with QueryTrait
+
   object TITLE extends DoxTableKeyNodeType("TITLE") {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE
@@ -33,30 +33,18 @@ object DoxTableKeyNodeType {
     }
   }
 
-  trait QueryTrait {
-    def key(query: Query[_]) = {
-      new DoxTableKeyNodeType("NONE") {
-        override def valueOf(index: Int, element: AnyRef) = {
-          val value = new QReflection(element).get(query)
+  def key(query: Query[_]) = {
+    new DoxTableKeyNodeType("NONE") {
+      override def valueOf(index: Int, element: AnyRef) = {
+        val value = new QReflection(element).get(query)
 
-          value match {
-            case m: TextAST => m
-            case m          => TextFactory.text(m.toString())
-          }
+        value match {
+          case m: TextAST => m
+          case m          => TextFactory.text(m.toString())
         }
       }
     }
   }
-
-  //  def keyMarkup(query: Query[TextAST]) = {
-  //    new DoxTableKeyNodeType("NONE") {
-  //      override def valueOf(index: Int, element: AnyRef) = {
-  //        val value = new QReflection(element).get(query)
-  //        value.asInstanceOf[TextAST]
-  //      }
-  //    }
-  //  }
-
 }
 
 abstract class DoxTableKeyNodeType(typey: String) {

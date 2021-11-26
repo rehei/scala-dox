@@ -61,9 +61,10 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
   }
 
   protected def removeObsoleteColumnSpace(parentChildren: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
-    parentChildren.isEmpty match {
-      case true => Seq()
-      case false => {
+    parentChildren.length match {
+      case x if (x == 0) => Seq()
+      case y if (y == 1) => getLastChild(parentChildren.head)
+      case z if (z > 1) => {
         val cleaned = cleanSides(parentChildren)
         getCleanedChildren(cleaned) ++ getLastChild(cleaned.last)
       }
