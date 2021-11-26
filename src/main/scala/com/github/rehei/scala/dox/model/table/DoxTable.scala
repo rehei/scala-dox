@@ -40,7 +40,7 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     new DoxTableTransposedRepository(root, data)
   }
 
-  def removeColumnSpaces() = {
+  def removeObsoleteSpaces() = {
     this.copy(root = root.copy(children = removeObsoleteColumnSpace(root.children)))
   }
 
