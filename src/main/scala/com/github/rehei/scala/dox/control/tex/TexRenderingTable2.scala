@@ -42,7 +42,7 @@ class TexRenderingTable2(baseAST: TexAST, floating: Boolean, model: DoxTable[_],
     if (!floating) {
       \ FloatBarrier;
     }
-    $ { _ table & { ###("H!") } } {
+    $ { _ table & { ###("H") } } {
       \ centering;
       $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
         \ toprule;
