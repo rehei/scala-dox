@@ -2,7 +2,6 @@ package com.github.rehei.scala.dox.text.util
 
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextObjectSubscript
-import com.github.rehei.scala.dox.text.TextObjectSpace
 import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.control.tex.TexEscape
@@ -34,7 +33,6 @@ object Text2TEX {
     while (base.count < sequence.size) {
 
       base.append(textDefault(sequence.drop(base.count)))
-      base.append(textSpace(sequence.drop(base.count)))
       base.append(textSubscript(sequence.drop(base.count)))
 
     }
@@ -46,13 +44,6 @@ object Text2TEX {
   protected def textDefault(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectDefault](sequence)
     val resultString = collection.map(text => escape(text.in)).mkString
-
-    ParseResult(resultString, collection.size)
-  }
-
-  protected def textSpace(sequence: Seq[TextObject]) = {
-    val collection = collect[TextObjectSpace](sequence)
-    val resultString = collection.map(text => ("\\hspace*" * text.space) + text.text).mkString
 
     ParseResult(resultString, collection.size)
   }
