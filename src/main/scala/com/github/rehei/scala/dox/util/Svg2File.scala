@@ -28,8 +28,7 @@ class Svg2File(protected val baseDirectory: Path) {
 
   protected def target(figure: DoxSvgFigure) = {
     val filename = figure.config.label.map(_.name + ".svg").getOrElse(generateName)
-    assert(usage.get(filename).isEmpty)
-    usage.put(filename, true)
+    FilenameCheck.addFilename(filename)
     baseDirectory.resolve(filename)
   }
 

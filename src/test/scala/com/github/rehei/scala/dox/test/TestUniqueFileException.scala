@@ -6,63 +6,42 @@ import java.nio.file.Paths
 import org.junit.Test
 import scala.collection.mutable.HashMap
 import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.util.TexTable2File
+import com.github.rehei.scala.dox.model.DoxSvgFigure
+import scala.xml.NodeSeq
+import com.github.rehei.scala.dox.model.DoxFigure
+import com.github.rehei.scala.dox.util.Svg2File
+import org.junit.FixMethodOrder
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class TestUniqueFileException extends DoxFileEnum(None) {
-  class UniqueFileNameException(errorText: String) extends Exception(errorText) {
-    def this(errorText: String, reason: Throwable) {
-      this(errorText)
-      initCause(reason)
-    }
-    def this(reason: Throwable) {
-      this(Option(reason).map(_.toString()).orNull, reason)
-    }
-    def this() {
-      this(null: String)
-    }
-  }
 
+  class TestNamingRepository(prefix: Option[String]) extends DoxFileEnum(prefix) {
+    val doxFileName = unique
+  }
   val inmemory = Paths.get("/mnt/inmemory/")
   val peter = unique
   val tmp = inmemory.resolve("./datax/datax-" + "abc")
   tmp.toFile().mkdirs()
 
   protected val TARGET = tmp.normalize()
-  println(TARGET)
   protected val TARGET_DUMMY = TARGET.resolve("dmy")
-  protected val usage = HashMap[String, Boolean]()
-  protected val nextID = DoxReferenceFactory("")
-  protected val prefix = "blub"
-  protected var count = 0
+  protected val fileEnum = new TestNamingRepository(None)
 
-  @Test(expected = classOf[UniqueFileNameException])
-  def test() {
-    // Wegen generateFileName wird der Durchlauf partiell und vollständig hunderte Male aufgerufen, warum?
-    //    val samefilename1 = generateFileName
-    //    println(count)
-    //    count += 1
-    val samefilename1 = "peter.tex"
-    addAndCheckFileName(samefilename1)
-    //    println("aaa")
-    val samefilename2 = "peter.tex" // generateFileName
-    addAndCheckFileName(samefilename2)
-    //    println("ddd")
+  @Test(expected = classOf[AssertionError])
+  def firstTest() {
+
+    val tableFile = DoxTableFile("somestringtable", fileEnum.doxFileName.get())
+    val testTableName = new TexTable2File(tmp)
+    testTableName.generate(tableFile)
+    testTableName.generate(tableFile)
   }
-
-  protected def addAndCheckFileName(filename: String) = {
-    //    println(filename)
-    //    println("asd")
-    if (!usage.get(filename).isEmpty) {
-      throw new UniqueFileNameException(usage.size.toString())
-    }
-    usage.put(filename, true)
-  }
-  protected def generateFileName() = {
-    val tableFile = DoxTableFile("some latex", peter.get())
-    tableFile.label.map(_.name + ".tex").getOrElse(generateName)
-  }
-
-  protected def generateName() = {
-    s"${prefix}_${nextID.filename().referenceID}.tex"
-
+  @Test(expected = classOf[AssertionError])
+  def secondTest() {
+    val svgFile = DoxSvgFigure(DoxFigure("somecaption", fileEnum.doxFileName.get()), NodeSeq.Empty)
+    val testSvgName = new Svg2File(tmp)
+    testSvgName.generate(svgFile)
+    testSvgName.generate(svgFile)
   }
 }

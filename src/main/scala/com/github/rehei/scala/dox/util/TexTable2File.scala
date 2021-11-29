@@ -22,8 +22,7 @@ class TexTable2File(protected val baseDirectory: Path) {
 
   protected def target(table: DoxTableFile) = {
     val filename = table.label.map(_.name + ".tex").getOrElse(generateName)
-    assert(usage.get(filename).isEmpty)
-    usage.put(filename, true)
+    FilenameCheck.addFilename(filename)
     baseDirectory.resolve(filename)
   }
 
