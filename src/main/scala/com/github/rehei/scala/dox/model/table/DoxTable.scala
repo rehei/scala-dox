@@ -32,7 +32,7 @@ case class DoxTable[T <: AnyRef](val totalRoot: DoxTableKeyNode)(implicit clazzT
   }
 
   def caption = {
-    Text2TEX.generate(root.config.text)
+    Text2TEX.generate(root.config.base.text)
   }
 
   def normal = {

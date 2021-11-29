@@ -29,10 +29,10 @@ class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[
       node.nodeType match {
         case DoxTableKeyNodeType.TITLE       => Seq()
         case DoxTableKeyNodeType.COLUMNSPACE => Seq()
-        case other                           => Seq(DoxTableTransposedRow(node.config.text, dataBuffer.dequeue, currentLevel))
+        case other                           => Seq(DoxTableTransposedRow(node.config.base.text, dataBuffer.dequeue, currentLevel))
       }
     } else {
-      val currentRow = Seq(DoxTableTransposedRow(node.config.text, Seq(), currentLevel))
+      val currentRow = Seq(DoxTableTransposedRow(node.config.base.text, Seq(), currentLevel))
       val tailRows = transposedRowsInner(node.children, dataBuffer, currentLevel)
       currentRow ++ tailRows
     }

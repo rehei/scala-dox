@@ -6,7 +6,7 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
 
   val title = {
     root.children.headOption.map(head => head.nodeType match {
-      case DoxTableKeyNodeType.TITLE => head.config.text
+      case DoxTableKeyNodeType.TITLE => head.config.base.text
       case other                     => TextFactory.NONE
     }).getOrElse(TextFactory.NONE)
   }

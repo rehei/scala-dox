@@ -2,8 +2,14 @@ package com.github.rehei.scala.dox.model.table
 
 import scala.collection.Seq
 
-case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyConfig, children: Seq[DoxTableKeyNode]) {
+object DoxTableKeyNode {
+  val NONE = DoxTableKeyNode(DoxTableKeyNodeType.NONE, DoxTableKeyConfigExtended.NONE, Seq.empty)
+}
 
+case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyConfigExtended, children: Seq[DoxTableKeyNode]) {
+  def setNodeType(newNodeType: DoxTableKeyNodeType) = {
+    this.copy(nodeType = newNodeType)
+  }
   def valueOf(index: Int, element: AnyRef) = {
     nodeType.valueOf(index, element)
   }

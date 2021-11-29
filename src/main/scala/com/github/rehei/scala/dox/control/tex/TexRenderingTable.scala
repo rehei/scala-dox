@@ -8,13 +8,15 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.table.DoxTableHeadRow
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 
 class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: String) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
   protected object ColumnType {
-    private val baseString = """\let\newline\\\arraybackslash\hspace{0pt}}m"""
+    private val baseString = """\arraybackslash}m"""
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
@@ -22,7 +24,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
 
-  protected val columnSizeDefault = 2.0
+  protected val COLUMN_SIZE_DEFAULT = 2.0
 
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
@@ -31,6 +33,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   def createTableString() = {
     create()
+    println(tmpAST.build())
     tmpAST.build()
   }
 
@@ -54,7 +57,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     }
   }
   protected def columnConfigTotalSize() = {
-    val columnSizes = model.root.leavesRecursive().map(_.config.columnSize.map(size => size).getOrElse(columnSizeDefault))
+    val columnSizes = model.root.leavesRecursive().map(_.config.width.map(size => size).getOrElse(COLUMN_SIZE_DEFAULT))
     val tabColSeps = model.root.leavesRecursive().length * 2
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
@@ -65,14 +68,17 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
   }
 
   protected def appendTableHead() {
-
-    for (row <- model.normal.list()) yield {
-      val mappedHead = withOffset(row.values).map(asMappedTableHeadKey(_)).toSeq
-
-      \ plain { mappedHead.map(_.content.generate()).mkString(" & ") + "\\\\" }
-      \ plain { mappedHead.flatMap(_.ruleOption).map(_.generate()).mkString(" ") + "\n" }
+    for (row <- model.normal.list()) {
+      setCategories(getMappedHead(row))
     }
+  }
+  protected def getMappedHead(row: DoxTableHeadRow) = {
+    withOffset(row.values).map(row => asMappedTableHeadKey(row)).toSeq
+  }
 
+  protected def setCategories(mappedHead: Seq[MappedTableHeadKey]) = {
+    \ plain { mappedHead.map(_.content.generate()).mkString(" & ") + "\\\\" }
+    \ plain { mappedHead.flatMap(_.ruleOption).map(_.generate()).mkString(" ") + "\n" }
   }
 
   protected def asMappedTableHeadKey(value: DoxTableHeadRowKeyWithOffset) = {
@@ -88,7 +94,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
       }
     }
 
-    MappedTableHeadKey(\\ multicolumn & { value.key.size } { getTexAlignment(value.key.config) } { Text2TEX.generate(value.key.config.text) }, ruleOption)
+    MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { Text2TEX.generate(value.key.config.base.text) }, ruleOption)
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
@@ -106,9 +112,16 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
     }
   }
 
-  protected def getTexAlignment(config: DoxTableKeyConfig) = {
-    val size = config.columnSize.getOrElse(columnSizeDefault)
-    config.alignment match {
+  protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {
+    config.base.alignment match {
+      case DoxTableAlignment.LEFT  => "l"
+      case DoxTableAlignment.RIGHT => "r"
+      case _                       => "c"
+    }
+  }
+  protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
+    val size = config.width.getOrElse(COLUMN_SIZE_DEFAULT)
+    config.base.alignment match {
       case DoxTableAlignment.LEFT  => ColumnType.l(size)
       case DoxTableAlignment.RIGHT => ColumnType.r(size)
       case _                       => ColumnType.c(size)

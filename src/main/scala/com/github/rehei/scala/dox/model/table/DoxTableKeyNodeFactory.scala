@@ -24,53 +24,83 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply(name: String, title: Option[String]) = {
-      title.map(text => {
-        (new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable)
-          .append(new DoxTableKeyNode(DoxTableKeyNodeType.TITLE, DoxTableKeyConfig.NONE.name(text), Seq.empty))
-      }).getOrElse(
-        new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable)
+      val root = nodeWritable(DoxTableKeyNodeType.ROOT).config(DoxTableKeyConfig.NONE.name(name)).width(None)
+      title.map {
+        text => { root.append(Title(name)) }
+      } getOrElse {
+        root
+      }
     }
   }
 
   object Whitespace {
     def apply() = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.WHITESPACE, DoxTableKeyConfig.NONE, Seq.empty)
+      node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
+
     }
     def apply(columnSize: Double) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.WHITESPACE, DoxTableKeyConfig.NONE.setSize(columnSize), Seq.empty)
+      node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(columnSize))
+
     }
   }
 
   object Columnspace {
     def apply() = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.COLUMNSPACE, DoxTableKeyConfig.NONE.setSize(0.1), Seq.empty)
+      node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
+
     }
   }
 
   object Title {
     def apply(name: String) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.TITLE, DoxTableKeyConfig.NONE.name(name), Seq.empty)
+      node(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(name)).width(None)
+
     }
   }
 
   object Index {
     def apply() = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.INDEX, DoxTableKeyConfig.NONE, Seq.empty) with Writeable
+      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE).width(None)
     }
     def apply(name: String) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.INDEX, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable
+      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name)).width(None)
+
     }
   }
 
   object Node {
-    def apply(config: DoxTableKeyConfig) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, config, Seq.empty) with Writeable {
-        def finalize(callback: Query[T] => Query[_]) = {
-          val query = callback(new Query[T])
-          DoxTableKeyNode(DoxTableKeyNodeType.key(query), config, Seq.empty)
+    def apply(_config: DoxTableKeyConfig) = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, configExt(_config), Seq.empty) with Writeable {
+        def width(_width: Option[Double]) = new {
+          def finalize(callback: Query[T] => Query[_]) = {
+            val query = callback(new Query[T])
+            DoxTableKeyNode(DoxTableKeyNodeType.key(query), config.setWidth(_width), Seq.empty)
+          }
         }
+
       }
     }
   }
 
+  protected def nodeWritable(_nodeType: DoxTableKeyNodeType) = {
+    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) with Writeable {
+      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) with Writeable {
+        def width(_width: Option[Double]) = {
+          new DoxTableKeyNode(nodeType, config.setWidth(_width), children) with Writeable
+        }
+      }
+    }
+  }
+  protected def node(_nodeType: DoxTableKeyNodeType) = {
+    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) {
+      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) {
+        def width(_width: Option[Double]) = {
+          new DoxTableKeyNode(nodeType, config.setWidth(_width), children)
+        }
+      }
+    }
+  }
+  protected def configExt(base: DoxTableKeyConfig) = {
+    DoxTableKeyConfigExtended(base, None)
+  }
 }

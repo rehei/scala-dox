@@ -2,6 +2,7 @@ package com.github.rehei.scala.dox.model.table
 
 class DoxTableHeadRepository(totalRoot: DoxTableKeyNode) {
 
+  protected val WHITESPACE_DEFAULT_WIDTH = 0.1
   protected val factory = DoxTableKeyNodeFactory()
   protected val tableSupport = DoxTableSupport(totalRoot)
   tableSupport.checkValidity()
@@ -30,7 +31,7 @@ class DoxTableHeadRepository(totalRoot: DoxTableKeyNode) {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
-            Seq(factory.Whitespace(base.config.columnSize.getOrElse(2)))
+            Seq(factory.Whitespace(base.config.width.getOrElse(WHITESPACE_DEFAULT_WIDTH)))
           } else {
             Seq.empty
           }
