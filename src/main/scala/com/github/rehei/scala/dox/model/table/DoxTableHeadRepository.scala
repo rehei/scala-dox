@@ -1,8 +1,12 @@
 package com.github.rehei.scala.dox.model.table
 
-class DoxTableHeadRepository(root: DoxTableKeyNode) {
+class DoxTableHeadRepository(totalRoot: DoxTableKeyNode) {
 
   protected val factory = DoxTableKeyNodeFactory()
+  protected val tableSupport = DoxTableSupport(totalRoot)
+  tableSupport.checkValidity()
+  val title = tableSupport.title
+  val root = totalRoot.copy(children = tableSupport.noneTitleChildren)
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
@@ -11,13 +15,11 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
     }
 
     def byLevel(level: Int): Seq[DoxTableKeyNode] = {
-
       if (level == 0) {
         Seq(base)
       } else {
         base.children.flatMap(_.byLevel(level - 1))
       }
-
     }
 
     def withWhitespace() = {
@@ -46,7 +48,10 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
     val transformedRoot = root.withWhitespace()
 
     for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
-      DoxTableHeadRow(transformedRoot.byLevel(level).map(m => DoxTableHeadRowKey(m.config, m.width(), m.hasNonWhitespaceChildren())))
+      DoxTableHeadRow(
+        transformedRoot
+          .byLevel(level)
+          .map(m => DoxTableHeadRowKey(m.config, m.width(), m.hasNonWhitespaceChildren())))
     }
   }
 

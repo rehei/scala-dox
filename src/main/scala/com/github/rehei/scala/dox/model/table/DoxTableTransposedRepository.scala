@@ -10,46 +10,10 @@ import scala.collection.mutable.Queue
 class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]]) {
   case class DoxTableTransposedRow(head: TextAST, data: Seq[TextAST], columnDepth: Int)
 
-  implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
+  protected val tableSupport = DoxTableSupport(root)
+  tableSupport.checkValidity()
 
-    val title = {
-      root.children.headOption.map(head => head.nodeType match {
-        case DoxTableKeyNodeType.TITLE => head.config.text
-        case other                     => TextFactory.NONE
-      }).getOrElse(TextFactory.NONE)
-    }
-
-    protected val noneTitleChildren = {
-      base.children.headOption.map(
-        head => head.nodeType match {
-          case DoxTableKeyNodeType.TITLE => base.children.drop(1)
-          case other                     => base.children
-        }).getOrElse(base.children)
-
-    }
-    def checkValidity() {
-      for (child <- noneTitleChildren) {
-        findInvalid(child)
-      }
-    }
-    protected def findInvalid(node: DoxTableKeyNode): Unit = {
-      checkNode(node)
-      for (child <- node.children) {
-        findInvalid(child)
-      }
-    }
-
-    protected def checkNode(node: DoxTableKeyNode) = {
-      node.nodeType match {
-        case DoxTableKeyNodeType.TITLE => throw new IllegalArgumentException("Title Node found, but not as first root node child.")
-        case other                     => true
-      }
-    }
-  }
-
-  root.checkValidity()
-
-  val title = root.title
+  val title = tableSupport.title
 
   def list() = {
     transposedStart()

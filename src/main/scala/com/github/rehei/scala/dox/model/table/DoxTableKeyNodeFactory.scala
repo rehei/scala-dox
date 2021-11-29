@@ -8,17 +8,13 @@ import com.github.rehei.scala.dox.text.TextAST
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
-
     def append(additionalChildren: DoxTableKeyNode*) = {
-      this.copy(children = children ++ additionalChildren)
+      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
     }
-
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      this.copy(children = children ++ additionalChildren)
+      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
     }
-
   }
-
 
   object Table {
     def apply(node: DoxTableKeyNode) = {
@@ -27,8 +23,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Root {
-    def apply(name: String) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable 
+    def apply(name: String, title: Option[String]) = {
+      title.map(text => {
+        (new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable)
+          .append(new DoxTableKeyNode(DoxTableKeyNodeType.TITLE, DoxTableKeyConfig.NONE.name(text), Seq.empty))
+      }).getOrElse(
+        new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, DoxTableKeyConfig.NONE.name(name), Seq.empty) with Writeable)
     }
   }
 

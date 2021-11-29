@@ -4,6 +4,9 @@ import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
+import scala.runtime.Tuple3Zipped.Ops
+import scala.Option
+import java.util.Optional
 
 object DoxTableKeyNodeType {
   object NONE extends DoxTableKeyNodeType("NONE")
@@ -12,7 +15,12 @@ object DoxTableKeyNodeType {
       TextFactory.NONE
     }
   }
-  object ROOT extends DoxTableKeyNodeType("ROOT")
+  object ROOT extends DoxTableKeyNodeType("ROOT") {
+    override def optionalTitle(text: String) = {
+      TextFactory.text(text)
+    }
+  }
+
   object WHITESPACE extends DoxTableKeyNodeType("WHITESPACE")
   object RULE extends DoxTableKeyNodeType("RULE")
 
@@ -48,6 +56,10 @@ object DoxTableKeyNodeType {
 }
 
 abstract class DoxTableKeyNodeType(typey: String) {
+
+  def optionalTitle(text: String): TextAST = {
+    throw new UnsupportedOperationException(typey)
+  }
 
   def valueOf(index: Int, element: AnyRef): TextAST = {
     throw new UnsupportedOperationException(typey)

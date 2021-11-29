@@ -36,29 +36,23 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   protected def create() {
 
-    if (!floating) {
-      \ FloatBarrier;
-    }
-    $ { _ table & { ###("H") } } {
-      \ centering;
+    $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
+      \ toprule;
+      appendTitle()
+      appendTableHead()
+      \ midrule;
+      appendTableBody()
+      \ bottomrule;
 
-      $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-        \ toprule;
-        appendTableHead()
-        \ midrule;
-        appendTableBody()
-        \ bottomrule;
-      }
-
-      \ caption & { model.caption }
-      \ label { reference }
     }
-    if (!floating) {
-      \ FloatBarrier;
-    }
-
   }
-
+  protected def appendTitle() = {
+    if (!Text2TEX.generate(model.title).isEmpty()) {
+      \ plain { (\\ multicolumn & { model.root.leavesRecursive().length } { "c" } { Text2TEX.generate(model.title) }).generate() }
+      \ plain { "\\\\" + "\n" }
+      \ midrule
+    }
+  }
   protected def columnConfigTotalSize() = {
     val columnSizes = model.root.leavesRecursive().map(_.config.columnSize.map(size => size).getOrElse(columnSizeDefault))
     val tabColSeps = model.root.leavesRecursive().length * 2
@@ -72,7 +66,7 @@ class TexRenderingTable(baseAST: TexAST, floating: Boolean, model: DoxTable[_], 
 
   protected def appendTableHead() {
 
-    for (row <- model.head.list()) yield {
+    for (row <- model.normal.list()) yield {
       val mappedHead = withOffset(row.values).map(asMappedTableHeadKey(_)).toSeq
 
       \ plain { mappedHead.map(_.content.generate()).mkString(" & ") + "\\\\" }

@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.text.TextAST
 
-class TexRenderingTable2(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: String) {
+class TexRenderingTableTransposed(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: String) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: TextAST, contentData: Seq[TextAST])
@@ -23,8 +23,8 @@ class TexRenderingTable2(baseAST: TexAST, floating: Boolean, model: DoxTable[_],
 
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
-  protected val columnSizeDefault = 1.0
-  protected val columnSizeCategory = 3.0
+  protected val columnSizeDefault = 3.0
+  protected val columnSizeCategory = 4.0
   protected val dataColumnAmount = model.transposed.list().map(_.data.length).max
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
@@ -33,29 +33,15 @@ class TexRenderingTable2(baseAST: TexAST, floating: Boolean, model: DoxTable[_],
 
   def createTableString() = {
     create()
-    println(tmpAST.build())
     tmpAST.build()
   }
 
   protected def create() {
-
-    if (!floating) {
-      \ FloatBarrier;
-    }
-    $ { _ table & { ###("H") } } {
-      \ centering;
-      $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-        \ toprule;
-        appendTitle()
-        \ midrule;
-        appendTable()
-        \ bottomrule;
-      }
-      \ caption & { model.caption }
-      \ label { reference }
-    }
-    if (!floating) {
-      \ FloatBarrier;
+    $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
+      \ toprule;
+      appendTitle()
+      appendTable()
+      \ bottomrule;
     }
   }
 
@@ -68,8 +54,11 @@ class TexRenderingTable2(baseAST: TexAST, floating: Boolean, model: DoxTable[_],
   }
 
   protected def appendTitle() = {
-    \ plain { (\\ multicolumn & { dataColumnAmount + 1 } { "c" } { Text2TEX.generate(model.transposed.title) }).generate() }
-    \ plain { "\\\\" + "\n" }
+    if (!Text2TEX.generate(model.title).isEmpty()) {
+      \ plain { (\\ multicolumn & { dataColumnAmount + 1 } { "c" } { Text2TEX.generate(model.title) }).generate() }
+      \ plain { "\\\\" + "\n" }
+      \ midrule
+    }
   }
 
   protected def appendTable() {
