@@ -1,8 +1,8 @@
 package com.github.rehei.scala.dox.test.model.file
 
 import org.junit.Test
-import com.github.rehei.scala.dox.model.file.DoxIndexedEnum
-import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
+import com.github.rehei.scala.dox.model.reference.DoxIndexedEnum
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 
 class DoxFileEnumTest {
 

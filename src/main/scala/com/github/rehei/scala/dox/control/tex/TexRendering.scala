@@ -3,8 +3,6 @@ package com.github.rehei.scala.dox.control.tex
 import com.github.rehei.scala.dox.control.DoxHandleSvg
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.file.DoxReferenceEquation
-import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
@@ -12,8 +10,10 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.DoxLabelTable
-import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
+import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 class TexRendering(
   baseAST:        TexAST,

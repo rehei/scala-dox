@@ -1,7 +1,6 @@
 package com.github.rehei.scala.dox.control.xml
 
 import scala.xml.NodeSeq
-import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.util.NextID
 
 trait XMLMarkupFactory {

@@ -1,8 +1,8 @@
 package com.github.rehei.scala.dox.control
 
 import com.github.rehei.scala.dox.model.DoxLabelTable
-import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 
 object DoxBuilderTable {
 

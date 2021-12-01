@@ -3,10 +3,10 @@ package com.github.rehei.scala.dox.control.noop
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
-import com.github.rehei.scala.dox.model.file.DoxReferenceEquation
-import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 

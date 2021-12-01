@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.model.file
+package com.github.rehei.scala.dox.model.reference
 
 import com.github.rehei.scala.dox.util.DoxIndexedRepository
 
@@ -16,6 +16,10 @@ class DoxIndexedEnum(prefix: Option[String]) extends DoxIndexedRepository {
 
   def uniqueImage = {
     MyIndexedHandle(DoxReferencePersistentImage(_))
+  }
+
+  def uniqueEquation = {
+    MyIndexedHandle(DoxReferenceEquation(_))
   }
 
 }

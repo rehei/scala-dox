@@ -5,12 +5,12 @@ import scala.collection.Seq
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
-import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
-import com.github.rehei.scala.dox.model.file.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
+import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 

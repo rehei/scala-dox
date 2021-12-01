@@ -1,6 +1,5 @@
 package com.github.rehei.scala.dox.test
 
-import com.github.rehei.scala.dox.model.file.DoxIndexedEnum
 import java.nio.file.Paths
 import org.junit.Test
 import scala.collection.mutable.HashMap
@@ -16,6 +15,7 @@ import java.nio.file.Path
 import java.nio.file.FileSystem
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.util.FileAlreadyExistsException
+import com.github.rehei.scala.dox.model.reference.DoxIndexedEnum
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class TestUniqueFileException extends DoxIndexedEnum(None) {

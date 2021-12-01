@@ -1,9 +1,9 @@
 package com.github.rehei.scala.dox.control.tex
 
 import com.github.rehei.scala.dox.model.DoxLabelTable
-import com.github.rehei.scala.dox.model.file.DoxReferenceEquation
-import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 

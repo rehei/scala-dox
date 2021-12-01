@@ -1,4 +1,4 @@
-package com.github.rehei.scala.dox.model.file
+package com.github.rehei.scala.dox.model.reference
 
 trait DoxReferenceBase {
   
