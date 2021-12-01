@@ -14,6 +14,7 @@ import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.file.DoxFile
+import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 
 class TexRendering(
   baseAST:        TexAST,
@@ -109,14 +110,25 @@ class TexRendering(
     this
   }
 
+  protected def internalTable(table: DoxLabelTableMulti) {
+    val verticalSpace = "\n\\vspace*{1cm}"
+    val texTable = table.multiTable.map(model => getTable(model, None, table.transposed, false) + verticalSpace).mkString
+    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+    if (!floating) {
+      \ FloatBarrier;
+    }
+    $ { _ table & { ###("H") } } {
+      \ input { filename }
+      \ caption & { tableName(table.label) }
+    }
+    if (!floating) {
+      \ FloatBarrier;
+    }
+  }
+
   protected def internalTable(table: DoxLabelTable[_]) {
 
-    val texTable = {
-      table.transposed match {
-        case false => { new TexRenderingTable(baseAST, floating, table.model, tableName(table.label)).createTableString() }
-        case true  => { new TexRenderingTableTransposed(baseAST, floating, table.model, tableName(table.label)).createTableString() }
-      }
-    }
+    val texTable = getTable(table.model, table.label, table.transposed, true)
     val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;
@@ -131,6 +143,12 @@ class TexRendering(
     }
   }
 
+  protected def getTable(model: DoxTable[_], label: Option[DoxFile], transposed: Boolean, toprule: Boolean) = {
+    transposed match {
+      case false => { new TexRenderingTable(baseAST, toprule, model, tableName(label)).createTableString() }
+      case true  => { new TexRenderingTableTransposed(baseAST, toprule, model, tableName(label)).createTableString() }
+    }
+  }
   protected def tableName(label: Option[DoxFile]) = {
     label.map(_.name).getOrElse("dummylabel")
   }

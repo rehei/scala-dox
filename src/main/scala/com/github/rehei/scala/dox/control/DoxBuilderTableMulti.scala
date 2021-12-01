@@ -12,14 +12,13 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 
-object DoxBuilderTable {
+object DoxBuilderTableMulti {
 
   def label(_labelOption: Option[DoxFile]) = new {
-    def table[T <: AnyRef](_table: DoxTable[T]) = new {
+    def tables(_tables: Seq[DoxTable[_]]) = new {
       def transposed(_transposed: Boolean) = {
-        DoxLabelTable(_labelOption, _table, _transposed)
+        DoxLabelTableMulti(_labelOption, _tables, _transposed)
       }
     }
   }
-
 }

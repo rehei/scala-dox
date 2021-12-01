@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.text.TextAST
 
-class TexRenderingTableTransposed(baseAST: TexAST, floating: Boolean, model: DoxTable[_], reference: String) {
+class TexRenderingTableTransposed(baseAST: TexAST, toprule: Boolean, model: DoxTable[_], reference: String) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: TextAST, contentData: Seq[TextAST])
@@ -38,7 +38,9 @@ class TexRenderingTableTransposed(baseAST: TexAST, floating: Boolean, model: Dox
 
   protected def create() {
     $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-      \ toprule;
+      if (toprule) {
+        \ toprule;
+      }
       appendTitle()
       appendTable()
       \ bottomrule;

@@ -9,6 +9,13 @@ import java.nio.charset.StandardCharsets
 
 object IOUtils {
 
+  def writeStringUnique(path: Path, content: String) = {
+    if (Files.exists(path)) {
+      throw new FileAlreadyExistsException(path.toAbsolutePath().toString())
+    } else {
+      writeString(path, content)
+    }
+  }
   def writeString(path: Path, content: String) = {
     Files.createDirectories(path.getParent())
 

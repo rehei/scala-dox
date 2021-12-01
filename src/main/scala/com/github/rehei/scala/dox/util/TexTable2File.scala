@@ -6,29 +6,22 @@ import scala.collection.mutable.HashMap
 
 import com.github.rehei.scala.dox.control.DoxReferenceFactory
 import com.github.rehei.scala.dox.model.table.DoxTableFile
+import java.nio.file.Files
 
 class TexTable2File(protected val baseDirectory: Path) {
 
-  protected val usage = HashMap[String, Boolean]()
   protected val prefix = "generated"
   protected val nextID = DoxReferenceFactory("table")
 
   def generate(table: DoxTableFile) = {
     val file = target(table)
-    write(file, table)
-
+    IOUtils.writeStringUnique(file, table.filecontent)
     file
   }
 
   protected def target(table: DoxTableFile) = {
     val filename = table.label.map(_.name + ".tex").getOrElse(generateName)
-    FilenameCheck.addFilename(filename)
     baseDirectory.resolve(filename)
-  }
-
-  protected def write(path: Path, table: DoxTableFile) = {
-    val content = table.filecontent
-    IOUtils.writeString(path, content)
   }
 
   protected def generateName() = {

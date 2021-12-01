@@ -8,6 +8,7 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
@@ -34,6 +35,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   protected def internalCiteP(key: String) = Unit
   protected def internalCite(key: String) = Unit
   protected def internalTable(labelTable: DoxLabelTable[_]) = Unit
+  protected def internalTable(labelTable: DoxLabelTableMulti) = Unit
   protected def internalSvg(image: DoxSvgFigure) = Unit
   protected def internalList(itemSeq: Seq[String]) = Unit
 

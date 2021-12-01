@@ -26,7 +26,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def apply(name: String, title: Option[String]) = {
       val root = nodeWritable(DoxTableKeyNodeType.ROOT).config(DoxTableKeyConfig.NONE.name(name)).width(None)
       title.map {
-        text => { root.append(Title(name)) }
+        text => root.append(Title(name))
       } getOrElse {
         root
       }
@@ -36,35 +36,34 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Whitespace {
     def apply() = {
       node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
-
     }
     def apply(columnSize: Double) = {
       node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(columnSize))
-
     }
   }
 
   object Columnspace {
     def apply() = {
       node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
-
     }
   }
 
   object Title {
     def apply(name: String) = {
       node(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(name)).width(None)
-
     }
   }
 
   object Index {
-    def apply() = {
-      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE).width(None)
+    def apply() = new {
+      def width(_width: Option[Double]) = {
+        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE).width(_width)
+      }
     }
-    def apply(name: String) = {
-      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name)).width(None)
-
+    def apply(name: String) = new {
+      def width(_width: Option[Double]) = {
+        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name)).width(_width)
+      }
     }
   }
 

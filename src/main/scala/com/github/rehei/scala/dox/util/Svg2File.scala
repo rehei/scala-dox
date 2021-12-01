@@ -13,22 +13,14 @@ class Svg2File(protected val baseDirectory: Path) {
   protected val nextID = DoxReferenceFactory("image")
   protected val prefix = "generated"
 
-  protected val usage = HashMap[String, Boolean]()
-
-  def generate(image: DoxSvgFigure) = {
-    val file = target(image)
-    write(file, image)
+  def generate(figure: DoxSvgFigure) = {
+    val file = target(figure)
+    IOUtils.writeStringUnique(file, Xhtml.toXhtml(figure.image))
     file
-  }
-
-  protected def write(path: Path, figure: DoxSvgFigure) = {
-    val content = Xhtml.toXhtml(figure.image)
-    IOUtils.writeString(path, content)
   }
 
   protected def target(figure: DoxSvgFigure) = {
     val filename = figure.config.label.map(_.name + ".svg").getOrElse(generateName)
-    FilenameCheck.addFilename(filename)
     baseDirectory.resolve(filename)
   }
 

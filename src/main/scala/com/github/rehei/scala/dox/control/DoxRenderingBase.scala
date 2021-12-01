@@ -12,6 +12,7 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -135,6 +136,12 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
+  def tableMulti(callback: DoxBuilderTableMulti.type => DoxLabelTableMulti): this.type = {
+    val data = callback(DoxBuilderTableMulti)
+    internalTable(data)
+    this
+  }
+
   def eqnarray(label: DoxReferenceEquation, expression: String): this.type
 
   def clearpage(): this.type
@@ -160,6 +167,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCite(key: String): Unit
   protected def internalSvg(imageSet: DoxSvgFigure): Unit
   protected def internalTable(table: DoxLabelTable[_]): Unit
+  protected def internalTable(table: DoxLabelTableMulti): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }
