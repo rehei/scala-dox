@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.model.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.file.DoxFile
+import com.github.rehei.scala.dox.model.file.DoxPersistentTable
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -27,17 +27,17 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     prefixReferenceP(i18n.equation, reference)
   }
 
-  def refFigure(reference: DoxFile) = {
+  def refFigure(reference: DoxPersistentTable) = {
     prefixReference(i18n.figure, reference)
   }
-  def refFigureP(reference: DoxFile) = {
+  def refFigureP(reference: DoxPersistentTable) = {
     prefixReferenceP(i18n.figure, reference)
   }
 
-  def refTable(reference: DoxFile) = {
+  def refTable(reference: DoxPersistentTable) = {
     prefixReference(i18n.table, reference)
   }
-  def refTableP(reference: DoxFile) = {
+  def refTableP(reference: DoxPersistentTable) = {
     prefixReferenceP(i18n.table, reference)
   }
 

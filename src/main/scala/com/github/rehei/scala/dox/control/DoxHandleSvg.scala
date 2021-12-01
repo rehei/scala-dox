@@ -16,7 +16,7 @@ case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
   protected val inkscape = new InkscapeUtils(mode, targetTexSVG)
 
-  assume(targetTexSVG.toString().startsWith(targetTex.toString()), "targetTexSVG should be within targetTex")
+  assume(targetTexSVG.toString().startsWith(targetTex.toString()))
 
   protected val svgFileGen = new Svg2File(targetTexSVG)
 

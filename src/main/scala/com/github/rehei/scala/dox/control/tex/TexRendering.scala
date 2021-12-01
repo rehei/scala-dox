@@ -12,7 +12,7 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.DoxLabelTable
-import com.github.rehei.scala.dox.model.file.DoxFile
+import com.github.rehei.scala.dox.model.file.DoxPersistentTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 
 class TexRendering(
@@ -142,13 +142,13 @@ class TexRendering(
     }
   }
 
-  protected def getTable(model: DoxTable[_], label: Option[DoxFile], transposed: Boolean, toprule: Boolean) = {
+  protected def getTable(model: DoxTable[_], label: Option[DoxPersistentTable], transposed: Boolean, toprule: Boolean) = {
     transposed match {
       case false => { new TexRenderingTable(baseAST, toprule, model, tableName(label)).createTableString() }
       case true  => { new TexRenderingTableTransposed(baseAST, toprule, model, tableName(label)).createTableString() }
     }
   }
-  protected def tableName(label: Option[DoxFile]) = {
+  protected def tableName(label: Option[DoxPersistentTable]) = {
     label.map(_.name).getOrElse("dummylabel")
   }
 

@@ -16,7 +16,7 @@ case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path) {
   protected val targetTex = _targetTex.normalize()
   protected val targetTexTable = _targetTexTable.normalize()
 
-  assume(targetTexTable.toString().startsWith(targetTex.toString()), "targetTexSVG should be within targetTex")
+  assume(targetTexTable.toString().startsWith(targetTex.toString()))
 
   protected val tableFileGen = new TexTable2File(targetTexTable)
 

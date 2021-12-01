@@ -1,20 +1,20 @@
 package com.github.rehei.scala.dox.test.model.file
 
 import org.junit.Test
-import com.github.rehei.scala.dox.model.file.DoxFileEnum
-import com.github.rehei.scala.dox.model.file.DoxFile
+import com.github.rehei.scala.dox.model.file.DoxIndexedEnum
+import com.github.rehei.scala.dox.model.file.DoxPersistentTable
 
 class DoxFileEnumTest {
 
   @Test
   def test() {
 
-    object Repository extends DoxFileEnum(None) {
-      val foo = unique
+    object Repository extends DoxIndexedEnum(None) {
+      val foo = uniqueTable
     }
 
     val value = Repository.foo.get()
-    assert(value == Some(DoxFile("foo")))
+    assert(value == Some(DoxPersistentTable("foo")))
   }
 
 }

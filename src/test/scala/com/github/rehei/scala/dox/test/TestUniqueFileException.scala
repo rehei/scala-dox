@@ -1,7 +1,7 @@
 package com.github.rehei.scala.dox.test
 
 import com.github.rehei.scala.dox.control.DoxReferenceFactory
-import com.github.rehei.scala.dox.model.file.DoxFileEnum
+import com.github.rehei.scala.dox.model.file.DoxIndexedEnum
 import java.nio.file.Paths
 import org.junit.Test
 import scala.collection.mutable.HashMap
@@ -19,10 +19,10 @@ import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.util.FileAlreadyExistsException
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-class TestUniqueFileException extends DoxFileEnum(None) {
+class TestUniqueFileException extends DoxIndexedEnum(None) {
 
-  class TestNamingRepository(prefix: Option[String]) extends DoxFileEnum(prefix) {
-    val doxFileName = unique
+  class TestNamingRepository(prefix: Option[String]) extends DoxIndexedEnum(prefix) {
+    val doxFileName = uniqueTable
   }
   protected val fileSystem = MemoryFileSystemBuilder.newEmpty().build()
   protected val inmemory = fileSystem.getPath("/mnt/inmemory/")
@@ -46,4 +46,5 @@ class TestUniqueFileException extends DoxFileEnum(None) {
     testSvgName.generate(svgFile)
     testSvgName.generate(svgFile)
   }
+  
 }
