@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model
 
 import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.file.DoxPersistentTable
+import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
 
-case class DoxLabelTable[T <: AnyRef](label: Option[DoxPersistentTable], model: DoxTable[T], transposed: Boolean)
+case class DoxLabelTable[T <: AnyRef](label: Option[DoxReferencePersistentTable], model: DoxTable[T], transposed: Boolean)

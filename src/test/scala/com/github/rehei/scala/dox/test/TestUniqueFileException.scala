@@ -1,6 +1,5 @@
 package com.github.rehei.scala.dox.test
 
-import com.github.rehei.scala.dox.control.DoxReferenceFactory
 import com.github.rehei.scala.dox.model.file.DoxIndexedEnum
 import java.nio.file.Paths
 import org.junit.Test
@@ -22,7 +21,8 @@ import com.github.rehei.scala.dox.util.FileAlreadyExistsException
 class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   class TestNamingRepository(prefix: Option[String]) extends DoxIndexedEnum(prefix) {
-    val doxFileName = uniqueTable
+    val doxTable = uniqueTable
+    val doxImage = uniqueImage
   }
   protected val fileSystem = MemoryFileSystemBuilder.newEmpty().build()
   protected val inmemory = fileSystem.getPath("/mnt/inmemory/")
@@ -33,7 +33,7 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def firstTest() {
-    val tableFile = DoxTableFile("somestringtable", fileEnum.doxFileName.get())
+    val tableFile = DoxTableFile("somestringtable", fileEnum.doxTable.get())
     val testTableName = new TexTable2File(tmp)
     testTableName.generate(tableFile)
     testTableName.generate(tableFile)
@@ -41,10 +41,10 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def secondTest() {
-    val svgFile = DoxSvgFigure(DoxFigure("somecaption", fileEnum.doxFileName.get()), NodeSeq.Empty)
+    val svgFile = DoxSvgFigure(DoxFigure("somecaption", fileEnum.doxImage.get()), NodeSeq.Empty)
     val testSvgName = new Svg2File(tmp)
     testSvgName.generate(svgFile)
     testSvgName.generate(svgFile)
   }
-  
+
 }

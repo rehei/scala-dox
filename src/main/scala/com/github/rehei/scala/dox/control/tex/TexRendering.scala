@@ -3,8 +3,8 @@ package com.github.rehei.scala.dox.control.tex
 import com.github.rehei.scala.dox.control.DoxHandleSvg
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.DoxReferenceEquation
-import com.github.rehei.scala.dox.model.DoxReferenceBase
+import com.github.rehei.scala.dox.model.file.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
@@ -12,7 +12,7 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.DoxLabelTable
-import com.github.rehei.scala.dox.model.file.DoxPersistentTable
+import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 
 class TexRendering(
@@ -142,14 +142,14 @@ class TexRendering(
     }
   }
 
-  protected def getTable(model: DoxTable[_], label: Option[DoxPersistentTable], transposed: Boolean, toprule: Boolean) = {
+  protected def getTable(model: DoxTable[_], label: Option[DoxReferencePersistentTable], transposed: Boolean, toprule: Boolean) = {
     transposed match {
       case false => { new TexRenderingTable(baseAST, toprule, model, tableName(label)).createTableString() }
       case true  => { new TexRenderingTableTransposed(baseAST, toprule, model, tableName(label)).createTableString() }
     }
   }
-  protected def tableName(label: Option[DoxPersistentTable]) = {
-    label.map(_.name).getOrElse("dummylabel")
+  protected def tableName(label: Option[DoxReferencePersistentTable]) = {
+    label.map(_.referenceID).getOrElse("dummylabel")
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {

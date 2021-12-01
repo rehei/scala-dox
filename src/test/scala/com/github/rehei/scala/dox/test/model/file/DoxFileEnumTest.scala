@@ -2,7 +2,7 @@ package com.github.rehei.scala.dox.test.model.file
 
 import org.junit.Test
 import com.github.rehei.scala.dox.model.file.DoxIndexedEnum
-import com.github.rehei.scala.dox.model.file.DoxPersistentTable
+import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
 
 class DoxFileEnumTest {
 
@@ -14,7 +14,7 @@ class DoxFileEnumTest {
     }
 
     val value = Repository.foo.get()
-    assert(value == Some(DoxPersistentTable("foo")))
+    assert(value == Some(DoxReferencePersistentTable("foo")))
   }
 
 }

@@ -5,12 +5,12 @@ import scala.collection.Seq
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
-import com.github.rehei.scala.dox.model.DoxReferenceBase
-import com.github.rehei.scala.dox.model.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.file.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.file.DoxPersistentTable
+import com.github.rehei.scala.dox.model.file.DoxReferencePersistentTable
+import com.github.rehei.scala.dox.model.file.DoxReferenceEquation
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -27,17 +27,17 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     prefixReferenceP(i18n.equation, reference)
   }
 
-  def refFigure(reference: DoxPersistentTable) = {
+  def refFigure(reference: DoxReferencePersistentTable) = {
     prefixReference(i18n.figure, reference)
   }
-  def refFigureP(reference: DoxPersistentTable) = {
+  def refFigureP(reference: DoxReferencePersistentTable) = {
     prefixReferenceP(i18n.figure, reference)
   }
 
-  def refTable(reference: DoxPersistentTable) = {
+  def refTable(reference: DoxReferencePersistentTable) = {
     prefixReference(i18n.table, reference)
   }
-  def refTableP(reference: DoxPersistentTable) = {
+  def refTableP(reference: DoxReferencePersistentTable) = {
     prefixReferenceP(i18n.table, reference)
   }
 

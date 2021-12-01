@@ -2,10 +2,8 @@ package com.github.rehei.scala.dox.util
 
 import java.nio.file.Path
 
-import scala.collection.mutable.HashMap
 import scala.xml.Xhtml
 
-import com.github.rehei.scala.dox.control.DoxReferenceFactory
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 class Svg2File(protected val baseDirectory: Path) {
@@ -20,7 +18,7 @@ class Svg2File(protected val baseDirectory: Path) {
   }
 
   protected def target(figure: DoxSvgFigure) = {
-    val filename = figure.config.label.map(_.name + ".svg").getOrElse(generateName)
+    val filename = figure.config.label.map(_.referenceID + ".svg").getOrElse(generateName)
     baseDirectory.resolve(filename)
   }
 

@@ -2,11 +2,7 @@ package com.github.rehei.scala.dox.util
 
 import java.nio.file.Path
 
-import scala.collection.mutable.HashMap
-
-import com.github.rehei.scala.dox.control.DoxReferenceFactory
 import com.github.rehei.scala.dox.model.table.DoxTableFile
-import java.nio.file.Files
 
 class TexTable2File(protected val baseDirectory: Path) {
 
@@ -20,7 +16,7 @@ class TexTable2File(protected val baseDirectory: Path) {
   }
 
   protected def target(table: DoxTableFile) = {
-    val filename = table.label.map(_.name + ".tex").getOrElse(generateName)
+    val filename = table.label.map(_.referenceID + ".tex").getOrElse(generateName)
     baseDirectory.resolve(filename)
   }
 

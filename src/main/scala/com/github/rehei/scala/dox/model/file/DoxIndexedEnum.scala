@@ -11,11 +11,11 @@ class DoxIndexedEnum(prefix: Option[String]) extends DoxIndexedRepository {
   }
 
   def uniqueTable = {
-    MyIndexedHandle(DoxPersistentTable(_))
+    MyIndexedHandle(DoxReferencePersistentTable(_))
   }
 
   def uniqueImage = {
-    MyIndexedHandle(DoxPersistentImage(_))
+    MyIndexedHandle(DoxReferencePersistentImage(_))
   }
 
 }
