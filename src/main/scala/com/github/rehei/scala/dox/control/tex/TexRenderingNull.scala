@@ -1,15 +1,13 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.DoxReferenceEquation
-import com.github.rehei.scala.dox.model.DoxReferenceLike
-import com.github.rehei.scala.dox.model.DoxSvgFigure
-import com.github.rehei.scala.dox.model.DoxReferenceTable
-import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.DoxReferenceBase
+import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
-  override def label(reference: DoxReferenceLike) = this
+  override def label(reference: DoxReferenceBase) = this
   override def chapter(name: String) = this
   override def section(name: String) = this
   override def subsection(name: String) = this
@@ -18,7 +16,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def textItalic(in: String) = this
   override def textRed(in: String) = this
 
-  override def ref(reference: DoxReferenceLike) = this
+  override def ref(reference: DoxReferenceBase) = this
 
   override def eqnarray(label: DoxReferenceEquation, expression: String) = this
   override def clearpage() = this

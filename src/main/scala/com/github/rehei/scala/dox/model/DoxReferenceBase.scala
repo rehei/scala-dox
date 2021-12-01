@@ -1,7 +1,7 @@
 package com.github.rehei.scala.dox.model
 
-trait DoxReferenceLike {
+trait DoxReferenceBase {
   
-  val referenceID: String
+  def referenceID: String
   
 }

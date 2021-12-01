@@ -1,3 +1,3 @@
 package com.github.rehei.scala.dox.model
 
-case class DoxReferenceGeneric(referenceID: String) extends DoxReferenceLike
+case class DoxReferenceGeneric(referenceID: String) extends DoxReferenceBase

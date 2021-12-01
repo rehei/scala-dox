@@ -11,7 +11,7 @@ import java.nio.file.Files
 class TexTable2File(protected val baseDirectory: Path) {
 
   protected val prefix = "generated"
-  protected val nextID = DoxReferenceFactory("table")
+  protected val nextID = NextID("table")
 
   def generate(table: DoxTableFile) = {
     val file = target(table)
@@ -25,6 +25,6 @@ class TexTable2File(protected val baseDirectory: Path) {
   }
 
   protected def generateName() = {
-    s"${prefix}_${nextID.filename().referenceID}.tex"
+    s"${prefix}_${nextID.nextID()}.tex"
   }
 }

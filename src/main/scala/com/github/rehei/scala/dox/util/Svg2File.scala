@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 
 class Svg2File(protected val baseDirectory: Path) {
 
-  protected val nextID = DoxReferenceFactory("image")
+  protected val nextID = NextID("image")
   protected val prefix = "generated"
 
   def generate(figure: DoxSvgFigure) = {
@@ -25,7 +25,7 @@ class Svg2File(protected val baseDirectory: Path) {
   }
 
   protected def generateName() = {
-    s"${prefix}_${nextID.filename().referenceID}.svg"
+    s"${prefix}_${nextID.nextID()}.svg"
   }
 
 }

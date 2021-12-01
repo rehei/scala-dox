@@ -4,15 +4,13 @@ import scala.collection.Seq
 
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxLabelTableMulti
+import com.github.rehei.scala.dox.model.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxReferenceEquation
-import com.github.rehei.scala.dox.model.DoxReferenceFigure
-import com.github.rehei.scala.dox.model.DoxReferenceLike
-import com.github.rehei.scala.dox.model.DoxReferenceTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxLabelTableMulti
+import com.github.rehei.scala.dox.model.file.DoxFile
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -29,24 +27,24 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     prefixReferenceP(i18n.equation, reference)
   }
 
-  def refFigure(reference: DoxReferenceFigure) = {
+  def refFigure(reference: DoxFile) = {
     prefixReference(i18n.figure, reference)
   }
-  def refFigureP(reference: DoxReferenceFigure) = {
+  def refFigureP(reference: DoxFile) = {
     prefixReferenceP(i18n.figure, reference)
   }
 
-  def refTable(reference: DoxReferenceTable) = {
+  def refTable(reference: DoxFile) = {
     prefixReference(i18n.table, reference)
   }
-  def refTableP(reference: DoxReferenceTable) = {
+  def refTableP(reference: DoxFile) = {
     prefixReferenceP(i18n.table, reference)
   }
 
-  protected def prefixReference(prefix: String, reference: DoxReferenceLike) = {
+  protected def prefixReference(prefix: String, reference: DoxReferenceBase) = {
     nonBreakingSpace.text(prefix).nonBreakingSpace.ref(reference)
   }
-  protected def prefixReferenceP(prefix: String, reference: DoxReferenceLike) = {
+  protected def prefixReferenceP(prefix: String, reference: DoxReferenceBase) = {
     nonBreakingSpace.`(`.text(prefix).nonBreakingSpace.ref(reference).`)`
   }
 
@@ -121,7 +119,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  def label(reference: DoxReferenceLike): this.type
+  def label(reference: DoxReferenceBase): this.type
   def chapter(name: String): this.type
   def section(name: String): this.type
   def subsection(name: String): this.type
@@ -129,7 +127,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def nonBreakingSpace: this.type
 
-  def ref(reference: DoxReferenceLike): this.type
+  def ref(reference: DoxReferenceBase): this.type
   def table(callback: DoxBuilderTable.type => DoxLabelTable[_]): this.type = {
     val data = callback(DoxBuilderTable)
     internalTable(data)

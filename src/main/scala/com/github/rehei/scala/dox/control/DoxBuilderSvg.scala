@@ -4,7 +4,6 @@ import scala.xml.NodeSeq
 
 import com.github.rehei.scala.dox.model.DoxFigure
 import com.github.rehei.scala.dox.model.DoxLikeString
-import com.github.rehei.scala.dox.model.DoxReferenceFigure
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.file.DoxFile
 

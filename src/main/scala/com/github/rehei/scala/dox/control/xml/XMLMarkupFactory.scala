@@ -2,11 +2,11 @@ package com.github.rehei.scala.dox.control.xml
 
 import scala.xml.NodeSeq
 import com.github.rehei.scala.dox.control.DoxReferenceFactory
-import com.github.rehei.scala.dox.model.DoxReferenceLike
+import com.github.rehei.scala.dox.model.DoxReferenceBase
 
 trait XMLMarkupFactory {
 
-  case class XMLHeadline(reference: DoxReferenceLike, name: String, multiply: Int, callback: XMLHeadline => NodeSeq) {
+  case class XMLHeadline(reference: DoxReferenceBase, name: String, multiply: Int, callback: XMLHeadline => NodeSeq) {
 
     def id = { reference.referenceID }
 
