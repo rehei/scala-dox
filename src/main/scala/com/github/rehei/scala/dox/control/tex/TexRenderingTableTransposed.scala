@@ -3,8 +3,10 @@ package com.github.rehei.scala.dox.control.tex
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
+import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 
-class TexRenderingTableTransposed(baseAST: TexAST, toprule: Boolean, model: DoxTable[_], reference: String) {
+class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: TextAST, contentData: Seq[TextAST])
@@ -23,6 +25,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, toprule: Boolean, model: DoxT
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
 
+  protected val modelTransposed = model.transposed
   import tmpMarkup._
 
   def createTableString() = {
@@ -32,7 +35,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, toprule: Boolean, model: DoxT
 
   protected def create() {
     $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-      if (toprule) {
+      if (isInnerTable) {
         \ toprule;
       }
       appendTitle()
@@ -46,15 +49,19 @@ class TexRenderingTableTransposed(baseAST: TexAST, toprule: Boolean, model: DoxT
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + (columnSizeCategory + dataColumnAmount * columnSizeDefault) + "cm"
   }
   protected def columnConfigEachColumnSize() = {
-    ColumnType.l(columnSizeCategory) ++ (1 to dataColumnAmount).map(_ => ColumnType.r(columnSizeDefault)).mkString
+    ColumnType.l(columnSizeCategory) ++ (1 to dataColumnAmount).map(col => ColumnType.r(columnSizeDefault)).mkString
   }
 
   protected def appendTitle() = {
-    if (!Text2TEX.generate(model.title).isEmpty()) {
-      \ plain { (\\ multicolumn & { dataColumnAmount + 1 } { "c" } { Text2TEX.generate(model.title) }).generate() }
+    if (showTitle) {
+      \ plain { (\\ multicolumn & { dataColumnAmount + 1 } { "c" } { Text2TEX.generate(modelTransposed.title) }).generate() }
       \ plain { "\\\\" + "\n" }
       \ midrule
     }
+  }
+
+  protected def showTitle() = {
+    !Text2TEX.generate(modelTransposed.title).isEmpty() && !isInnerTable
   }
 
   protected def appendTable() {
@@ -67,9 +74,17 @@ class TexRenderingTableTransposed(baseAST: TexAST, toprule: Boolean, model: DoxT
   }
 
   protected def content() = {
-    for (row <- model.transposed.list()) yield {
+    for (row <- modelTransposed.list()) yield {
       TableContent(\\ hspace { (row.columnDepth * 5) + "mm" }, row.head, row.data)
     }
   }
-
+  protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
+    val size = config.width.getOrElse(columnSizeDefault)
+    config.base.alignment match {
+      case DoxTableAlignment.LEFT   => ColumnType.l(size)
+      case DoxTableAlignment.RIGHT  => ColumnType.r(size)
+      case DoxTableAlignment.CENTER => ColumnType.c(size)
+      case _                        => ColumnType.l(size)
+    }
+  }
 }

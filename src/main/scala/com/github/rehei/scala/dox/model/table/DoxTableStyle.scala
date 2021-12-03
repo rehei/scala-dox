@@ -8,15 +8,15 @@ object DoxTableStyle {
 
 case class DoxTableStyle protected (protected val _isBold: Boolean, protected val _isItalic: Boolean, protected val _isUnderlined: Boolean) {
 
-  def ITALIC = {
+  def italic = {
     this.copy(_isItalic = true)
   }
 
-  def BOLD = {
+  def bold = {
     this.copy(_isBold = true)
   }
 
-  def UNDERLINED = {
+  def underlined = {
     this.copy(_isUnderlined = true)
   }
 

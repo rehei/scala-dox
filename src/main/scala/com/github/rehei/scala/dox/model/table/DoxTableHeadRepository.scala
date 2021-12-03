@@ -1,13 +1,11 @@
 package com.github.rehei.scala.dox.model.table
 
-class DoxTableHeadRepository(totalRoot: DoxTableKeyNode) {
+import com.github.rehei.scala.dox.text.TextAST
+
+class DoxTableHeadRepository(root: DoxTableKeyNode, val title: TextAST) {
 
   protected val WHITESPACE_DEFAULT_WIDTH = 0.1
   protected val factory = DoxTableKeyNodeFactory()
-  protected val tableSupport = DoxTableSupport(totalRoot)
-  tableSupport.checkValidity()
-  val title = tableSupport.title
-  val root = totalRoot.copy(children = tableSupport.noneTitleChildren)
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
@@ -46,7 +44,7 @@ class DoxTableHeadRepository(totalRoot: DoxTableKeyNode) {
 
   def list() = {
 
-    val transformedRoot = root.withWhitespace()
+    val transformedRoot = root.withNoneTitleChildrenOnly.withWhitespace()
 
     for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
       DoxTableHeadRow(

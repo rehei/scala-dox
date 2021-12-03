@@ -8,12 +8,17 @@ import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 
-case class DoxTable[T <: AnyRef](val totalRoot: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
-  protected val tableSupport = DoxTableSupport(totalRoot)
-  val root = totalRoot.copy(children = tableSupport.noneTitleChildren)
-  val title = tableSupport.title
+
+  def firstTitle = {
+    root
+      .children
+      .find(child => child.nodeType == DoxTableKeyNodeType.TITLE)
+      .map(title => title.config.base.text)
+      .getOrElse(TextFactory.NONE)
+  }
 
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
@@ -36,19 +41,23 @@ case class DoxTable[T <: AnyRef](val totalRoot: DoxTableKeyNode)(implicit clazzT
   }
 
   def normal = {
-    new DoxTableHeadRepository(root)
+    new DoxTableHeadRepository(root, firstTitle)
   }
 
   def transposed = {
-    new DoxTableTransposedRepository(root, data)
+    new DoxTableTransposedRepository(root, data, firstTitle)
   }
 
   def removeObsoleteSpaces() = {
-    this.copy(totalRoot = totalRoot.copy(children = tableSupport.removeObsoleteColumnSpace(totalRoot.children)))
+    this.copy(root = root.copy(children = root.children.map(_.removeObsoleteSpaces())))
   }
 
   def withColumnSpace = {
-    this.copy(totalRoot = totalRoot.copy(children = tableSupport.getChildrenSpaces()))
+    this.copy(root = root.addSpaces())
+  }
+
+  def withoutTitle = {
+    this.copy(root = root.withNoneTitleChildrenOnly)
   }
 
   protected def extract(element: T, index: Int) = {

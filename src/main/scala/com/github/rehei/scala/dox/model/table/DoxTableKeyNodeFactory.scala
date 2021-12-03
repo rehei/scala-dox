@@ -8,12 +8,64 @@ import com.github.rehei.scala.dox.text.TextAST
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
+
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, appendToTitleOrChildren(children, additionalChildren)) with Writeable
     }
+
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, appendToTitleOrChildren(children, additionalChildren)) with Writeable
     }
+
+    protected def appendToTitleOrChildren(children: Seq[DoxTableKeyNode], newChildren: Seq[DoxTableKeyNode]) = {
+      children
+        .headOption
+        .map(head => {
+          head.nodeType match {
+            case DoxTableKeyNodeType.TITLE => {
+              val firstTitleChild = addChildrenToUltimateTitle(head, newChildren)
+              Seq(firstTitleChild) ++ children.drop(1)
+            }
+            case other => children ++ newChildren
+          }
+        }).getOrElse(newChildren)
+    }
+    protected def addChildrenToUltimateTitle(child: DoxTableKeyNode, newChildren: Seq[DoxTableKeyNode]): DoxTableKeyNode = {
+      child
+        .children
+        .headOption
+        .map(head => {
+          head.nodeType match {
+            case DoxTableKeyNodeType.TITLE => child.copy(children = Seq(addChildrenToUltimateTitle(head, newChildren)) ++ child.children.drop(1))
+            case other                     => child.copy(children = child.children ++ newChildren)
+          }
+        }).getOrElse(child.copy(children = newChildren))
+
+//      if (child.children.headOption.exists(childsChild => childsChild.nodeType == DoxTableKeyNodeType.TITLE)) {
+//        child
+//          .children
+//          .headOption
+//          .map(childsChild => child.copy(children = Seq(addChildrenToUltimateTitle(childsChild, newChildren))))
+//          .getOrElse(child.copy(children = child.children ++ newChildren))
+//      } else {
+//        child.copy(children = child.children ++ newChildren)
+//      }
+    }
+    //
+    //    protected def appendChildrenToTitle(children: Seq[DoxTableKeyNode], newChildren: Seq[DoxTableKeyNode]) = {
+    //      if (children.exists(node => node.nodeType == DoxTableKeyNodeType.TITLE)) {
+    //        children
+    //          .map(node => {
+    //            if (node.nodeType == DoxTableKeyNodeType.TITLE) {
+    //              node.copy(children = children ++ newChildren)
+    //            } else {
+    //              node
+    //            }
+    //          })
+    //      } else {
+    //        children ++ newChildren
+    //      }
+    //    }
   }
 
   object Table {
@@ -26,7 +78,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def apply(name: String, title: Option[String]) = {
       val root = nodeWritable(DoxTableKeyNodeType.ROOT).config(DoxTableKeyConfig.NONE.name(name)).width(None)
       title.map {
-        text => root.append(Title(name))
+        text => root.append(nodeWritable(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(text)).width(None))
       } getOrElse {
         root
       }
@@ -45,12 +97,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Columnspace {
     def apply() = {
       node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
-    }
-  }
-
-  object Title {
-    def apply(name: String) = {
-      node(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(name)).width(None)
     }
   }
 

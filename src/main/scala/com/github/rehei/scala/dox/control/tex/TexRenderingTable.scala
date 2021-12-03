@@ -8,7 +8,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.text.util.Text2TEX
 
-class TexRenderingTable(baseAST: TexAST, toprule: Boolean, model: DoxTable[_], reference: String) {
+class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
@@ -22,7 +22,7 @@ class TexRenderingTable(baseAST: TexAST, toprule: Boolean, model: DoxTable[_], r
   }
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
-
+  protected val leavesAmount = model.root.leavesAmount()
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
 
@@ -30,34 +30,50 @@ class TexRenderingTable(baseAST: TexAST, toprule: Boolean, model: DoxTable[_], r
 
   def createTableString() = {
     create()
-    //    println(tmpAST.build())
     tmpAST.build()
   }
 
   protected def create() {
 
     $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-      if (toprule) {
+      if (!isInnerTable) {
         \ toprule;
       }
       appendTitle()
       appendTableHead()
-      \ midrule;
+      if (isInnerTable) {
+        midrule()
+      } else {
+        \ midrule
+      }
+
       appendTableBody()
-      \ bottomrule;
+      if (isInnerTable) {
+        midrule()
+      } else {
+        \ bottomrule
+      }
 
     }
   }
+  protected def midrule() = {
+    \ plain { (\\ cmidrule { s"1-${leavesAmount}" }).generate() + "\n" }
+  }
   protected def appendTitle() = {
-    if (!Text2TEX.generate(model.title).isEmpty()) {
-      \ plain { (\\ multicolumn & { model.root.leavesRecursive().length } { "c" } { Text2TEX.generate(model.title) }).generate() }
+    if (showTitle) {
+      \ plain { (\\ multicolumn & { leavesAmount } { "c" } { Text2TEX.generate(model.normal.title) }).generate() }
       \ plain { "\\\\" + "\n" }
       \ midrule
     }
   }
+
+  protected def showTitle() = {
+    !Text2TEX.generate(model.normal.title).isEmpty() && !isInnerTable
+  }
+
   protected def columnConfigTotalSize() = {
-    val columnSizes = model.root.leavesRecursive().map(_.config.width.map(size => size).getOrElse(COLUMN_SIZE_DEFAULT))
-    val tabColSeps = model.root.leavesRecursive().length * 2
+    val columnSizes = model.root.leavesWidths(COLUMN_SIZE_DEFAULT)
+    val tabColSeps = leavesAmount * 2
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
   }
