@@ -4,10 +4,12 @@ import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.reference.DoxReferenceText
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
-  override def label(reference: DoxReferenceBase) = this
+  override def label(reference: DoxReferenceText) = this
   override def chapter(name: String) = this
   override def section(name: String) = this
   override def subsection(name: String) = this

@@ -11,6 +11,8 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.reference.DoxReferenceText
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -119,7 +121,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  def label(reference: DoxReferenceBase): this.type
+  def label(reference: DoxReferenceText): this.type
   def chapter(name: String): this.type
   def section(name: String): this.type
   def subsection(name: String): this.type

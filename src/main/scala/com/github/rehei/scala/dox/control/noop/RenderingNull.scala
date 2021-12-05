@@ -7,10 +7,11 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
-  def label(reference: DoxReferenceBase) = this
+  def label(reference: DoxReferenceText) = this
   def chapter(name: String) = this
   def section(name: String) = this
   def subsection(name: String) = this

@@ -14,6 +14,7 @@ import com.github.rehei.scala.dox.model.DoxLabelTable
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 
 class TexRendering(
   baseAST:        TexAST,
@@ -29,7 +30,7 @@ class TexRendering(
 
   protected val POSITIONING_FIGURE = "H"
 
-  def label(reference: DoxReferenceBase) = {
+  def label(reference: DoxReferenceText) = {
     \ label { reference.referenceID }
     this
   }
