@@ -30,6 +30,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
           }
         }).getOrElse(newChildren)
     }
+    
     protected def addChildrenToUltimateTitle(child: DoxTableKeyNode, newChildren: Seq[DoxTableKeyNode]): DoxTableKeyNode = {
       child
         .children
@@ -40,32 +41,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
             case other                     => child.copy(children = child.children ++ newChildren)
           }
         }).getOrElse(child.copy(children = newChildren))
-
-//      if (child.children.headOption.exists(childsChild => childsChild.nodeType == DoxTableKeyNodeType.TITLE)) {
-//        child
-//          .children
-//          .headOption
-//          .map(childsChild => child.copy(children = Seq(addChildrenToUltimateTitle(childsChild, newChildren))))
-//          .getOrElse(child.copy(children = child.children ++ newChildren))
-//      } else {
-//        child.copy(children = child.children ++ newChildren)
-//      }
     }
-    //
-    //    protected def appendChildrenToTitle(children: Seq[DoxTableKeyNode], newChildren: Seq[DoxTableKeyNode]) = {
-    //      if (children.exists(node => node.nodeType == DoxTableKeyNodeType.TITLE)) {
-    //        children
-    //          .map(node => {
-    //            if (node.nodeType == DoxTableKeyNodeType.TITLE) {
-    //              node.copy(children = children ++ newChildren)
-    //            } else {
-    //              node
-    //            }
-    //          })
-    //      } else {
-    //        children ++ newChildren
-    //      }
-    //    }
   }
 
   object Table {
@@ -75,9 +51,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Root {
-    def apply(name: String, title: Option[String]) = {
-      val root = nodeWritable(DoxTableKeyNodeType.ROOT).config(DoxTableKeyConfig.NONE.name(name)).width(None)
-      title.map {
+    def apply(_name: String, _title: Option[String], _transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
+      val root = nodeRoot(_name).transposedStyle(_transposedStyle)
+      _title.map {
         text => root.append(nodeWritable(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(text)).width(None))
       } getOrElse {
         root
@@ -127,6 +103,21 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
+  protected def nodeRoot(_name: String) = {
+    new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name(_name)), Seq.empty) with Writeable {
+      def transposedStyle(_styleOption: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
+        val transposedConfig = _styleOption(DoxTableConfigTransposed)
+        new DoxTableKeyNode(
+          nodeType,
+          config
+            .setWidth(transposedConfig.columnWidthCategory)
+            .setWidthTransposed(transposedConfig.columnWidthData)
+            .setAlignment(transposedConfig.alignmentData),
+          children) with Writeable
+      }
+    }
+  }
+
   protected def nodeWritable(_nodeType: DoxTableKeyNodeType) = {
     new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) with Writeable {
       def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) with Writeable {
@@ -136,6 +127,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       }
     }
   }
+
   protected def node(_nodeType: DoxTableKeyNodeType) = {
     new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) {
       def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) {
@@ -145,7 +137,8 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       }
     }
   }
+
   protected def configExt(base: DoxTableKeyConfig) = {
-    DoxTableKeyConfigExtended(base, None)
+    DoxTableKeyConfigExtended(base, None, None)
   }
 }
