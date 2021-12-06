@@ -11,11 +11,11 @@ case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyCon
 
   protected val tableSupport = DoxTableSupport(this)
 
-  def noneTitleChildren() = tableSupport.noneTitleChildren
+//  def noneTitleChildren() = tableSupport.noneTitleChildren
 
-  def withNoneTitleChildrenOnly = {
-    this.copy(children = noneTitleChildren)
-  }
+//  def withNoneTitleChildrenOnly = {
+//    this.copy(children = noneTitleChildren)
+//  }
 
   def removeObsoleteSpaces() = {
     this.copy(children = tableSupport.removeChildrenObsoleteSpaces())

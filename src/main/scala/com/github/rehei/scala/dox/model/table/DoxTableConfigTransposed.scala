@@ -13,6 +13,7 @@ object DoxTableConfigTransposed {
   }
 
 }
+
 case class DoxTableConfigTransposed(columnWidthCategory: Option[Double], columnWidthData: Option[Double], alignmentData: DoxTableAlignment) {
 
 }

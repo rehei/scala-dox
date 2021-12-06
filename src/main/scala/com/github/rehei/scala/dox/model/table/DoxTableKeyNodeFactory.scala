@@ -10,38 +10,39 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   trait Writeable extends DoxTableKeyNode {
 
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.nodeType, this.config, appendToTitleOrChildren(children, additionalChildren)) with Writeable
+      //      new DoxTableKeyNode(this.nodeType, this.config, appendToTitleOrChildren(children, additionalChildren)) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
     }
 
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.nodeType, this.config, appendToTitleOrChildren(children, additionalChildren)) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
     }
 
-    protected def appendToTitleOrChildren(children: Seq[DoxTableKeyNode], newChildren: Seq[DoxTableKeyNode]) = {
-      children
-        .headOption
-        .map(head => {
-          head.nodeType match {
-            case DoxTableKeyNodeType.TITLE => {
-              val firstTitleChild = addChildrenToUltimateTitle(head, newChildren)
-              Seq(firstTitleChild) ++ children.drop(1)
-            }
-            case other => children ++ newChildren
-          }
-        }).getOrElse(newChildren)
-    }
-    
-    protected def addChildrenToUltimateTitle(child: DoxTableKeyNode, newChildren: Seq[DoxTableKeyNode]): DoxTableKeyNode = {
-      child
-        .children
-        .headOption
-        .map(head => {
-          head.nodeType match {
-            case DoxTableKeyNodeType.TITLE => child.copy(children = Seq(addChildrenToUltimateTitle(head, newChildren)) ++ child.children.drop(1))
-            case other                     => child.copy(children = child.children ++ newChildren)
-          }
-        }).getOrElse(child.copy(children = newChildren))
-    }
+//    protected def appendToTitleOrChildren(children: Seq[DoxTableKeyNode], newChildren: Seq[DoxTableKeyNode]) = {
+//      children
+//        .headOption
+//        .map(head => {
+//          head.nodeType match {
+//            case DoxTableKeyNodeType.TITLE => {
+//              val firstTitleChild = addChildrenToUltimateTitle(head, newChildren)
+//              Seq(firstTitleChild) ++ children.drop(1)
+//            }
+//            case other => children ++ newChildren
+//          }
+//        }).getOrElse(newChildren)
+//    }
+//
+//    protected def addChildrenToUltimateTitle(child: DoxTableKeyNode, newChildren: Seq[DoxTableKeyNode]): DoxTableKeyNode = {
+//      child
+//        .children
+//        .headOption
+//        .map(head => {
+//          head.nodeType match {
+//            case DoxTableKeyNodeType.TITLE => child.copy(children = Seq(addChildrenToUltimateTitle(head, newChildren)) ++ child.children.drop(1))
+//            case other                     => child.copy(children = child.children ++ newChildren)
+//          }
+//        }).getOrElse(child.copy(children = newChildren))
+//    }
   }
 
   object Table {
@@ -51,12 +52,21 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Root {
-    def apply(_name: String, _title: Option[String], _transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
-      val root = nodeRoot(_name).transposedStyle(_transposedStyle)
-      _title.map {
-        text => root.append(nodeWritable(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(text)).width(None))
-      } getOrElse {
-        root
+    def apply(_name: String) = new {
+      def default() = {
+        effectiveNode(_.NONE)
+      }
+      def onTransposed(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
+        effectiveNode(_transposedStyle)
+      }
+
+      protected def effectiveNode(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
+        val root = nodeRoot(_name).transposedStyle(_transposedStyle)
+//        _title.map {
+//          text => root.append(nodeWritable(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(text)).width(None))
+//        } getOrElse {
+          root
+//        }
       }
     }
   }

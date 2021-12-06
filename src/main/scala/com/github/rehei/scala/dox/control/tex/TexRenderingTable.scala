@@ -7,8 +7,9 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.text.TextAST
 
-class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], titleOption: Option[TextAST], isInnerTable: Boolean) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
@@ -41,12 +42,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
       }
       appendTitle()
       appendTableHead()
-      if (isInnerTable) {
-        midrule()
-      } else {
-        \ midrule
-      }
-
+      midrule()
       appendTableBody()
       if (isInnerTable) {
         midrule()
@@ -56,19 +52,28 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
 
     }
   }
+
   protected def midrule() = {
     \ plain { (\\ cmidrule { s"1-${leavesAmount}" }).generate() + "\n" }
   }
+
   protected def appendTitle() = {
     if (showTitle) {
-      \ plain { (\\ multicolumn & { leavesAmount } { "c" } { Text2TEX.generate(model.normal.title) }).generate() }
+      \ plain { (\\ multicolumn & { leavesAmount } { "c" } { titleAST() }).generate() }
       \ plain { "\\\\" + "\n" }
       \ midrule
     }
   }
+  
+  protected def titleAST() = {
+    titleOption.map(
+      title => {
+        Text2TEX.generate(title)
+      }).getOrElse("")
+  }
 
   protected def showTitle() = {
-    !Text2TEX.generate(model.normal.title).isEmpty() && !isInnerTable
+    titleOption.isDefined && !isInnerTable
   }
 
   protected def columnConfigTotalSize() = {

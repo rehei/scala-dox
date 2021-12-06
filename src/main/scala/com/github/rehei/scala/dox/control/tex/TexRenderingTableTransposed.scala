@@ -5,8 +5,9 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
+import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
+class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], titleOption: Option[TextAST], isInnerTable: Boolean) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: TextAST, contentData: Seq[TextAST])
@@ -55,17 +56,23 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
 
   protected def appendTitle() = {
     if (showTitle) {
-      \ plain { (\\ multicolumn & { dataColumnAmount + 1 } { "c" } { Text2TEX.generate(modelTransposed.title) }).generate() }
+      \ plain { (\\ multicolumn & { dataColumnAmount + 1 } { "c" } { titleAST() }).generate() }
       \ plain { "\\\\" + "\n" }
       \ midrule
     }
   }
 
+  protected def titleAST() = {
+    titleOption.map(
+      title => {
+        Text2TEX.generate(title)
+      }).getOrElse("")
+  }
   protected def tableConfig() = {
     TableConfig(model.root.config.width.getOrElse(columnSizeCategory), model.root.config.transposedWidth.getOrElse(columnSizeDefault))
   }
   protected def showTitle() = {
-    !Text2TEX.generate(modelTransposed.title).isEmpty() && !isInnerTable
+    titleOption.isDefined && !isInnerTable
   }
 
   protected def appendTable() {
@@ -91,13 +98,13 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
       case _                        => ColumnType.r(columnWidths.dataWidth)
     }
   }
-//  protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
-//    val size = config.width.getOrElse(columnSizeDefault)
-//    config.base.alignment match {
-//      case DoxTableAlignment.LEFT   => ColumnType.l(size)
-//      case DoxTableAlignment.RIGHT  => ColumnType.r(size)
-//      case DoxTableAlignment.CENTER => ColumnType.c(size)
-//      case _                        => ColumnType.l(size)
-//    }
-//  }
+  //  protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
+  //    val size = config.width.getOrElse(columnSizeDefault)
+  //    config.base.alignment match {
+  //      case DoxTableAlignment.LEFT   => ColumnType.l(size)
+  //      case DoxTableAlignment.RIGHT  => ColumnType.r(size)
+  //      case DoxTableAlignment.CENTER => ColumnType.c(size)
+  //      case _                        => ColumnType.l(size)
+  //    }
+  //  }
 }

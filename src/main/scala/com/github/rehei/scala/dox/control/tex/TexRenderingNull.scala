@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
@@ -31,7 +31,6 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override protected def internalCiteT(key: String) = Unit
   override protected def internalCiteP(key: String) = Unit
   override protected def internalCite(key: String) = Unit
-  override protected def internalTable(labelTable: DoxLabelTable[_]) = Unit
   override protected def internalSvg(image: DoxSvgFigure) = Unit
   override protected def internalList(itemSeq: Seq[String]) = Unit
 

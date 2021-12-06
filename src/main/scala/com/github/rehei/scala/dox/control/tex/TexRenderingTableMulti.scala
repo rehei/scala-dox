@@ -4,8 +4,9 @@ import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableMulti
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableMulti(baseAST: TexAST, modelMulti: DoxTableMulti, title: Option[TextAST], transposed: Boolean) {
+class TexRenderingTableMulti(baseAST: TexAST, modelMulti: DoxTableMulti, transposed: Boolean) {
 
   protected val verticalSpace = "\n\\vspace*{1cm}\\\\"
   protected val COLUMN_SIZE_DEFAULT = 2.0
@@ -30,11 +31,11 @@ class TexRenderingTableMulti(baseAST: TexAST, modelMulti: DoxTableMulti, title: 
   }
 
   def createTables() = {
-    \ plain { modelMulti.models.map(model => "{" + getTable(model) + "}" + verticalSpace).mkString }
+    \ plain { modelMulti.content.map(model => "{" + getTable(model) + "}" + verticalSpace).mkString }
   }
 
   protected def appendTitle() = {
-    title.map(
+    modelMulti.title.map(
       text => {
         \ plain { Text2TEX.generate(text) }
         topruleEndRow()
@@ -44,15 +45,16 @@ class TexRenderingTableMulti(baseAST: TexAST, modelMulti: DoxTableMulti, title: 
   protected def topruleEndRow() = {
     \ plain { "\\toprule" } + endRow().generate()
   }
-  
+
   protected def endRow() = {
     \ plain { "\\\\" + "\n" }
   }
 
   protected def getTable(model: DoxTable[_]) = {
-    transposed match {
-      case false => { new TexRenderingTable(baseAST, model, true).createTableString() }
-      case true  => { new TexRenderingTableTransposed(baseAST, model, true).createTableString() }
+    if (transposed) {
+      new TexRenderingTableTransposed(baseAST, model, None, true).createTableString()
+    } else {
+      new TexRenderingTable(baseAST, model, None, true).createTableString()
     }
   }
 

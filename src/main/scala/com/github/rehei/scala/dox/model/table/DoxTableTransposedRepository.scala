@@ -7,9 +7,9 @@ import scala.collection.mutable.ArrayBuffer
 import com.github.rehei.scala.dox.text.TextFactory
 import scala.collection.mutable.Queue
 
-class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]], val title: TextAST) {
+class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]]) {
   case class DoxTableTransposedRow(head: TextAST, data: Seq[TextAST], columnDepth: Int)
-  protected val effectiveRoot = root.withNoneTitleChildrenOnly
+  protected val effectiveRoot = root
 
   def list() = {
     transposedStart()

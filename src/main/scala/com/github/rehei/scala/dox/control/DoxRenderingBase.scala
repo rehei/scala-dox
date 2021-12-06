@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox.control
 import scala.collection.Seq
 
 import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxLabelTableMulti
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
@@ -130,13 +130,8 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def nonBreakingSpace: this.type
 
   def ref(reference: DoxReferenceBase): this.type
-  def table(callback: DoxBuilderTable.type => DoxLabelTable[_]): this.type = {
-    val data = callback(DoxBuilderTable)
-    internalTable(data)
-    this
-  }
 
-  def tableMulti(callback: DoxBuilderTableMulti.type => DoxLabelTableMulti): this.type = {
+  def table(callback: DoxBuilderTableMulti.type => DoxLabelTableMulti): this.type = {
     val data = callback(DoxBuilderTableMulti)
     internalTable(data)
     this
@@ -166,7 +161,6 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
   protected def internalSvg(imageSet: DoxSvgFigure): Unit
-  protected def internalTable(table: DoxLabelTable[_]): Unit
   protected def internalTable(table: DoxLabelTableMulti): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 

@@ -10,11 +10,12 @@ import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.control.DoxRenderingBase
-import com.github.rehei.scala.dox.model.DoxLabelTable
+import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
+import com.github.rehei.scala.dox.text.TextAST
 
 class TexRendering(
   baseAST:        TexAST,
@@ -111,7 +112,14 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxLabelTableMulti) {
-    val texTable = new TexRenderingTableMulti(baseAST, table.models, table.title, table.transposed).createTableString()
+    val texTable = {
+      if (table.models.isMulti) {
+        new TexRenderingTableMulti(baseAST, table.models, table.transposed).createTableString()
+      } else {
+        getTable(table.models.contentHead, table.label, table.models.title, table.transposed, false)
+      }
+    }
+    
     val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;
@@ -129,31 +137,33 @@ class TexRendering(
       \ FloatBarrier;
     }
   }
+//
+//  protected def internalTable(table: DoxTableViewModel[_]) {
+//
+//    val texTable = getTable(table.model, table.label, table.transposed, false)
+//    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+//    if (!floating) {
+//      \ FloatBarrier;
+//    }
+//    $ { _ table & { ###("H") } } {
+//      \ centering;
+//      \ input { filename }
+//      \ caption & { tableName(table.label) }
+//    }
+//    if (!floating) {
+//      \ FloatBarrier;
+//    }
+//  }
 
-  protected def internalTable(table: DoxLabelTable[_]) {
+  protected def getTable(model: DoxTable[_], label: Option[DoxReferencePersistentTable], title: Option[TextAST], transposed: Boolean, isInnerTable: Boolean) = {
+    if (transposed) {
+      new TexRenderingTableTransposed(baseAST, model, title, isInnerTable).createTableString()
+    } else {
+      new TexRenderingTable(baseAST, model, title, isInnerTable).createTableString()
+    }
 
-    val texTable = getTable(table.model, table.label, table.transposed, false)
-    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
-    if (!floating) {
-      \ FloatBarrier;
-    }
-    $ { _ table & { ###("H") } } {
-      \ centering;
-      \ input { filename }
-      \ caption & { tableName(table.label) }
-    }
-    if (!floating) {
-      \ FloatBarrier;
-    }
   }
 
-  protected def getTable(model: DoxTable[_], label: Option[DoxReferencePersistentTable], transposed: Boolean, isInnerTable: Boolean) = {
-    transposed match {
-      case false => { new TexRenderingTable(baseAST, model, isInnerTable).createTableString() }
-      case true  => { new TexRenderingTableTransposed(baseAST, model, isInnerTable).createTableString() }
-    }
-  }
-  
   protected def tableName(label: Option[DoxReferencePersistentTable]) = {
     label.map(_.referenceID).getOrElse("dummylabel")
   }
