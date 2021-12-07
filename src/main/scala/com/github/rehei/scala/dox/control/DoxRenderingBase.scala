@@ -4,7 +4,7 @@ import scala.collection.Seq
 
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxTableViewModel
-import com.github.rehei.scala.dox.model.DoxLabelTableMulti
+import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
@@ -25,6 +25,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def refEquation(reference: DoxReferenceEquation) = {
     prefixReference(i18n.equation, reference)
   }
+
   def refEquationP(reference: DoxReferenceEquation) = {
     prefixReferenceP(i18n.equation, reference)
   }
@@ -32,6 +33,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def refFigure(reference: DoxReferencePersistentTable) = {
     prefixReference(i18n.figure, reference)
   }
+
   def refFigureP(reference: DoxReferencePersistentTable) = {
     prefixReferenceP(i18n.figure, reference)
   }
@@ -39,6 +41,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   def refTable(reference: DoxReferencePersistentTable) = {
     prefixReference(i18n.table, reference)
   }
+
   def refTableP(reference: DoxReferencePersistentTable) = {
     prefixReferenceP(i18n.table, reference)
   }
@@ -131,8 +134,14 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def ref(reference: DoxReferenceBase): this.type
 
-  def table(callback: DoxBuilderTableMulti.type => DoxLabelTableMulti): this.type = {
-    val data = callback(DoxBuilderTableMulti)
+  def table(callback: DoxBuilderTable.type => DoxTableViewModel[_]): this.type = {
+    val data = callback(DoxBuilderTable)
+    internalTable(data)
+    this
+  }
+
+  def tableSequence(callback: DoxBuilderTableSequence.type => DoxTableViewModelSequence): this.type = {
+    val data = callback(DoxBuilderTableSequence)
     internalTable(data)
     this
   }
@@ -161,7 +170,8 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
   protected def internalSvg(imageSet: DoxSvgFigure): Unit
-  protected def internalTable(table: DoxLabelTableMulti): Unit
+  protected def internalTable(table: DoxTableViewModelSequence): Unit
+  protected def internalTable(table: DoxTableViewModel[_]): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }

@@ -12,13 +12,13 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
 
   protected val _data = ArrayBuffer[T]()
 
-//  def firstTitle = {
-//    root
-//      .children
-//      .find(child => child.nodeType == DoxTableKeyNodeType.TITLE)
-//      .map(title => title.config.base.text)
-//      .getOrElse(TextFactory.NONE)
-//  }
+  def titleOption = {
+    root
+      .children
+      .find(child => child.nodeType == DoxTableKeyNodeType.TITLE)
+      .map(title => Some(title.config.base.text))
+      .getOrElse(None)
+  }
 
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
@@ -41,12 +41,10 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
   }
 
   def normal = {
-//    new DoxTableHeadRepository(root, firstTitle)
     new DoxTableHeadRepository(root)
   }
 
   def transposed = {
-//    new DoxTableTransposedRepository(root, data, firstTitle)
     new DoxTableTransposedRepository(root, data)
   }
 
@@ -58,9 +56,9 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     this.copy(root = root.addSpaces())
   }
 
-//  def withoutTitle = {
-//    this.copy(root = root.withNoneTitleChildrenOnly)
-//  }
+  def withoutTitle = {
+    this.copy(root = root.withoutTitle)
+  }
 
   protected def extract(element: T, index: Int) = {
     for (node <- root.leavesRecursive()) yield {

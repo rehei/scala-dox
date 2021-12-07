@@ -9,7 +9,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextAST
 
-class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], titleOption: Option[TextAST], isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
@@ -64,16 +64,16 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], titleOption: Option
       \ midrule
     }
   }
-  
+
   protected def titleAST() = {
-    titleOption.map(
+    model.titleOption.map(
       title => {
         Text2TEX.generate(title)
       }).getOrElse("")
   }
 
   protected def showTitle() = {
-    titleOption.isDefined && !isInnerTable
+    model.titleOption.isDefined && !isInnerTable
   }
 
   protected def columnConfigTotalSize() = {

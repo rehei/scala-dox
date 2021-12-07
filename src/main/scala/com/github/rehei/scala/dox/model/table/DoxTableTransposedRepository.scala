@@ -9,7 +9,7 @@ import scala.collection.mutable.Queue
 
 class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]]) {
   case class DoxTableTransposedRow(head: TextAST, data: Seq[TextAST], columnDepth: Int)
-  protected val effectiveRoot = root
+  protected val effectiveRoot = root.withoutTitle()
 
   def list() = {
     transposedStart()

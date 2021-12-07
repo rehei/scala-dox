@@ -7,7 +7,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], titleOption: Option[TextAST], isInnerTable: Boolean) {
+class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: TextAST, contentData: Seq[TextAST])
@@ -63,7 +63,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], titleOpti
   }
 
   protected def titleAST() = {
-    titleOption.map(
+    model.titleOption.map(
       title => {
         Text2TEX.generate(title)
       }).getOrElse("")
@@ -72,7 +72,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], titleOpti
     TableConfig(model.root.config.width.getOrElse(columnSizeCategory), model.root.config.transposedWidth.getOrElse(columnSizeDefault))
   }
   protected def showTitle() = {
-    titleOption.isDefined && !isInnerTable
+    model.titleOption.isDefined && !isInnerTable
   }
 
   protected def appendTable() {
