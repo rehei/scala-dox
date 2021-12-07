@@ -52,14 +52,10 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply(_name: String, _title: Option[String]) = new {
-      def default() = {
-        effectiveNode(_.NONE)
-      }
       def onTransposed(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
-        effectiveNode(_transposedStyle)
+        rootNode(_transposedStyle)
       }
-
-      protected def effectiveNode(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
+      protected def rootNode(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
         val root = nodeRoot(_name).transposedStyle(_transposedStyle)
         _title.map {
           text => root.append(nodeWritable(DoxTableKeyNodeType.TITLE).config(DoxTableKeyConfig.NONE.name(text)).width(None))
