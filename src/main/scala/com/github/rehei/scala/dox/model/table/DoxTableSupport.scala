@@ -21,7 +21,6 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
         .sliding(2)
         .flatMap({
           case Seq(onlyChild) => {
-            println(onlyChild)
             Seq(processLastNode(onlyChild))
           }
           case Seq(firstChild, _) => processCurrentNode(firstChild)
