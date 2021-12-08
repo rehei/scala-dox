@@ -121,9 +121,11 @@ class TexRendering(
     $ { _ table & { ###("H") } } {
 
       \ centering;
-      \ input { filename }
-      \ caption & { tableName(table.label) }
+//      $ { _ tabular$ & { "\\textwidth" } { "l" } } {
+        \ input { filename }
 
+//      }
+      \ caption & { escape(tableLabel(table.label)) }
     }
 
     if (!floating) {
@@ -140,7 +142,7 @@ class TexRendering(
     $ { _ table & { ###("H") } } {
       \ centering;
       \ input { filename }
-      \ caption & { tableName(table.label) }
+      \ caption & { escape(tableLabel(table.label)) }
     }
     if (!floating) {
       \ FloatBarrier;
@@ -156,10 +158,6 @@ class TexRendering(
 
   }
 
-  protected def tableName(label: Option[DoxReferencePersistentTable]) = {
-    label.map(_.referenceID).getOrElse("dummylabel")
-  }
-
   protected def internalSvg(svg: DoxSvgFigure) {
     if (!floating) {
       \ FloatBarrier;
@@ -167,7 +165,7 @@ class TexRendering(
     $ { _ figure & { ###(POSITIONING_FIGURE) } } {
       \ centering;
       appendTransformableSVG(svg)
-      \ caption & { escape(svg.config.caption) }
+      \ caption & { escape(tableLabel(svg.config.label)) }
     }
     if (!floating) {
       \ FloatBarrier;
@@ -206,5 +204,9 @@ class TexRendering(
     val filename = svgHandle.serialize(figure).toString()
 
     \ includegraphics & { filename }
+  }
+
+  protected def tableLabel(label: Option[DoxReferenceBase]) = {
+    label.map(_.referenceID).getOrElse("dummylabel")
   }
 }
