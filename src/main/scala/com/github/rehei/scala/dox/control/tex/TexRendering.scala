@@ -112,7 +112,7 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxTableViewModelSequence) {
-    val texTable = new TexRenderingTableMulti(baseAST, table.models, table.titleOption, table.transposed).createTableString()
+    val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption, table.transposed).createTableString()
     val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;

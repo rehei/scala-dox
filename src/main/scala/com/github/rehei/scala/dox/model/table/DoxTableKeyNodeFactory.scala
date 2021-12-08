@@ -100,7 +100,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
         def width(_width: Option[Double]) = new {
           def finalize(callback: Query[T] => Query[_]) = {
             val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.key(query), config.setWidth(_width), Seq.empty)
+            DoxTableKeyNode(DoxTableKeyNodeType.key(query), config.setCategoryWidth(_width), Seq.empty)
           }
         }
 
@@ -115,9 +115,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
         new DoxTableKeyNode(
           nodeType,
           config
-            .setWidth(transposedConfig.columnWidthCategory)
-            .setWidthTransposed(transposedConfig.columnWidthData)
-            .setAlignment(transposedConfig.alignmentData),
+            .setCategoryWidth(transposedConfig.columnWidthCategory)
+            .setDataWidthTransposed(transposedConfig.columnWidthData)
+            .setDataAlignmentTransposed(transposedConfig.alignmentData),
           children) with Writeable
       }
     }
@@ -127,7 +127,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) with Writeable {
       def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) with Writeable {
         def width(_width: Option[Double]) = {
-          new DoxTableKeyNode(nodeType, config.setWidth(_width), children) with Writeable
+          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children) with Writeable
         }
       }
     }
@@ -137,7 +137,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) {
       def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) {
         def width(_width: Option[Double]) = {
-          new DoxTableKeyNode(nodeType, config.setWidth(_width), children)
+          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children)
         }
       }
     }

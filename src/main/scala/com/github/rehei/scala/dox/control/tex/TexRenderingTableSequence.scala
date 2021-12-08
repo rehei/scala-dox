@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableMulti(baseAST: TexAST, modelMulti: DoxTableSequence, titleOption: Option[TextAST], transposed: Boolean) {
+class TexRenderingTableSequence(baseAST: TexAST, modelMulti: DoxTableSequence, titleOption: Option[TextAST], transposed: Boolean) {
 
   protected val verticalSpace = "\n\\vspace*{0.5cm}" + "\n"
   protected val COLUMN_SIZE_DEFAULT = 2.0
@@ -68,9 +68,9 @@ class TexRenderingTableMulti(baseAST: TexAST, modelMulti: DoxTableSequence, titl
 
   protected def getTable(model: DoxTable[_]) = {
     if (transposed) {
-      new TexRenderingTableTransposed(baseAST, model, false).createTableString()
+      new TexRenderingTableTransposed(baseAST, model, true).createTableString()
     } else {
-      new TexRenderingTable(baseAST, model, false).createTableString()
+      new TexRenderingTable(baseAST, model, true).createTableString()
     }
   }
 

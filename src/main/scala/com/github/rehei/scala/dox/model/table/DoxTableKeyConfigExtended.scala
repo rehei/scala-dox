@@ -6,13 +6,13 @@ object DoxTableKeyConfigExtended {
 
 case class DoxTableKeyConfigExtended(base: DoxTableKeyConfig, width: Option[Double], transposedWidth: Option[Double]) {
   
-  def setWidth(newWidth: Option[Double]) = {
+  def setCategoryWidth(newWidth: Option[Double]) = {
     this.copy(width = newWidth)
   }
-  def setWidthTransposed(newWidth: Option[Double]) = {
+  def setDataWidthTransposed(newWidth: Option[Double]) = {
     this.copy(transposedWidth = newWidth)
   }
-  def setAlignment(_alignment: DoxTableAlignment) = {
+  def setDataAlignmentTransposed(_alignment: DoxTableAlignment) = {
     this.copy(base = base.copy(alignment = _alignment))
   }
   
