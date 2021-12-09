@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableSequence(baseAST: TexAST, modelMulti: DoxTableSequence, titleOption: Option[TextAST], transposed: Boolean) {
+class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, titleOption: Option[TextAST], transposed: Boolean) {
 
   protected val verticalSpace = "\n\\vspace*{0.5cm}" + "\n"
   protected val COLUMN_SIZE_DEFAULT = 2.0
@@ -34,10 +34,13 @@ class TexRenderingTableSequence(baseAST: TexAST, modelMulti: DoxTableSequence, t
   }
 
   def createTables() = {
-    modelMulti.models.map(model => {
-      \ plain { "{" + getTable(model) + "}" }
-      endRowEntry()
-    })
+    modelSequence
+      .sequence
+      .filterNot(model => model == DoxTable.NONE)
+      .map(model => {
+        \ plain { "{" + getTable(model) + "}" }
+        endRowEntry()
+      })
   }
 
   protected def appendTitle() = {
@@ -78,8 +81,8 @@ class TexRenderingTableSequence(baseAST: TexAST, modelMulti: DoxTableSequence, t
     \ plain { verticalSpace + "\\\\ \n" }
   }
   protected def columnConfigTotalSize() = {
-    val columnSizes = modelMulti.columnsMaxWidths(COLUMN_SIZE_DEFAULT)
-    val tabColSeps = modelMulti.columnsMaxAmount * 2
+    val columnSizes = modelSequence.columnsMaxWidths(COLUMN_SIZE_DEFAULT)
+    val tabColSeps = modelSequence.columnsMaxAmount * 2
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
   }

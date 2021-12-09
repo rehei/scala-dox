@@ -112,40 +112,41 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxTableViewModelSequence) {
-    val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption, table.transposed).createTableString()
-    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
-    if (!floating) {
-      \ FloatBarrier;
-    }
+    if (!table.models.sequence.filterNot(_ == DoxTable.NONE).isEmpty) {
+      val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption, table.transposed).createTableString()
+      val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+      if (!floating) {
+        \ FloatBarrier;
+      }
 
-    $ { _ table & { ###("H") } } {
+      $ { _ table & { ###("H") } } {
 
-      \ centering;
-//      $ { _ tabular$ & { "\\textwidth" } { "l" } } {
+        \ centering;
         \ input { filename }
+        \ caption & { escape(tableLabel(table.label)) }
+      }
 
-//      }
-      \ caption & { escape(tableLabel(table.label)) }
-    }
-
-    if (!floating) {
-      \ FloatBarrier;
+      if (!floating) {
+        \ FloatBarrier;
+      }
     }
   }
 
   protected def internalTable(table: DoxTableViewModel[_]) {
-    val texTable = getTable(table.model, table.label, table.transposed, false)
-    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
-    if (!floating) {
-      \ FloatBarrier;
-    }
-    $ { _ table & { ###("H") } } {
-      \ centering;
-      \ input { filename }
-      \ caption & { escape(tableLabel(table.label)) }
-    }
-    if (!floating) {
-      \ FloatBarrier;
+    if (table.model != DoxTable.NONE) {
+      val texTable = getTable(table.model, table.label, table.transposed, false)
+      val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+      if (!floating) {
+        \ FloatBarrier;
+      }
+      $ { _ table & { ###("H") } } {
+        \ centering;
+        \ input { filename }
+        \ caption & { escape(tableLabel(table.label)) }
+      }
+      if (!floating) {
+        \ FloatBarrier;
+      }
     }
   }
 

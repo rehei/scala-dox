@@ -8,6 +8,10 @@ import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 
+object DoxTable {
+  val NONE = new DoxTable(DoxTableKeyNode.NONE)
+}
+
 case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
