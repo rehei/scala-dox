@@ -41,7 +41,7 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def secondTest() {
-    val svgFile = DoxSvgFigure(DoxFigure("somecaption", fileEnum.doxImage.get()), NodeSeq.Empty)
+    val svgFile = DoxSvgFigure(DoxFigure(fileEnum.doxImage.get()), NodeSeq.Empty)
     val testSvgName = new Svg2File(tmp)
     testSvgName.generate(svgFile)
     testSvgName.generate(svgFile)
