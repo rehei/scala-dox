@@ -15,15 +15,10 @@ object DoxTableKeyNodeType {
       TextFactory.NONE
     }
   }
-  object ROOT extends DoxTableKeyNodeType("ROOT") {
-    override def optionalTitle(text: String) = {
-      TextFactory.text(text)
-    }
-  }
+  object ROOT extends DoxTableKeyNodeType("ROOT")
 
   object WHITESPACE extends DoxTableKeyNodeType("WHITESPACE")
   object RULE extends DoxTableKeyNodeType("RULE")
-
 
   object INDEX extends DoxTableKeyNodeType("INDEX") {
     override def valueOf(index: Int, element: AnyRef) = {
@@ -52,10 +47,6 @@ object DoxTableKeyNodeType {
 }
 
 abstract class DoxTableKeyNodeType(typey: String) {
-
-  def optionalTitle(text: String): TextAST = {
-    throw new UnsupportedOperationException(typey)
-  }
 
   def valueOf(index: Int, element: AnyRef): TextAST = {
     throw new UnsupportedOperationException(typey)
