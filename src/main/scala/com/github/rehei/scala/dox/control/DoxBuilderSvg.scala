@@ -9,19 +9,9 @@ import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentImage
 
 object DoxBuilderSvg {
 
-  def caption(_builder: DoxLikeString) = {
-    create(_builder.get())
-  }
-
-  def caption(_caption: String) = {
-    create(_caption)
-  }
-
-  protected def create(_caption: String) = new {
-    def label(_labelOption: Option[DoxReferencePersistentImage]) = new {
-      def data(_data: NodeSeq) = {
-        DoxSvgFigure(DoxFigure(_caption, _labelOption), _data)
-      }
+  def label(_labelOption: Option[DoxReferencePersistentImage]) = new {
+    def data(_data: NodeSeq) = {
+      DoxSvgFigure(DoxFigure(_labelOption), _data)
     }
   }
 
