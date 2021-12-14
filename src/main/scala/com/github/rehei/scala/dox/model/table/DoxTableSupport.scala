@@ -4,10 +4,6 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableSupport(root: DoxTableKeyNode) {
 
-  def noneTitleChildren = {
-    filterNotTitles(root.children)
-  }
-
   def addChildrenSpaces() = {
     root.children.length match {
       case x if (x < 1) => Seq.empty
@@ -16,40 +12,16 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
   }
 
   protected def spacedColumns(children: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
-    val children1 = {
-      children
-        .sliding(2)
-        .flatMap({
-          case Seq(onlyChild) => {
-            Seq(processLastNode(onlyChild))
-          }
-          case Seq(firstChild, _) => processCurrentNode(firstChild)
-        }).toSeq
-    }
-    val children2 = {
-      if ((children.length >= 2)) {
-        Seq(processLastNode(children.last))
-      } else {
-        Seq.empty
-      }
-    }
-    children1 ++ children2
+    applyToAllExceptLast(children) ++ children.lastOption.map(last => Seq(last)).getOrElse(Seq())
   }
 
-  protected def processCurrentNode(node: DoxTableKeyNode) = {
-    if (node.nodeType == DoxTableKeyNodeType.TITLE) {
-      Seq(node.copy(children = spacedColumns(node.children)))
-    } else {
-      applyColumnSpace(node)
-    }
-  }
-
-  protected def processLastNode(node: DoxTableKeyNode) = {
-    if (node.nodeType == DoxTableKeyNodeType.TITLE) {
-      node.copy(children = spacedColumns(node.children))
-    } else {
-      node
-    }
+  protected def applyToAllExceptLast(children: Seq[DoxTableKeyNode]) = {
+    children
+      .sliding(2)
+      .flatMap({
+        case Seq(firstChild, _) => applyColumnSpace(firstChild)
+        case other              => other
+      }).toSeq
   }
 
   protected def applyColumnSpace(node: DoxTableKeyNode) = {
@@ -60,33 +32,9 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
       Seq(node)
     }
   }
-  //  def addChildrenSpaces() = {
-  //    root.children.length match {
-  //      case x if (x < 1)  => root.children
-  //      case y if (y == 1) => {
-  //        root.children.headOption.map(
-  //            head => {
-  //              if(head.nodeType == DoxTableKeyNodeType.TITLE){
-  //
-  //              }
-  //                }
-  //            )
-  //      }
-  //      case other         => spacedColumns()
-  //    }
-  //  }
+
   def removeChildrenObsoleteSpaces() = {
     removeObsoleteColumnSpace(root.children)
-  }
-
-  protected def filterNotTitles(children: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
-    children
-      .flatMap(child => {
-        child.nodeType match {
-          case DoxTableKeyNodeType.TITLE => filterNotTitles(child.children)
-          case other                     => Seq(child)
-        }
-      })
   }
 
   protected def removeObsoleteColumnSpace(parentChildren: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {

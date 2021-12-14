@@ -8,6 +8,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.text.TextFactory
 
 class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
 
@@ -66,14 +67,14 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def titleAST() = {
-    model.titleOption.map(
+    model.headTitle.map(
       title => {
-        Text2TEX.generate(title)
+        Text2TEX.generate(TextFactory.text(title))
       }).getOrElse("")
   }
 
   protected def showTitle() = {
-    model.titleOption.isDefined && !isInnerTable
+    model.headTitle.isDefined && !isInnerTable
   }
 
   protected def columnConfigTotalSize() = {

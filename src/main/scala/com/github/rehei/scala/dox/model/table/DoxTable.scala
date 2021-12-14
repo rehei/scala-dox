@@ -9,20 +9,12 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 
 object DoxTable {
-  val NONE = new DoxTable(DoxTableKeyNode.NONE)
+  val NONE = new DoxTable(DoxTableKeyNode.NONE, None)
 }
 
-case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode, headTitle: Option[String])(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
-
-  def titleOption = {
-    root
-      .children
-      .find(child => child.nodeType == DoxTableKeyNodeType.TITLE)
-      .map(title => Some(title.config.base.text))
-      .getOrElse(None)
-  }
 
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
@@ -58,10 +50,6 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
 
   def withColumnSpace = {
     this.copy(root = root.addSpaces())
-  }
-
-  def withoutTitle = {
-    this.copy(root = root.withoutTitle)
   }
 
   protected def extract(element: T, index: Int) = {

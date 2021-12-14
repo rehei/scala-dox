@@ -63,16 +63,16 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
   }
 
   protected def titleAST() = {
-    model.titleOption.map(
+    model.headTitle.map(
       title => {
-        Text2TEX.generate(title)
+        Text2TEX.generate(TextFactory.text(title))
       }).getOrElse("")
   }
   protected def tableConfig() = {
     TableConfig(model.root.config.width.getOrElse(columnSizeCategory), model.root.config.transposedWidth.getOrElse(columnSizeDefault))
   }
   protected def showTitle() = {
-    model.titleOption.isDefined && !isInnerTable
+    model.headTitle.isDefined && !isInnerTable
   }
 
   protected def appendTable() {

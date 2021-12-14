@@ -9,21 +9,19 @@ import scala.collection.mutable.Queue
 
 class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]]) {
   case class DoxTableTransposedRow(head: TextAST, data: Seq[TextAST], columnDepth: Int)
-  protected val effectiveRoot = root.withoutTitle()
 
   def list() = {
     transposedStart()
   }
 
   protected def transposedStart() = {
-    transposedRowsInner(effectiveRoot.children, data.transpose.to[Queue], -1)
+    transposedRowsInner(root.children, data.transpose.to[Queue], -1)
   }
 
   protected def transposedRows(node: DoxTableKeyNode, dataBuffer: Queue[ArrayBuffer[TextAST]], transposed: Seq[DoxTableTransposedRow], parentLevel: Int): Seq[DoxTableTransposedRow] = {
     val currentLevel = parentLevel + 1
     if (node.isLeaf) {
       node.nodeType match {
-        case DoxTableKeyNodeType.TITLE       => Seq()
         case DoxTableKeyNodeType.COLUMNSPACE => Seq()
         case other                           => Seq(DoxTableTransposedRow(node.config.base.text, dataBuffer.dequeue, currentLevel))
       }

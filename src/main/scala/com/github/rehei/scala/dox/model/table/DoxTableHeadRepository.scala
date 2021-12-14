@@ -44,7 +44,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
   def list() = {
 
-    val transformedRoot = root.withoutTitle().withWhitespace()
+    val transformedRoot = root.withWhitespace()
 
     for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
       DoxTableHeadRow(
