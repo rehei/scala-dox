@@ -53,7 +53,10 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
   }
 
   protected def getCleanedChildren(parentChildren: Seq[DoxTableKeyNode]) = {
-    (parentChildren.sliding(2).map { case Seq(first, second) => first.copy(children = removeObsoleteColumnSpace(first.children)) }).toSeq
+    (parentChildren.sliding(2).map {
+      case Seq(first, _) => first.copy(children = removeObsoleteColumnSpace(first.children))
+      case other         => DoxTableKeyNode.NONE
+    }).filterNot(_.nodeType == DoxTableKeyNodeType.NONE).toSeq
   }
 
   protected def getLastChild(child: DoxTableKeyNode) = {

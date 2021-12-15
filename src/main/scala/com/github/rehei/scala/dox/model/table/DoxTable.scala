@@ -45,7 +45,7 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode, headTitle: Option[St
   }
 
   def removeObsoleteSpaces() = {
-    this.copy(root = root.copy(children = root.children.map(_.removeObsoleteSpaces())))
+    this.copy(root = root.copy(children = root.removeObsoleteSpaces().children))
   }
 
   def withColumnSpace = {

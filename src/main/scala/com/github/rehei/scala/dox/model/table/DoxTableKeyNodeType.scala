@@ -48,6 +48,10 @@ object DoxTableKeyNodeType {
 
 abstract class DoxTableKeyNodeType(typey: String) {
 
+  override def toString() = {
+    typey
+  }
+  
   def valueOf(index: Int, element: AnyRef): TextAST = {
     throw new UnsupportedOperationException(typey)
   }
