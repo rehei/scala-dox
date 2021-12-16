@@ -7,6 +7,7 @@ import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.control.tex.TexEscape
 import scala.reflect.ClassTag
 import scala.collection.mutable.ArrayBuffer
+import com.github.rehei.scala.dox.text.TextObjectNewline
 
 object Text2TEX {
 
@@ -36,7 +37,7 @@ object Text2TEX {
       base.append(textSubscript(sequence.drop(base.count)))
 
     }
-    
+
     base.text
 
   }
@@ -55,6 +56,12 @@ object Text2TEX {
     ParseResult(result, collection.size)
   }
 
+  protected def textNewline(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectNewline](sequence)
+    val result = textNewlineExplicit(collection, 0)
+    ParseResult(result, collection.size)
+  }
+
   protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
     subscriptSeq.lift(index).map {
       text => "\\textsubscript{" + escape(text.in) + textSubScriptExplicit(subscriptSeq, index + 1) + "}"
@@ -62,7 +69,13 @@ object Text2TEX {
       ""
     }
   }
-
+  protected def textNewlineExplicit(newlineSeq: Seq[TextObjectNewline], index: Int): String = {
+    newlineSeq.lift(index).map {
+      newline => "\\newline" + textNewlineExplicit(newlineSeq, index + 1)
+    } getOrElse {
+      ""
+    }
+  }
   protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {
     val subSequence = sequence.takeWhile(classTag.runtimeClass.isInstance(_))
     subSequence.map(_.asInstanceOf[T])

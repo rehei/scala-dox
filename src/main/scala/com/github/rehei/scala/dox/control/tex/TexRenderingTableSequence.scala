@@ -21,7 +21,6 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
 
   def createTableString() = {
     createTitleTable()
-    println(tmpAST.build())
     tmpAST.build()
   }
 

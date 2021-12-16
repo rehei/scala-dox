@@ -16,4 +16,7 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
   }
 
+  def newline() = {
+    this.copy(sequence = sequence :+ TextObjectNewline())
+  }
 }
