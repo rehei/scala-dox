@@ -35,6 +35,7 @@ object Text2TEX {
 
       base.append(textDefault(sequence.drop(base.count)))
       base.append(textSubscript(sequence.drop(base.count)))
+      base.append(textNewline(sequence.drop(base.count)))
 
     }
 
@@ -71,7 +72,7 @@ object Text2TEX {
   }
   protected def textNewlineExplicit(newlineSeq: Seq[TextObjectNewline], index: Int): String = {
     newlineSeq.lift(index).map {
-      newline => "\\newline" + textNewlineExplicit(newlineSeq, index + 1)
+      newline => " \\newline " + textNewlineExplicit(newlineSeq, index + 1)
     } getOrElse {
       ""
     }
