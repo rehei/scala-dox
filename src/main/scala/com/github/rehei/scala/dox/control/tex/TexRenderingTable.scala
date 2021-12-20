@@ -9,6 +9,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
+import com.github.rehei.scala.dox.text.TextObjectDefault
 
 class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
 
@@ -89,6 +90,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def appendTableHead() {
+
     for (row <- model.normal.list()) {
       setCategories(getMappedHead(row))
     }

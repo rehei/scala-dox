@@ -4,17 +4,18 @@ import scala.collection.Seq
 import com.github.rehei.scala.macros.Query
 import scala.reflect.ClassTag
 import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
 
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren) with Writeable
     }
 
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.nodeType, this.config, children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren) with Writeable
     }
   }
 
@@ -29,7 +30,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Root {
     def apply() = new {
       def onTransposed(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
-        nodeRoot("").transposedStyle(_transposedStyle)
+        nodeRoot().transposedStyle(_transposedStyle)
       }
     }
   }
@@ -76,8 +77,8 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
-  protected def nodeRoot(_name: String) = {
-    new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name(_name)), Seq.empty) with Writeable {
+  protected def nodeRoot() = {
+    new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty) with Writeable {
       def transposedStyle(_styleOption: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
         val transposedConfig = _styleOption(DoxTableConfigTransposed)
         new DoxTableKeyNode(

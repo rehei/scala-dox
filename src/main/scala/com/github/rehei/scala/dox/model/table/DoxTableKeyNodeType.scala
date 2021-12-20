@@ -33,7 +33,7 @@ object DoxTableKeyNodeType {
   }
 
   def key(query: Query[_]) = {
-    new DoxTableKeyNodeType("NONE") {
+    new DoxTableKeyNodeType("LEAF") {
       override def valueOf(index: Int, element: AnyRef) = {
         val value = new QReflection(element).get(query)
 

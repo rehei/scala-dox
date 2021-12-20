@@ -79,6 +79,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   protected def endRowEntry() = {
     \ plain { verticalSpace + "\\\\ \n" }
   }
+
   protected def columnConfigTotalSize() = {
     val columnSizes = modelSequence.columnsMaxWidths(COLUMN_SIZE_DEFAULT)
     val tabColSeps = modelSequence.columnsMaxAmount * 2

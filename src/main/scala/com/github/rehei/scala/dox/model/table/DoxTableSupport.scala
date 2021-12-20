@@ -6,8 +6,8 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
 
   def addChildrenSpaces() = {
     root.children.length match {
-      case x if (x < 1) => Seq.empty
-      case other        => spacedColumns(root.children)
+      case x if (x <= 1) => root.children
+      case other         => spacedColumns(root.children)
     }
   }
 
