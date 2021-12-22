@@ -65,12 +65,13 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
   protected def titleAST() = {
     model.headTitle.map(
       title => {
-        Text2TEX.generate(TextFactory.text(title))
+        styleText(title)
       }).getOrElse("")
   }
   protected def tableConfig() = {
     TableConfig(model.root.config.width.getOrElse(columnSizeCategory), model.root.config.transposedWidth.getOrElse(columnSizeDefault))
   }
+
   protected def showTitle() = {
     model.headTitle.isDefined && !isInnerTable
   }
@@ -82,6 +83,10 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
       \ plain { Text2TEX.generate(row.contentHead) + " & " }
       \ plain { row.contentData.map(data => Text2TEX.generate(data)).mkString(" & ") + "\\\\" + "\n" }
     }
+  }
+
+  protected def styleText(config: DoxTableKeyConfigExtended) = {
+    config.base.style.applyStyle(Text2TEX.generate(config.base.text))
   }
 
   protected def content() = {
@@ -98,13 +103,4 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
       case _                        => ColumnType.r(columnWidths.dataWidth)
     }
   }
-  //  protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
-  //    val size = config.width.getOrElse(columnSizeDefault)
-  //    config.base.alignment match {
-  //      case DoxTableAlignment.LEFT   => ColumnType.l(size)
-  //      case DoxTableAlignment.RIGHT  => ColumnType.r(size)
-  //      case DoxTableAlignment.CENTER => ColumnType.c(size)
-  //      case _                        => ColumnType.l(size)
-  //    }
-  //  }
 }

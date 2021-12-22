@@ -12,7 +12,7 @@ object DoxTable {
   val NONE = new DoxTable(DoxTableKeyNode.NONE, None)
 }
 
-case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode, headTitle: Option[String])(implicit clazzTag: ClassTag[T]) {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode, headTitle: Option[DoxTableKeyConfigExtended])(implicit clazzTag: ClassTag[T]) {
 
   protected val _data = ArrayBuffer[T]()
 

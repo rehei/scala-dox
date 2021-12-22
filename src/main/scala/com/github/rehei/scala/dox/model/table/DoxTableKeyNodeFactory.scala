@@ -20,9 +20,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Table extends {
-    def title(headTitle: Option[String]) = new {
+    def title(headTitle: Option[DoxTableKeyConfig]) = new {
       def root(node: DoxTableKeyNode) = {
-        DoxTable[T](node, headTitle).withColumnSpace
+        DoxTable[T](node, headTitle.map(configExt)).withColumnSpace
       }
     }
   }

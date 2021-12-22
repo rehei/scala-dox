@@ -61,7 +61,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
 
   protected def appendTitle() = {
     if (showTitle) {
-      \ plain { (\\ multicolumn & { leavesAmount } { "c" } { titleAST() }).generate() }
+      \ plain { (\\ multicolumn & { leavesAmount } { model.headTitle.map(config => getHeadAlignment(config)).getOrElse("c") } { titleAST() }).generate() }
       \ plain { "\\\\" + "\n" }
       \ midrule
     }
@@ -70,7 +70,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   protected def titleAST() = {
     model.headTitle.map(
       title => {
-        Text2TEX.generate(TextFactory.text(title))
+        styleText(title)
       }).getOrElse("")
   }
 
@@ -118,11 +118,11 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
       }
     }
 
-    MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { styleText(Text2TEX.generate(value.key.config.base.text), value.key.config) }, ruleOption)
+    MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { styleText(value.key.config) }, ruleOption)
   }
 
-  protected def styleText(text: String, config: DoxTableKeyConfigExtended) = {
-    config.base.style.applyStyle(text)
+  protected def styleText(config: DoxTableKeyConfigExtended) = {
+    config.base.style.applyStyle(Text2TEX.generate(config.base.text))
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
