@@ -19,4 +19,8 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def newline() = {
     this.copy(sequence = sequence :+ TextObjectNewline())
   }
+
+  def arrowRight() = {
+    this.copy(sequence = sequence :+ TextObjectArrowRight())
+  }
 }

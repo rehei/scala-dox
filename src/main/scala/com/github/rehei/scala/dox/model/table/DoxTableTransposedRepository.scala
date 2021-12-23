@@ -8,7 +8,7 @@ import com.github.rehei.scala.dox.text.TextFactory
 import scala.collection.mutable.Queue
 
 class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[TextAST]]) {
-  case class DoxTableTransposedRow(head: TextAST, data: Seq[TextAST], columnDepth: Int)
+  case class DoxTableTransposedRow(head: DoxTableKeyConfigExtended, data: Seq[TextAST], columnDepth: Int)
 
   def list() = {
     transposedStart()
@@ -23,10 +23,10 @@ class DoxTableTransposedRepository(root: DoxTableKeyNode, data: ArrayBuffer[Seq[
     if (node.isLeaf) {
       node.nodeType match {
         case DoxTableKeyNodeType.COLUMNSPACE => Seq()
-        case other                           => Seq(DoxTableTransposedRow(node.config.base.text, dataBuffer.dequeue, currentLevel))
+        case other                           => Seq(DoxTableTransposedRow(node.config, dataBuffer.dequeue, currentLevel))
       }
     } else {
-      val currentRow = Seq(DoxTableTransposedRow(node.config.base.text, Seq(), currentLevel))
+      val currentRow = Seq(DoxTableTransposedRow(node.config, Seq(), currentLevel))
       val tailRows = transposedRowsInner(node.children, dataBuffer, currentLevel)
       currentRow ++ tailRows
     }

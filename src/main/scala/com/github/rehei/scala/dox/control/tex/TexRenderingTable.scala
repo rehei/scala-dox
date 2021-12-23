@@ -90,7 +90,6 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def appendTableHead() {
-
     for (row <- model.normal.list()) {
       setCategories(getMappedHead(row))
     }

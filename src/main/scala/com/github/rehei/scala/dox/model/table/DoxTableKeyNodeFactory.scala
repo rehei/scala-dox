@@ -86,7 +86,8 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
           config
             .setCategoryWidth(transposedConfig.columnWidthCategory)
             .setDataWidthTransposed(transposedConfig.columnWidthData)
-            .setDataAlignmentTransposed(transposedConfig.alignmentData),
+            .setDataAlignmentTransposed(transposedConfig.alignmentData)
+            .setMidruleTransposed(transposedConfig.hasMidrule),
           children) with Writeable
       }
     }
@@ -113,6 +114,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   protected def configExt(base: DoxTableKeyConfig) = {
-    DoxTableKeyConfigExtended(base, None, None)
+    DoxTableKeyConfigExtended(base, None, None, false)
   }
 }
