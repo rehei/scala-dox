@@ -9,6 +9,7 @@ import scala.reflect.ClassTag
 import scala.collection.mutable.ArrayBuffer
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectArrowRight
+import com.github.rehei.scala.dox.text.TextObjectDeltaUppercase
 
 object Text2TEX {
 
@@ -26,7 +27,6 @@ object Text2TEX {
   def generate(element: TextAST) = {
 
     val base = ParseResult("", 0)
-    checkKnownTypes(element.sequence)
     asText(base, element.sequence)
   }
 
@@ -34,10 +34,17 @@ object Text2TEX {
 
     while (base.count < sequence.size) {
 
+      val before = base.count
+      
       base.append(textDefault(sequence.drop(base.count)))
       base.append(textSubscript(sequence.drop(base.count)))
       base.append(textNewline(sequence.drop(base.count)))
       base.append(textArrowRight(sequence.drop(base.count)))
+      base.append(textDelta(sequence.drop(base.count)))
+
+      if (base.count == before) {
+        throw new IllegalArgumentException("TextObject type not supported: " + sequence.drop(base.count).head.getClass.getSimpleName)
+      }
 
     }
 
@@ -71,6 +78,12 @@ object Text2TEX {
     ParseResult(result, collection.size)
   }
 
+  protected def textDelta(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectDeltaUppercase](sequence)
+    val result = textDeltaExplicit(collection, 0)
+    ParseResult(result, collection.size)
+  }
+
   protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
     subscriptSeq.lift(index).map {
       text => "\\textsubscript{" + escape(text.in) + textSubScriptExplicit(subscriptSeq, index + 1) + "}"
@@ -95,24 +108,17 @@ object Text2TEX {
     }
   }
 
+  protected def textDeltaExplicit(newlineSeq: Seq[TextObjectDeltaUppercase], index: Int): String = {
+    newlineSeq.lift(index).map {
+      newline => " $\\Delta$" + textDeltaExplicit(newlineSeq, index + 1)
+    } getOrElse {
+      ""
+    }
+  }
+
   protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {
     val subSequence = sequence.takeWhile(classTag.runtimeClass.isInstance(_))
     subSequence.map(_.asInstanceOf[T])
-  }
-
-  protected def checkKnownTypes(sequence: Seq[TextObject]) = {
-
-    sequence.map(
-      textObject => {
-        textObject match {
-          case a: TextObjectDefault    => true
-          case b: TextObjectSubscript  => true
-          case c: TextObjectNewline    => true
-          case d: TextObjectArrowRight => true
-          case other                   => throw new IllegalArgumentException("TextObject type not supported" + other)
-        }
-      })
-
   }
 
 }
