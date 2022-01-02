@@ -6,6 +6,9 @@ import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.control.DoxBuilderTableSequence
+import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
+import com.github.rehei.scala.dox.control.DoxBuilderTable
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
@@ -14,6 +17,11 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def section(name: String) = this
   override def subsection(name: String) = this
   override def subsubsection(name: String) = this
+
+  override def bigskip() = this
+
+  override def tableSequence(callback: DoxBuilderTableSequence.type => DoxTableViewModelSequence) = this
+  override def table(callback: DoxBuilderTable.type => DoxTableViewModel[_]): this.type = this
 
   override def textItalic(in: String) = this
   override def textRed(in: String) = this
