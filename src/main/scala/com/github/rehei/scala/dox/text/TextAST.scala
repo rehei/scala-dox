@@ -23,8 +23,16 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def arrowRight() = {
     this.copy(sequence = sequence :+ TextObjectArrowRight())
   }
-  
+
+  def arrowUp() = {
+    this.copy(sequence = sequence :+ TextObjectArrowUp())
+  }
+
   def deltaUppercase() = {
     this.copy(sequence = sequence :+ TextObjectDeltaUppercase())
+  }
+
+  def epsilonLowercase() = {
+    this.copy(sequence = sequence :+ TextObjectEpsilonLowercase())
   }
 }

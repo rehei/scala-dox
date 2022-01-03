@@ -1,15 +1,16 @@
 package com.github.rehei.scala.dox.text.util
 
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.text.TextObjectSubscript
-import com.github.rehei.scala.dox.text.TextObject
-import com.github.rehei.scala.dox.text.TextObjectDefault
-import com.github.rehei.scala.dox.control.tex.TexEscape
 import scala.reflect.ClassTag
-import scala.collection.mutable.ArrayBuffer
-import com.github.rehei.scala.dox.text.TextObjectNewline
+
+import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectArrowRight
+import com.github.rehei.scala.dox.text.TextObjectArrowUp
+import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.text.TextObjectDeltaUppercase
+import com.github.rehei.scala.dox.text.TextObjectEpsilonLowercase
+import com.github.rehei.scala.dox.text.TextObjectNewline
+import com.github.rehei.scala.dox.text.TextObjectSubscript
 
 object Text2TEX {
 
@@ -22,7 +23,7 @@ object Text2TEX {
 
   }
 
-  import TexEscape._
+  import com.github.rehei.scala.dox.control.tex.TexEscape._
 
   def generate(element: TextAST) = {
 
@@ -35,12 +36,14 @@ object Text2TEX {
     while (base.count < sequence.size) {
 
       val before = base.count
-      
+
       base.append(textDefault(sequence.drop(base.count)))
       base.append(textSubscript(sequence.drop(base.count)))
       base.append(textNewline(sequence.drop(base.count)))
       base.append(textArrowRight(sequence.drop(base.count)))
+      base.append(textArrowUp(sequence.drop(base.count)))
       base.append(textDelta(sequence.drop(base.count)))
+      base.append(textEpsilonLower(sequence.drop(base.count)))
 
       if (base.count == before) {
         throw new IllegalArgumentException("TextObject type not supported: " + sequence.drop(base.count).head.getClass.getSimpleName)
@@ -78,9 +81,22 @@ object Text2TEX {
     ParseResult(result, collection.size)
   }
 
+  protected def textArrowUp(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectArrowUp](sequence)
+    val result = textArrowUpExplicit(collection, 0)
+    ParseResult(result, collection.size)
+  }
+  
+  
   protected def textDelta(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectDeltaUppercase](sequence)
     val result = textDeltaExplicit(collection, 0)
+    ParseResult(result, collection.size)
+  }
+
+  protected def textEpsilonLower(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectEpsilonLowercase](sequence)
+    val result = textEpsilonLowerExplicit(collection, 0)
     ParseResult(result, collection.size)
   }
 
@@ -108,9 +124,25 @@ object Text2TEX {
     }
   }
 
+  protected def textArrowUpExplicit(newlineSeq: Seq[TextObjectArrowUp], index: Int): String = {
+    newlineSeq.lift(index).map {
+      newline => " $\\uparrow$ " + textArrowUpExplicit(newlineSeq, index + 1)
+    } getOrElse {
+      ""
+    }
+  }
+
   protected def textDeltaExplicit(newlineSeq: Seq[TextObjectDeltaUppercase], index: Int): String = {
     newlineSeq.lift(index).map {
       newline => " $\\Delta$" + textDeltaExplicit(newlineSeq, index + 1)
+    } getOrElse {
+      ""
+    }
+  }
+
+  protected def textEpsilonLowerExplicit(newlineSeq: Seq[TextObjectEpsilonLowercase], index: Int): String = {
+    newlineSeq.lift(index).map {
+      newline => " $\\epsilon$" + textEpsilonLowerExplicit(newlineSeq, index + 1)
     } getOrElse {
       ""
     }
