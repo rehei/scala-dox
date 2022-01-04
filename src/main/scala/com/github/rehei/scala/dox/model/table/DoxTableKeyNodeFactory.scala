@@ -7,7 +7,7 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
-
+  protected val minWidth = 0.001
   trait Writeable extends DoxTableKeyNode {
 
     def append(additionalChildren: DoxTableKeyNode*) = {
@@ -36,17 +36,18 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Whitespace {
+
     def apply() = {
-      node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
+      node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(minWidth))
     }
-    def apply(columnSize: Double) = {
-      node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(columnSize))
+    def apply(columnSize: Option[Double]) = {
+      node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(columnSize.getOrElse(minWidth)))
     }
   }
 
   object Columnspace {
     def apply() = {
-      node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(0.1))
+      node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(minWidth))
     }
   }
 

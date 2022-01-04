@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.text.TextAST
 
 class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
-  protected val WHITESPACE_DEFAULT_WIDTH = 0.1
+
   protected val factory = DoxTableKeyNodeFactory()
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
@@ -29,7 +29,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
-            Seq(factory.Whitespace(base.config.width.getOrElse(WHITESPACE_DEFAULT_WIDTH)))
+            Seq(factory.Whitespace(base.config.width))
           } else {
             Seq.empty
           }

@@ -16,7 +16,7 @@ case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyCon
   }
 
   def addSpaces() = {
-    this.copy(children = tableSupport.addChildrenSpaces)
+    this.copy(children = tableSupport.addChildrenSpaces(this))
   }
 
   def setNodeType(newNodeType: DoxTableKeyNodeType) = {

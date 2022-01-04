@@ -4,15 +4,16 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableSupport(root: DoxTableKeyNode) {
 
-  def addChildrenSpaces() = {
-    root.children.length match {
-      case x if (x <= 1) => root.children
-      case other         => spacedColumns(root.children)
-    }
+  def addChildrenSpaces(node: DoxTableKeyNode) = {
+    spacedColumns(node.children)
   }
 
   protected def spacedColumns(children: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
-    applyToAllExceptLast(children) ++ children.lastOption.map(last => Seq(last)).getOrElse(Seq())
+    if (children.length > 1) {
+      applyToAllExceptLast(children) ++ children.lastOption.map(last => Seq(last.addSpaces())).getOrElse(Seq())
+    } else {
+      applyToAllExceptLast(children)
+    }
   }
 
   protected def applyToAllExceptLast(children: Seq[DoxTableKeyNode]) = {
@@ -20,14 +21,15 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
       .sliding(2)
       .flatMap({
         case Seq(firstChild, _) => applyColumnSpace(firstChild)
+        case Seq(onlyChild)     => Seq(onlyChild.addSpaces())
         case other              => other
       }).toSeq
   }
 
   protected def applyColumnSpace(node: DoxTableKeyNode) = {
     val factory = DoxTableKeyNodeFactory()
-    if (node.children.length > 0) {
-      Seq(node, factory.Columnspace())
+    if (!node.isLeaf()) {
+      Seq(node.addSpaces(), factory.Columnspace())
     } else {
       Seq(node)
     }
