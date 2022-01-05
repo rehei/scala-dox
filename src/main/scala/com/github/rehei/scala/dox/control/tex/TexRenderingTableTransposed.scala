@@ -13,7 +13,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: String, contentData: Seq[TextAST])
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
   protected object ColumnType {
-    private val baseString = """\let\newline\\\arraybackslash\hspace{0pt}}m"""
+    private val baseString = """\let\newline\\\arraybackslash\hspace{0pt}}p"""
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
