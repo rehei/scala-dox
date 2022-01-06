@@ -25,6 +25,14 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
+  protected val hasSpacing = model.root.config.columnSpacing
+  protected val ROW_SPACING = {
+    if (hasSpacing) {
+      "\\rule{0pt}{4ex}"
+    } else {
+      ""
+    }
+  }
   protected val leavesAmount = model.root.leavesAmount()
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
@@ -136,7 +144,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
 
   protected def appendTableBody() {
     for (row <- model.data) yield {
-      \ plain { row.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
+      \ plain { ROW_SPACING + row.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
     }
   }
 

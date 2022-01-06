@@ -29,8 +29,8 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = new {
-      def onTransposed(_transposedStyle: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
-        nodeRoot().transposedStyle(_transposedStyle)
+      def extendedConfig(_extendedConfig: DoxTableConfigExtended.type => DoxTableConfigExtended) = {
+        nodeRoot().transposedStyle(_extendedConfig)
       }
     }
   }
@@ -80,15 +80,15 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   protected def nodeRoot() = {
     new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty) with Writeable {
-      def transposedStyle(_styleOption: DoxTableConfigTransposed.type => DoxTableConfigTransposed) = {
-        val transposedConfig = _styleOption(DoxTableConfigTransposed)
+      def transposedStyle(_styleOption: DoxTableConfigExtended.type => DoxTableConfigExtended) = {
+        val transposedConfig = _styleOption(DoxTableConfigExtended)
         new DoxTableKeyNode(
           nodeType,
           config
             .setCategoryWidth(transposedConfig.columnWidthCategory)
             .setDataWidthTransposed(transposedConfig.columnWidthData)
             .setDataAlignmentTransposed(transposedConfig.alignmentData)
-            .setMidruleTransposed(transposedConfig.hasMidrule),
+            .setColumnSpacing(transposedConfig.hasMidrule),
           children) with Writeable
       }
     }
@@ -115,6 +115,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   protected def configExt(base: DoxTableKeyConfig) = {
-    DoxTableKeyConfigExtended(base, None, None, false)
+    DoxTableKeyConfigExtended(base, false, None, None)
   }
 }

@@ -118,14 +118,6 @@ class TexRendering(
     }
   }
 
-  //  def eqnarray(label: DoxReferencePersistentEquation, expression: String) = {
-  //    $ { _.eqnarray } {
-  //      \ plain { expression }
-  //      \ label { label.referenceID }
-  //    }
-  //    this
-  //  }
-
   protected def internalTable(table: DoxTableViewModelSequence) {
     if (!table.models.sequence.filterNot(_ == DoxTable.NONE).isEmpty) {
       val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption, table.transposed).createTableString()

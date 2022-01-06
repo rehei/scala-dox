@@ -11,7 +11,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
 
   case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   case class TableContent(contentHeadOffset: TexCommandInline, contentHead: String, contentData: Seq[TextAST])
-  case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
+  case class TableConfig(categoryWidth: Double, dataWidth: Double, hasSpacing: Boolean)
   protected object ColumnType {
     private val baseString = """\let\newline\\\arraybackslash\hspace{0pt}}p"""
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
@@ -28,6 +28,13 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
 
   protected val transposedConfig = tableConfig()
   protected val modelTransposed = model.transposed
+  protected val ROW_SPACING = {
+    if (transposedConfig.hasSpacing) {
+      "\\rule{0pt}{4ex}"
+    } else {
+      ""
+    }
+  }
   import tmpMarkup._
 
   def createTableString() = {
@@ -72,7 +79,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
     TableConfig(
       model.root.config.width.getOrElse(columnSizeCategory),
       model.root.config.transposedWidth.getOrElse(columnSizeDefault),
-      model.root.config.transposedMidrule)
+      model.root.config.columnSpacing)
   }
 
   protected def showTitle() = {
@@ -86,7 +93,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
         {
           writeContent(head)
           for (row <- rows.drop(1)) {
-            if (transposedConfig.hasMidrule) {
+            if (transposedConfig.hasSpacing) {
               \ midrule
             }
             writeContent(row)
@@ -97,7 +104,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
   }
 
   protected def writeContent(row: TableContent) = {
-    \ plain { row.contentHeadOffset.generate() }
+    \ plain { ROW_SPACING + row.contentHeadOffset.generate() }
     \ plain { row.contentHead + " & " }
     \ plain { row.contentData.map(data => Text2TEX.generate(data)).mkString(" & ") + "\\\\" + "\n" }
   }
