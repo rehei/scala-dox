@@ -7,10 +7,11 @@ import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectArrowRight
 import com.github.rehei.scala.dox.text.TextObjectArrowUp
 import com.github.rehei.scala.dox.text.TextObjectDefault
-import com.github.rehei.scala.dox.text.TextObjectDeltaUppercase
-import com.github.rehei.scala.dox.text.TextObjectEpsilonLowercase
+import com.github.rehei.scala.dox.text.TextObjectLetterDeltaUppercase
+import com.github.rehei.scala.dox.text.TextObjectLetterEpsilonLowercase
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
+import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
 
 object Text2TEX {
 
@@ -42,8 +43,9 @@ object Text2TEX {
       base.append(textNewline(sequence.drop(base.count)))
       base.append(textArrowRight(sequence.drop(base.count)))
       base.append(textArrowUp(sequence.drop(base.count)))
-      base.append(textDelta(sequence.drop(base.count)))
-      base.append(textEpsilonLower(sequence.drop(base.count)))
+      base.append(textLetterDelta(sequence.drop(base.count)))
+      base.append(textLetterEpsilonLower(sequence.drop(base.count)))
+      base.append(textLetterTauLower(sequence.drop(base.count)))
 
       if (base.count == before) {
         throw new IllegalArgumentException("TextObject type not supported: " + sequence.drop(base.count).head.getClass.getSimpleName)
@@ -86,23 +88,28 @@ object Text2TEX {
     val result = textArrowUpExplicit(collection, 0)
     ParseResult(result, collection.size)
   }
-  
-  
-  protected def textDelta(sequence: Seq[TextObject]) = {
-    val collection = collect[TextObjectDeltaUppercase](sequence)
-    val result = textDeltaExplicit(collection, 0)
+
+  protected def textLetterDelta(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectLetterDeltaUppercase](sequence)
+    val result = textLetterDeltaExplicit(collection, 0)
     ParseResult(result, collection.size)
   }
 
-  protected def textEpsilonLower(sequence: Seq[TextObject]) = {
-    val collection = collect[TextObjectEpsilonLowercase](sequence)
-    val result = textEpsilonLowerExplicit(collection, 0)
+  protected def textLetterEpsilonLower(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectLetterEpsilonLowercase](sequence)
+    val result = textLetterEpsilonLowerExplicit(collection, 0)
+    ParseResult(result, collection.size)
+  }
+
+  protected def textLetterTauLower(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectLetterTauLowercase](sequence)
+    val result = textLetterTauLowerExplicit(collection, 0)
     ParseResult(result, collection.size)
   }
 
   protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
     subscriptSeq.lift(index).map {
-      text => "\\textsubscript{" + escape(text.in) + textSubScriptExplicit(subscriptSeq, index + 1) + "}"
+      text => "\\textsubscript{" + Text2TEX.generate(text.textAST) + "}" + textSubScriptExplicit(subscriptSeq, index + 1)
     } getOrElse {
       ""
     }
@@ -132,17 +139,25 @@ object Text2TEX {
     }
   }
 
-  protected def textDeltaExplicit(newlineSeq: Seq[TextObjectDeltaUppercase], index: Int): String = {
+  protected def textLetterDeltaExplicit(newlineSeq: Seq[TextObjectLetterDeltaUppercase], index: Int): String = {
     newlineSeq.lift(index).map {
-      newline => " $\\Delta$" + textDeltaExplicit(newlineSeq, index + 1)
+      newline => "$\\Delta$" + textLetterDeltaExplicit(newlineSeq, index + 1)
     } getOrElse {
       ""
     }
   }
 
-  protected def textEpsilonLowerExplicit(newlineSeq: Seq[TextObjectEpsilonLowercase], index: Int): String = {
+  protected def textLetterEpsilonLowerExplicit(newlineSeq: Seq[TextObjectLetterEpsilonLowercase], index: Int): String = {
     newlineSeq.lift(index).map {
-      newline => " $\\epsilon$" + textEpsilonLowerExplicit(newlineSeq, index + 1)
+      newline => "$\\epsilon$" + textLetterEpsilonLowerExplicit(newlineSeq, index + 1)
+    } getOrElse {
+      ""
+    }
+  }
+
+  protected def textLetterTauLowerExplicit(newlineSeq: Seq[TextObjectLetterTauLowercase], index: Int): String = {
+    newlineSeq.lift(index).map {
+      newline => "$\\tau$" + textLetterTauLowerExplicit(newlineSeq, index + 1)
     } getOrElse {
       ""
     }

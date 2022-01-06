@@ -12,7 +12,11 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
-  def subscript(in: String) = {
+  def subscript(in: String): TextAST = {
+    this.subscript(TextFactory.text(in))
+  }
+
+  def subscript(in: TextAST): TextAST = {
     this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
   }
 
@@ -28,11 +32,15 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectArrowUp())
   }
 
-  def deltaUppercase() = {
-    this.copy(sequence = sequence :+ TextObjectDeltaUppercase())
+  def letterDeltaUppercase() = {
+    this.copy(sequence = sequence :+ TextObjectLetterDeltaUppercase())
   }
 
-  def epsilonLowercase() = {
-    this.copy(sequence = sequence :+ TextObjectEpsilonLowercase())
+  def letterEpsilonLowercase() = {
+    this.copy(sequence = sequence :+ TextObjectLetterEpsilonLowercase())
+  }
+
+  def letterTauLowercase() = {
+    this.copy(sequence = sequence :+ TextObjectLetterTauLowercase())
   }
 }
