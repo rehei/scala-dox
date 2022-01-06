@@ -9,10 +9,11 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
-import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.DoxEquation
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -22,11 +23,11 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     }
   }
 
-  def refEquation(reference: DoxReferenceEquation) = {
+  def refEquation(reference: DoxReferencePersistentEquation) = {
     prefixReference(i18n.equation, reference)
   }
 
-  def refEquationP(reference: DoxReferenceEquation) = {
+  def refEquationP(reference: DoxReferencePersistentEquation) = {
     prefixReferenceP(i18n.equation, reference)
   }
 
@@ -146,7 +147,12 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  def eqnarray(label: DoxReferenceEquation, expression: String): this.type
+  def equation(callback: DoxBuilderEquation.type => DoxEquation) = {
+    val data = callback(DoxBuilderEquation)
+    internalEquation(data)
+    this
+  }
+  //  def eqnarray(label: DoxReferencePersistentEquation, expression: String): this.type
 
   def clearpage(): this.type
 
@@ -172,6 +178,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalSvg(imageSet: DoxSvgFigure): Unit
   protected def internalTable(table: DoxTableViewModelSequence): Unit
   protected def internalTable(table: DoxTableViewModel[_]): Unit
+  protected def internalEquation(table: DoxEquation): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }

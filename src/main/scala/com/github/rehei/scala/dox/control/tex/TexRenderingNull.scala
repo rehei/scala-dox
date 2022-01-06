@@ -2,15 +2,17 @@ package com.github.rehei.scala.dox.control.tex
 
 import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxSvgFigure
-import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.control.DoxBuilderTableSequence
 import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
 import com.github.rehei.scala.dox.control.DoxBuilderTable
+import com.github.rehei.scala.dox.control.DoxBuilderEquation
+import com.github.rehei.scala.dox.model.DoxEquation
 
-class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
+class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null, null) {
 
   override def label(reference: DoxReferenceText) = this
   override def chapter(name: String) = this
@@ -22,13 +24,13 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
 
   override def tableSequence(callback: DoxBuilderTableSequence.type => DoxTableViewModelSequence) = this
   override def table(callback: DoxBuilderTable.type => DoxTableViewModel[_]): this.type = this
-
+  override def equation(callback: DoxBuilderEquation.type => DoxEquation) = this
   override def textItalic(in: String) = this
   override def textRed(in: String) = this
 
   override def ref(reference: DoxReferenceBase) = this
 
-  override def eqnarray(label: DoxReferenceEquation, expression: String) = this
+  //  override def eqnarray(label: DoxReferencePersistentEquation, expression: String) = this
   override def clearpage() = this
 
   override def nonBreakingSpace = this

@@ -19,7 +19,7 @@ class DoxIndexedEnum(prefix: Option[String]) extends DoxIndexedRepository {
   }
 
   def uniqueEquation = {
-    MyIndexedHandle(DoxReferenceEquation(_))
+    MyIndexedHandle(DoxReferencePersistentEquation(_))
   }
 
 }

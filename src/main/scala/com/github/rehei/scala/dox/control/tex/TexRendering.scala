@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
 import com.github.rehei.scala.dox.control.DoxHandleSvg
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.control.DoxHandleTable
@@ -16,6 +16,9 @@ import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.model.DoxEquation
+import com.github.rehei.scala.dox.control.DoxHandleEquation
+import com.github.rehei.scala.dox.model.DoxEquationFile
 
 class TexRendering(
   baseAST:        TexAST,
@@ -24,7 +27,8 @@ class TexRendering(
   svgHandle:      DoxHandleSvg,
   i18n:           DoxI18N,
   bibHandle:      DoxBibKeyRendering,
-  tableHandle:    DoxHandleTable) extends DoxRenderingBase(i18n, bibHandle) {
+  tableHandle:    DoxHandleTable,
+  equationHandle: DoxHandleEquation) extends DoxRenderingBase(i18n, bibHandle) {
 
   protected val markup = new TexMarkupFactory(baseAST)
   import markup._
@@ -103,13 +107,24 @@ class TexRendering(
     this
   }
 
-  def eqnarray(label: DoxReferenceEquation, expression: String) = {
-    $ { _.eqnarray } {
-      \ plain { expression }
-      \ label { label.referenceID }
+  protected def internalEquation(equation: DoxEquation) = {
+    val texEquations = new TexRenderingEquation(baseAST, equation).createEquationString()
+    val filename = equationHandle.serialize(DoxEquationFile(texEquations, equation.label))
+    $ { _ mdframed } {
+      $ { _ figure & { ###("H") } } {
+        \ input { filename }
+        \ caption & { escape(fileLabel(equation.label)) }
+      }
     }
-    this
   }
+
+  //  def eqnarray(label: DoxReferencePersistentEquation, expression: String) = {
+  //    $ { _.eqnarray } {
+  //      \ plain { expression }
+  //      \ label { label.referenceID }
+  //    }
+  //    this
+  //  }
 
   protected def internalTable(table: DoxTableViewModelSequence) {
     if (!table.models.sequence.filterNot(_ == DoxTable.NONE).isEmpty) {
@@ -123,7 +138,7 @@ class TexRendering(
 
         \ centering;
         \ input { filename }
-        \ caption & { escape(tableLabel(table.label)) }
+        \ caption & { escape(fileLabel(table.label)) }
       }
 
       if (!floating) {
@@ -142,7 +157,7 @@ class TexRendering(
       $ { _ table & { ###("H") } } {
         \ centering;
         \ input { filename }
-        \ caption & { escape(tableLabel(table.label)) }
+        \ caption & { escape(fileLabel(table.label)) }
       }
       if (!floating) {
         \ FloatBarrier;
@@ -166,7 +181,7 @@ class TexRendering(
     $ { _ figure & { ###(POSITIONING_FIGURE) } } {
       \ centering;
       appendTransformableSVG(svg)
-      \ caption & { escape(tableLabel(svg.config.label)) }
+      \ caption & { escape(fileLabel(svg.label)) }
     }
     if (!floating) {
       \ FloatBarrier;
@@ -207,7 +222,7 @@ class TexRendering(
     \ includegraphics & { filename }
   }
 
-  protected def tableLabel(label: Option[DoxReferenceBase]) = {
+  protected def fileLabel(label: Option[DoxReferenceBase]) = {
     label.map(_.referenceID).getOrElse("dummylabel")
   }
 }

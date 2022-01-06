@@ -5,9 +5,10 @@ import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.reference.DoxReferenceEquation
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
+import com.github.rehei.scala.dox.model.DoxEquation
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
@@ -22,7 +23,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
 
   def ref(reference: DoxReferenceBase) = this
 
-  def eqnarray(label: DoxReferenceEquation, expression: String) = this
+  //  def eqnarray(label: DoxReferencePersistentEquation, expression: String) = this
   def clearpage() = this
 
   def nonBreakingSpace = this
@@ -33,6 +34,7 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   protected def internalCiteT(key: String) = Unit
   protected def internalCiteP(key: String) = Unit
   protected def internalCite(key: String) = Unit
+  protected def internalEquation(labelTable: DoxEquation) = Unit
   protected def internalTable(labelTable: DoxTableViewModel[_]) = Unit
   protected def internalTable(labelTable: DoxTableViewModelSequence) = Unit
   protected def internalSvg(image: DoxSvgFigure) = Unit
