@@ -20,7 +20,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
-
+    def numeric(size: Double) = "S[table-column-width=" + size + "cm]"
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
 
@@ -33,6 +33,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
 
   def createTableString() = {
     create()
+    println(tmpAST.build())
     tmpAST.build()
   }
 
@@ -150,10 +151,11 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
     val size = config.width.getOrElse(COLUMN_SIZE_DEFAULT)
     config.base.alignment match {
-      case DoxTableAlignment.LEFT   => ColumnType.l(size)
-      case DoxTableAlignment.RIGHT  => ColumnType.r(size)
-      case DoxTableAlignment.CENTER => ColumnType.c(size)
-      case _                        => ColumnType.l(size)
+      case DoxTableAlignment.LEFT    => ColumnType.l(size)
+      case DoxTableAlignment.RIGHT   => ColumnType.r(size)
+      case DoxTableAlignment.CENTER  => ColumnType.c(size)
+      case DoxTableAlignment.NUMERIC => ColumnType.numeric(size)
+      case _                         => ColumnType.l(size)
     }
   }
 

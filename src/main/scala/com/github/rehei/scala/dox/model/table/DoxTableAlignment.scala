@@ -6,6 +6,7 @@ object DoxTableAlignment {
   val LEFT = DoxTableAlignment("LEFT")
   val RIGHT = DoxTableAlignment("RIGHT")
   val CENTER = DoxTableAlignment("CENTER")
+  val NUMERIC = DoxTableAlignment("NUMERIC")
 
 }
 

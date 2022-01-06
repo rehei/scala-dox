@@ -17,7 +17,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
-
+    def numeric(size: Double) = "S[table-column-width=" + size + "cm]"
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
   protected val columnSizeDefault = 3.0
@@ -112,10 +112,11 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
   }
   protected def getTableAlignment() = {
     model.root.config.base.alignment match {
-      case DoxTableAlignment.LEFT   => ColumnType.l(transposedConfig.dataWidth)
-      case DoxTableAlignment.RIGHT  => ColumnType.r(transposedConfig.dataWidth)
-      case DoxTableAlignment.CENTER => ColumnType.c(transposedConfig.dataWidth)
-      case _                        => ColumnType.r(transposedConfig.dataWidth)
+      case DoxTableAlignment.LEFT    => ColumnType.l(transposedConfig.dataWidth)
+      case DoxTableAlignment.RIGHT   => ColumnType.r(transposedConfig.dataWidth)
+      case DoxTableAlignment.CENTER  => ColumnType.c(transposedConfig.dataWidth)
+      case DoxTableAlignment.NUMERIC => ColumnType.numeric(transposedConfig.dataWidth)
+      case _                         => ColumnType.r(transposedConfig.dataWidth)
     }
   }
 }
