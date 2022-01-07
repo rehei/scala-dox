@@ -1,12 +1,16 @@
 package com.github.rehei.scala.dox.model.table
 
-object DoxTablePhaseType {
+import scala.collection.mutable.ListBuffer
 
-  val NONE = DoxTablePhaseType(0)
+object DoxTablePhaseType {
+  val ALL = ListBuffer[DoxTablePhaseType]()
+  val BUILD = DoxTablePhaseType(0)
   val INIT = DoxTablePhaseType(1)
   val TUNING = DoxTablePhaseType(2)
   val SUMMARY = DoxTablePhaseType(3)
 
 }
 
-case class DoxTablePhaseType protected (val progression: Int)
+case class DoxTablePhaseType protected (val progression: Int) {
+  DoxTablePhaseType.ALL.append(this)
+}
