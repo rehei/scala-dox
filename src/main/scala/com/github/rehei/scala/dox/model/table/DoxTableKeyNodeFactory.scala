@@ -59,7 +59,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
     def apply(name: String) = new {
       def width(_width: Option[Double]) = {
-        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name)).width(_width)
+        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name).copy(alignment = DoxTableAlignment.NUMERIC)).width(_width)
       }
     }
   }
