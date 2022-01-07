@@ -41,7 +41,6 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
 
   def createTableString() = {
     create()
-    println(tmpAST.build())
     tmpAST.build()
   }
 
@@ -150,10 +149,11 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
 
   protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {
     config.base.alignment match {
-      case DoxTableAlignment.LEFT   => "l"
-      case DoxTableAlignment.RIGHT  => "r"
-      case DoxTableAlignment.CENTER => "c"
-      case _                        => "l"
+      case DoxTableAlignment.LEFT    => "l"
+      case DoxTableAlignment.RIGHT   => "r"
+      case DoxTableAlignment.CENTER  => "c"
+      case DoxTableAlignment.NUMERIC => "c"
+      case _                         => "l"
     }
   }
   protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
