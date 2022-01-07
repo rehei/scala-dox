@@ -5,6 +5,7 @@ object DoxTablePhaseType {
   val NONE = DoxTablePhaseType(0)
   val INIT = DoxTablePhaseType(1)
   val TUNING = DoxTablePhaseType(2)
+  val SUMMARY = DoxTablePhaseType(3)
 
 }
 
