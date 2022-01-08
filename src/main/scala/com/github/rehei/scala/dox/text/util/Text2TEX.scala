@@ -60,13 +60,13 @@ object Text2TEX {
     }
   }
 
-  SpecialSignParser[TextObjectNewline](" \\newline ")
+  SpecialSignParser[TextObjectNewline]("\\newline{}")
   SpecialSignParser[TextObjectArrowRight]("$\\rightarrow$")
   SpecialSignParser[TextObjectArrowUp]("$\\uparrow$")
-  SpecialSignParser[TextObjectLetterDeltaLowercase]("\\delta")
-  SpecialSignParser[TextObjectLetterDeltaUppercase]("\\Delta")
-  SpecialSignParser[TextObjectLetterEpsilonLowercase]("\\epsilon")
-  SpecialSignParser[TextObjectLetterTauLowercase]("\\tau")
+  SpecialSignParser[TextObjectLetterDeltaLowercase]("$\\delta{}$")
+  SpecialSignParser[TextObjectLetterDeltaUppercase]("$\\Delta{}$")
+  SpecialSignParser[TextObjectLetterEpsilonLowercase]("$\\epsilon{}$")
+  SpecialSignParser[TextObjectLetterTauLowercase]("$\\tau{}$")
 
   def generate(element: TextAST) = {
 
