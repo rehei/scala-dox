@@ -36,6 +36,10 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectLetterDeltaUppercase())
   }
 
+  def letterDeltaLowercase() = {
+    this.copy(sequence = sequence :+ TextObjectLetterDeltaLowercase())
+  }
+
   def letterEpsilonLowercase() = {
     this.copy(sequence = sequence :+ TextObjectLetterEpsilonLowercase())
   }
