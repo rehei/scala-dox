@@ -91,9 +91,6 @@ object Text2TEX {
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
       }
-
-      println(base.totalText)
-      println(base.totalCount)
       
       if (base.totalCount == before) {
         throw new IllegalArgumentException("TextObject type not supported: " + next().head.getClass.getSimpleName)
