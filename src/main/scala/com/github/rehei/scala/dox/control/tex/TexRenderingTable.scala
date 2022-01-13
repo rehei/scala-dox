@@ -20,7 +20,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
-    def numeric(size: Double) = "S[table-column-width=" + size + "cm]"
+    def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
 
@@ -142,9 +142,16 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def appendTableBody() {
-    for (row <- model.data) yield {
-      \ plain { ROW_SPACING + row.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
+    model.data.headOption.map {
+      head =>
+        {
+          \ plain { head.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
+          for (row <- model.data.drop(1)) {
+            \ plain { ROW_SPACING + row.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
+          }
+        }
     }
+
   }
 
   protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {

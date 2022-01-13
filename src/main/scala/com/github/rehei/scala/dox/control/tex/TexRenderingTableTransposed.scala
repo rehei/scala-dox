@@ -17,7 +17,7 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
-    def numeric(size: Double) = "S[table-column-width=" + size + "cm]"
+    def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
   protected val columnSizeDefault = 3.0
@@ -91,20 +91,20 @@ class TexRenderingTableTransposed(baseAST: TexAST, model: DoxTable[_], isInnerTa
     rows.headOption.map {
       head =>
         {
-          writeContent(head)
+          writeContent(head, "")
           for (row <- rows.drop(1)) {
             if (transposedConfig.hasSpacing) {
               \ midrule
             }
-            writeContent(row)
+            writeContent(row, ROW_SPACING)
           }
         }
     }
 
   }
 
-  protected def writeContent(row: TableContent) = {
-    \ plain { ROW_SPACING + row.contentHeadOffset.generate() }
+  protected def writeContent(row: TableContent, rowSpacing: String) = {
+    \ plain { rowSpacing + row.contentHeadOffset.generate() }
     \ plain { row.contentHead + " & " }
     \ plain { row.contentData.map(data => Text2TEX.generate(data)).mkString(" & ") + "\\\\" + "\n" }
   }

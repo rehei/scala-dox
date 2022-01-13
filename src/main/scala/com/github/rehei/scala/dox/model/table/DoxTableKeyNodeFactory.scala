@@ -54,12 +54,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Index {
     def apply() = new {
       def width(_width: Option[Double]) = {
-        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.copy(alignment = DoxTableAlignment.NUMERIC)).width(_width)
+        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.copy(alignment = DoxTableAlignment.CENTER)).width(_width)
       }
     }
     def apply(name: String) = new {
       def width(_width: Option[Double]) = {
-        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name).copy(alignment = DoxTableAlignment.NUMERIC)).width(_width)
+        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name).copy(alignment = DoxTableAlignment.CENTER)).width(_width)
       }
     }
   }
