@@ -67,6 +67,7 @@ object Text2TEX {
   SpecialSignParser[TextObjectLetterDeltaUppercase]("$\\Delta{}$")
   SpecialSignParser[TextObjectLetterEpsilonLowercase]("$\\epsilon{}$")
   SpecialSignParser[TextObjectLetterTauLowercase]("$\\tau{}$")
+  //SpecialSignParser[TextObjectDoubleStruckW]("\\slantbox{$\\mathbb{W}$}")
 
   def generate(element: TextAST) = {
 
