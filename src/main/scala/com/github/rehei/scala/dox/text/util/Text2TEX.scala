@@ -14,6 +14,13 @@ import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterDeltaLowercase
 import scala.collection.mutable.ArrayBuffer
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckW
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckT
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckV
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckI
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckS
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckG
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruckF
 
 object Text2TEX {
 
@@ -67,12 +74,22 @@ object Text2TEX {
   SpecialSignParser[TextObjectLetterDeltaUppercase]("$\\Delta{}$")
   SpecialSignParser[TextObjectLetterEpsilonLowercase]("$\\epsilon{}$")
   SpecialSignParser[TextObjectLetterTauLowercase]("$\\tau{}$")
-  //SpecialSignParser[TextObjectDoubleStruckW]("\\slantbox{$\\mathbb{W}$}")
+  //  SpecialSignParser[TextObjectDoubleStruckW](slantedMath('W'))
+  //  SpecialSignParser[TextObjectDoubleStruckV](slantedMath('V'))
+  //  SpecialSignParser[TextObjectDoubleStruckT](slantedMath('T'))
+  //  SpecialSignParser[TextObjectDoubleStruckI](slantedMath('I'))
+  //  SpecialSignParser[TextObjectDoubleStruckF](slantedMath('F'))
+  //  SpecialSignParser[TextObjectDoubleStruckG](slantedMath('G'))
+  //  SpecialSignParser[TextObjectDoubleStruckS](slantedMath('S'))
 
   def generate(element: TextAST) = {
 
     val base = ParseResult("", 0)
     asText(base, element.sequence)
+  }
+
+  protected def slantedMath(character: Char, in: String) = {
+    "\\$slantbox{$\\mathbb{" + character + "}_{" + in + "}$}$"
   }
 
   protected def asText(base: ParseResult, sequence: Seq[TextObject]) = {
@@ -88,11 +105,10 @@ object Text2TEX {
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
 
-      
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
       }
-      
+
       if (base.totalCount == before) {
         throw new IllegalArgumentException("TextObject type not supported: " + next().head.getClass.getSimpleName)
       }
