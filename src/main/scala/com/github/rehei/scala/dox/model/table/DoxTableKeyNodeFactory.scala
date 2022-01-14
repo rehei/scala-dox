@@ -49,6 +49,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def apply() = {
       node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(minWidth))
     }
+    def apply(width: Double) = {
+      node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(width))
+    }
   }
 
   object Index {

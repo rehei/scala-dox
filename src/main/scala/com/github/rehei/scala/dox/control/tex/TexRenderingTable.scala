@@ -124,8 +124,11 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
         None
       }
     }
-
-    MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { styleText(value.key.config) }, ruleOption)
+    if (value.key.config.base.alignment == DoxTableAlignment.ROTATED) {
+      MappedTableHeadKey(\\ rotatebox & { 45 } { styleText(value.key.config) }, ruleOption)
+    } else {
+      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { styleText(value.key.config) }, ruleOption)
+    }
   }
 
   protected def styleText(config: DoxTableKeyConfigExtended) = {
@@ -160,6 +163,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
       case DoxTableAlignment.RIGHT   => "r"
       case DoxTableAlignment.CENTER  => "c"
       case DoxTableAlignment.NUMERIC => "c"
+      case DoxTableAlignment.ROTATED => "l"
       case _                         => "l"
     }
   }
@@ -170,6 +174,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
       case DoxTableAlignment.RIGHT   => ColumnType.r(size)
       case DoxTableAlignment.CENTER  => ColumnType.c(size)
       case DoxTableAlignment.NUMERIC => ColumnType.numeric(size)
+      case DoxTableAlignment.ROTATED => ColumnType.l(size)
       case _                         => ColumnType.l(size)
     }
   }

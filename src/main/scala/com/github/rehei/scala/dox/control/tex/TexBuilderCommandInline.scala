@@ -10,6 +10,7 @@ class TexBuilderCommandInline(ast: TexAST) {
 
   object cmidrule extends TexMarkupObject
   object multicolumn extends TexMarkupObject
+  object rotatebox extends TexMarkupObject
   object textwidth extends TexMarkupObject
   object hsize extends TexMarkupObject
   object hspace extends TexMarkupObject
