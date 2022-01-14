@@ -1,3 +1,3 @@
 package com.github.rehei.scala.dox.text
 
-case class TextObjectDoubleStruckI() extends TextObject
+case class TextObjectDoubleStruckI(subscript: Option[String]) extends TextObjectSubscriptOption(subscript)
