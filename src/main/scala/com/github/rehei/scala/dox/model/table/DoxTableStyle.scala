@@ -1,9 +1,9 @@
 package com.github.rehei.scala.dox.model.table
 
-object DoxTableStyle {
+object DoxTableStyle extends DoxTableStyle(false, false, false) {
 
-  def apply() = new DoxTableStyle(false, false, false)
-  val NONE = DoxTableStyle.apply()
+  val NONE = this
+
 }
 
 case class DoxTableStyle protected (protected val _isBold: Boolean, protected val _isItalic: Boolean, protected val _isUnderlined: Boolean) {

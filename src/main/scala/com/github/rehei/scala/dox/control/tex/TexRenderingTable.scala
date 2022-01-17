@@ -28,7 +28,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   protected val hasSpacing = model.root.config.columnSpacing
   protected val ROW_SPACING = {
     if (hasSpacing) {
-      "\\rule{0pt}{4ex}"
+      "\\rule{0pt}{3ex}"
     } else {
       ""
     }

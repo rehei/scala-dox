@@ -92,7 +92,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
             .setCategoryWidth(transposedConfig.columnWidthCategory)
             .setDataWidthTransposed(transposedConfig.columnWidthData)
             .setDataAlignmentTransposed(transposedConfig.alignmentData)
-            .setColumnSpacing(transposedConfig.hasMidrule),
+            .setColumnSpacing(transposedConfig.hasRowSpacing),
           children) with Writeable
       }
     }
