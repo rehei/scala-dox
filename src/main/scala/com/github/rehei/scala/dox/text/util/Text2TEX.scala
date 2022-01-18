@@ -49,7 +49,7 @@ object Text2TEX {
     val all = ArrayBuffer[SpecialSignSubscriptParser[_]]()
   }
 
-  case class SpecialSignSubscriptParser[T <: TextObjectSubscriptOption](tex: String)(implicit val classTag: ClassTag[T]) {
+  case class SpecialSignSubscriptParser[T <: TextObjectSubscriptOption](letter: Char)(implicit val classTag: ClassTag[T]) {
     SpecialSignSubscriptParser.all.append(this)
 
     def parse(sequence: Seq[TextObject]) = {
@@ -68,9 +68,14 @@ object Text2TEX {
 
     protected def parseString(subscript: Option[String]) = {
       subscript
-        .map(m => "$" + tex + "_{" + m + "}$")
-        .getOrElse(s"${tex}")
+        .map(m => "$" + mathLetter() + "_{" + m + "}$")
+        .getOrElse("$" + mathLetter() + "$")
     }
+
+    protected def mathLetter() = {
+      "\\mathbb{" + letter + "}"
+    }
+
   }
   object SpecialSignParser {
     val all = ArrayBuffer[SpecialSignParser[_]]()
@@ -102,22 +107,18 @@ object Text2TEX {
   SpecialSignParser[TextObjectLetterDeltaUppercase]("$\\Delta{}$")
   SpecialSignParser[TextObjectLetterEpsilonLowercase]("$\\epsilon{}$")
   SpecialSignParser[TextObjectLetterTauLowercase]("$\\tau{}$")
-  SpecialSignSubscriptParser[TextObjectDoubleStruckW](slantedMath('W'))
-  SpecialSignSubscriptParser[TextObjectDoubleStruckV](slantedMath('V'))
-  SpecialSignSubscriptParser[TextObjectDoubleStruckT](slantedMath('T'))
-  SpecialSignSubscriptParser[TextObjectDoubleStruckI](slantedMath('I'))
-  SpecialSignSubscriptParser[TextObjectDoubleStruckF](slantedMath('F'))
-  SpecialSignSubscriptParser[TextObjectDoubleStruckG](slantedMath('G'))
-  SpecialSignSubscriptParser[TextObjectDoubleStruckS](slantedMath('S'))
+  SpecialSignSubscriptParser[TextObjectDoubleStruckW]('W')
+  SpecialSignSubscriptParser[TextObjectDoubleStruckV]('V')
+  SpecialSignSubscriptParser[TextObjectDoubleStruckT]('T')
+  SpecialSignSubscriptParser[TextObjectDoubleStruckI]('I')
+  SpecialSignSubscriptParser[TextObjectDoubleStruckF]('F')
+  SpecialSignSubscriptParser[TextObjectDoubleStruckG]('G')
+  SpecialSignSubscriptParser[TextObjectDoubleStruckS]('S')
 
   def generate(element: TextAST) = {
 
     val base = ParseResult("", 0)
     asText(base, element.sequence)
-  }
-
-  protected def slantedMath(character: Char) = {
-    "\\slantbox{$\\mathbb{" + character + "}$}"
   }
 
   protected def asText(base: ParseResult, sequence: Seq[TextObject]) = {
