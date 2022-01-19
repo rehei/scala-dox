@@ -6,13 +6,11 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, titleOption: Option[TextAST], transposed: Boolean) {
+class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, titleOption: Option[TextAST]) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
 
   protected val verticalSpace = "\n\\vspace*{0.5cm}" + "\n"
   protected val COLUMN_SIZE_DEFAULT = 2.0
-  protected val COLUMN_SIZE_TRANSPOSED_DEFAULT = 3.0
-  protected val COLUMN_SIZE_TRANSPOSED_CATEGORY_DEFAULT = 4.0
 
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
@@ -39,7 +37,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   def createTables() = {
     modelSequence
       .sequence
-      .filterNot(model => model == DoxTable.NONE)
+      .filterNot(_ == DoxTable.NONE)
       .map(model => {
         \ plain { "{" + getTable(model) + "}" }
         endRowEntry()
@@ -73,10 +71,9 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def getTable(model: DoxTable[_]) = {
-    if (transposed) {
-      new TexRenderingTableTransposed(baseAST, model, true).createTableString()
-    } else {
-      new TexRenderingTable(baseAST, model, true).createTableString()
+    model match {
+      //      case horizontal: DoxTableWrapper.TableLeftToRight[_] => new TexRenderingTableTransposed(baseAST, horizontal, true).createTableString()
+      case vertical: DoxTable[_] => new TexRenderingTable(baseAST, vertical, true).createTableString()
     }
   }
 
@@ -85,8 +82,8 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def columnConfigTotalSize() = {
-    val width = modelSequence.totalWidth(COLUMN_SIZE_DEFAULT, COLUMN_SIZE_TRANSPOSED_CATEGORY_DEFAULT, COLUMN_SIZE_TRANSPOSED_DEFAULT, transposed)
-    val tabColSeps = modelSequence.tabcolSeps(transposed)
+    val width = modelSequence.totalWidth(COLUMN_SIZE_DEFAULT)
+    val tabColSeps = modelSequence.tabcolSeps()
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + width + "cm"
   }

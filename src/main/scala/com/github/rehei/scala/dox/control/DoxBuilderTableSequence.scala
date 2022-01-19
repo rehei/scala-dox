@@ -12,10 +12,8 @@ object DoxBuilderTableSequence {
 
   def label(_labelOption: Option[DoxReferencePersistentTable]) = new {
     def data(_tables: Seq[DoxTable[_]]) = new {
-      def title(_title: Option[String]) = new {
-        def transposed(_transposed: Boolean) = {
-          DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables), titleOption(_title), _transposed)
-        }
+      def title(_title: Option[String]) = {
+        DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables), titleOption(_title))
       }
     }
   }

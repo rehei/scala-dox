@@ -20,6 +20,10 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
   }
 
+  def italic(in: String) = {
+    this.copy(sequence = sequence :+ TextObjectItalic(in))
+  }
+
   def newline() = {
     this.copy(sequence = sequence :+ TextObjectNewline())
   }
@@ -32,32 +36,16 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectArrowUp())
   }
 
-  def letterVUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckV(in))
+  def space() = {
+    this.copy(sequence = sequence :+ TextObjectSpace())
   }
 
-  def letterSUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckS(in))
+  def rule() = {
+    this.copy(sequence = sequence :+ TextObjectRule())
   }
 
-  def letterTUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckT(in))
-  }
-
-  def letterFUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckF(in))
-  }
-
-  def letterIUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckI(in))
-  }
-
-  def letterWUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckW(in))
-  }
-
-  def letterGUppercase(in: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruckG(in))
+  def doubleStruck(in: Char, subscript: Option[String]) = {
+    this.copy(sequence = sequence :+ TextObjectDoubleStruck(in, subscript))
   }
 
   def letterDeltaUppercase() = {

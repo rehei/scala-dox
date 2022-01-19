@@ -8,20 +8,14 @@ import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectArrowRight
 import com.github.rehei.scala.dox.text.TextObjectArrowUp
 import com.github.rehei.scala.dox.text.TextObjectDefault
+import com.github.rehei.scala.dox.text.TextObjectDoubleStruck
+import com.github.rehei.scala.dox.text.TextObjectItalic
 import com.github.rehei.scala.dox.text.TextObjectLetterDeltaLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterDeltaUppercase
 import com.github.rehei.scala.dox.text.TextObjectLetterEpsilonLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
-import com.github.rehei.scala.dox.text.TextObjectSubscriptOption
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckT
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckG
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckW
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckS
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckF
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckV
-import com.github.rehei.scala.dox.text.TextObjectDoubleStruckI
 
 object Text2TEX {
 
@@ -45,38 +39,6 @@ object Text2TEX {
 
   }
 
-  object SpecialSignSubscriptParser {
-    val all = ArrayBuffer[SpecialSignSubscriptParser[_]]()
-  }
-
-  case class SpecialSignSubscriptParser[T <: TextObjectSubscriptOption](letter: Char)(implicit val classTag: ClassTag[T]) {
-    SpecialSignSubscriptParser.all.append(this)
-
-    def parse(sequence: Seq[TextObject]) = {
-      val collection = collect[T](sequence)
-      val result = parseExplicit(collection, 0)
-      ParseResult(result, collection.size)
-    }
-
-    protected def parseExplicit(data: Seq[T], index: Int): String = {
-      data.lift(index).map {
-        m => parseString(m.in) + parseExplicit(data, index + 1)
-      } getOrElse {
-        ""
-      }
-    }
-
-    protected def parseString(subscript: Option[String]) = {
-      subscript
-        .map(m => "$" + mathLetter() + "_{" + m + "}$")
-        .getOrElse("$" + mathLetter() + "$")
-    }
-
-    protected def mathLetter() = {
-      "\\mathbb{" + letter + "}"
-    }
-
-  }
   object SpecialSignParser {
     val all = ArrayBuffer[SpecialSignParser[_]]()
   }
@@ -107,13 +69,6 @@ object Text2TEX {
   SpecialSignParser[TextObjectLetterDeltaUppercase]("$\\Delta{}$")
   SpecialSignParser[TextObjectLetterEpsilonLowercase]("$\\epsilon{}$")
   SpecialSignParser[TextObjectLetterTauLowercase]("$\\tau{}$")
-  SpecialSignSubscriptParser[TextObjectDoubleStruckW]('W')
-  SpecialSignSubscriptParser[TextObjectDoubleStruckV]('V')
-  SpecialSignSubscriptParser[TextObjectDoubleStruckT]('T')
-  SpecialSignSubscriptParser[TextObjectDoubleStruckI]('I')
-  SpecialSignSubscriptParser[TextObjectDoubleStruckF]('F')
-  SpecialSignSubscriptParser[TextObjectDoubleStruckG]('G')
-  SpecialSignSubscriptParser[TextObjectDoubleStruckS]('S')
 
   def generate(element: TextAST) = {
 
@@ -133,12 +88,10 @@ object Text2TEX {
 
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
+      base.append(textItalic(next()))
+      base.append(textDoubleStruck(next()))
 
       for (parser <- SpecialSignParser.all) {
-        base.append(parser.parse(next()))
-      }
-
-      for (parser <- SpecialSignSubscriptParser.all) {
         base.append(parser.parse(next()))
       }
 
@@ -155,6 +108,24 @@ object Text2TEX {
   protected def textDefault(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectDefault](sequence)
     val resultString = collection.map(text => escape(text.in)).mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textItalic(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectItalic](sequence)
+    val resultString = collection.map(text => "\\textit{" + text.in + "}").mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textDoubleStruck(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectDoubleStruck](sequence)
+    val resultString = collection.map(text => {
+      text.subscript
+        .map(sub => "$\\mathbb{" + text.in + "}_{" + sub + "}$")
+        .getOrElse("$\\mathbb{" + text.in + "}$")
+    }).mkString
 
     ParseResult(resultString, collection.size)
   }

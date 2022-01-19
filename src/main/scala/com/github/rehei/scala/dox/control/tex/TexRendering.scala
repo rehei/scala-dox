@@ -120,7 +120,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModelSequence) {
     if (!table.models.sequence.filterNot(_ == DoxTable.NONE).isEmpty) {
-      val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption, table.transposed).createTableString()
+      val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption).createTableString()
       val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
       if (!floating) {
         \ FloatBarrier;
@@ -141,7 +141,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModel[_]) {
     if (table.model != DoxTable.NONE) {
-      val texTable = getTable(table.model, table.label, table.transposed, false)
+      val texTable = new TexRenderingTable(baseAST, table.model, false).createTableString()
       val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
       if (!floating) {
         \ FloatBarrier;
@@ -155,15 +155,6 @@ class TexRendering(
         \ FloatBarrier;
       }
     }
-  }
-
-  protected def getTable(model: DoxTable[_], label: Option[DoxReferencePersistentTable], transposed: Boolean, isInnerTable: Boolean) = {
-    if (transposed) {
-      new TexRenderingTableTransposed(baseAST, model, isInnerTable).createTableString()
-    } else {
-      new TexRenderingTable(baseAST, model, isInnerTable).createTableString()
-    }
-
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {

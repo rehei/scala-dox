@@ -7,11 +7,10 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
-  
+
   protected val WIDTH_MIN = 0.001
 
   trait Writeable extends DoxTableKeyNode {
-
     def append(additionalChildren: DoxTableKeyNode*) = {
       new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren) with Writeable
     }
@@ -30,15 +29,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Root {
-    def apply() = new {
-      def extendedConfig(_extendedConfig: DoxTableConfigExtended.type => DoxTableConfigExtended) = {
-        nodeRoot().transposedStyle(_extendedConfig)
-      }
+    def apply() = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty) with Writeable
     }
   }
 
   object Whitespace {
-
     def apply() = {
       node(DoxTableKeyNodeType.WHITESPACE).config(DoxTableKeyConfig.NONE).width(Some(WIDTH_MIN))
     }
@@ -82,22 +78,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
-  protected def nodeRoot() = {
-    new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty) with Writeable {
-      def transposedStyle(_styleOption: DoxTableConfigExtended.type => DoxTableConfigExtended) = {
-        val transposedConfig = _styleOption(DoxTableConfigExtended)
-        new DoxTableKeyNode(
-          nodeType,
-          config
-            .setCategoryWidth(transposedConfig.columnWidthCategory)
-            .setDataWidthTransposed(transposedConfig.columnWidthData)
-            .setDataAlignmentTransposed(transposedConfig.alignmentData)
-            .setColumnSpacing(transposedConfig.hasRowSpacing),
-          children) with Writeable
-      }
-    }
-  }
-
   protected def nodeWritable(_nodeType: DoxTableKeyNodeType) = {
     new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) with Writeable {
       def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) with Writeable {
@@ -119,6 +99,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   protected def configExt(base: DoxTableKeyConfig) = {
-    DoxTableKeyConfigExtended(base, false, None, None)
+    DoxTableKeyConfigExtended(base, None)
   }
+
 }

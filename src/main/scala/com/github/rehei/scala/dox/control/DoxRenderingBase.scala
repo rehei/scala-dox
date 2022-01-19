@@ -152,7 +152,6 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     internalEquation(data)
     this
   }
-  //  def eqnarray(label: DoxReferencePersistentEquation, expression: String): this.type
 
   def clearpage(): this.type
 

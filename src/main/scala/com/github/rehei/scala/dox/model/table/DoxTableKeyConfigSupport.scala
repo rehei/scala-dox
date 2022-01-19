@@ -7,10 +7,8 @@ class DoxTableKeyConfigSupport() {
 
   protected object DataTableKeyConfigBuilder {
     case class BuildingObject(text: TextAST) {
-      def alignment(selectAlignment: DoxTableAlignment.type => DoxTableAlignment) = new {
-        def style(selectStyle: DoxTableStyle.type => DoxTableStyle) = {
-          DoxTableKeyConfig(text, selectAlignment(DoxTableAlignment), selectStyle(DoxTableStyle))
-        }
+      def alignment(selectAlignment: DoxTableAlignment.type => DoxTableAlignment) =  {
+        DoxTableKeyConfig(text, selectAlignment(DoxTableAlignment))
       }
     }
 

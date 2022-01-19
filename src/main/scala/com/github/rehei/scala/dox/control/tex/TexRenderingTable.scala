@@ -25,14 +25,6 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
-  protected val hasSpacing = model.root.config.columnSpacing
-  protected val ROW_SPACING = {
-    if (hasSpacing) {
-      "\\rule{0pt}{3ex}"
-    } else {
-      ""
-    }
-  }
   protected val leavesAmount = model.root.leavesAmount()
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
@@ -78,7 +70,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   protected def titleAST() = {
     model.headTitle.map(
       title => {
-        styleText(title)
+        Text2TEX.generate(title.base.text)
       }).getOrElse("")
   }
 
@@ -125,14 +117,10 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
       }
     }
     if (value.key.config.base.alignment == DoxTableAlignment.ROTATED) {
-      MappedTableHeadKey(\\ rotatebox & { 45 } { styleText(value.key.config) }, ruleOption)
+      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX.generate(value.key.config.base.text) }, ruleOption)
     } else {
-      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { styleText(value.key.config) }, ruleOption)
+      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { Text2TEX.generate(value.key.config.base.text) }, ruleOption)
     }
-  }
-
-  protected def styleText(config: DoxTableKeyConfigExtended) = {
-    config.base.style.applyStyle(Text2TEX.generate(config.base.text))
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
@@ -145,16 +133,21 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def appendTableBody() {
-    model.data.headOption.map {
-      head =>
-        {
-          \ plain { head.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
-          for (row <- model.data.drop(1)) {
-            \ plain { ROW_SPACING + row.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
-          }
-        }
+    for (row <- model.data) {
+      row.render(renderValue, renderSpace, renderRule)
     }
+  }
 
+  protected def renderValue(values: Seq[TextAST]) = {
+    \ plain { values.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
+  }
+
+  protected def renderSpace() = {
+    \ plain { "\\rule{0pt}{3ex}" }
+  }
+
+  protected def renderRule() = {
+    \ midrule
   }
 
   protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {

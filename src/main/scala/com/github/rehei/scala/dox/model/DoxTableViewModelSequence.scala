@@ -8,5 +8,4 @@ import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
 case class DoxTableViewModelSequence(
   label:       Option[DoxReferencePersistentTable],
   models:      DoxTableSequence,
-  titleOption: Option[TextAST],
-  transposed:  Boolean)
+  titleOption: Option[TextAST])
