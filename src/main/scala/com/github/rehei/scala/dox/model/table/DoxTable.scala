@@ -10,11 +10,11 @@ import com.github.rehei.scala.dox.text.TextFactory
 import org.hamcrest.core.IsEqual
 
 object DoxTable {
-  val NONE = new DoxTable(DoxTableKeyNode.NONE, None)
+  val NONE = new DoxTable(DoxTableKeyNode.NONE)
 
 }
 
-case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode, headTitle: Option[DoxTableKeyConfigExtended])(implicit clazzTag: ClassTag[T]) {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
 
   object DoxOptionBuilder {
 

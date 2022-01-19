@@ -37,51 +37,28 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def create() {
-
     $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
       if (!isInnerTable) {
         \ toprule;
       }
-      appendTitle()
       appendTableHead()
-      midrule()
+      \ midrule;
       appendTableBody()
       if (isInnerTable) {
-        midrule()
+        cmidrule()
       } else {
         \ bottomrule
       }
-
     }
   }
 
-  protected def midrule() = {
+  protected def cmidrule() = {
     \ plain { (\\ cmidrule { s"1-${leavesAmount}" }).generate() + "\n" }
-  }
-
-  protected def appendTitle() = {
-    if (showTitle) {
-      \ plain { (\\ multicolumn & { leavesAmount } { model.headTitle.map(config => getHeadAlignment(config)).getOrElse("c") } { titleAST() }).generate() }
-      \ plain { "\\\\" + "\n" }
-      \ midrule
-    }
-  }
-
-  protected def titleAST() = {
-    model.headTitle.map(
-      title => {
-        Text2TEX.generate(title.base.text)
-      }).getOrElse("")
-  }
-
-  protected def showTitle() = {
-    model.headTitle.isDefined && !isInnerTable
   }
 
   protected def columnConfigTotalSize() = {
     val columnSizes = model.root.leavesWidths(COLUMN_SIZE_DEFAULT)
     val tabColSeps = leavesAmount * 2
-
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
   }
 
@@ -147,7 +124,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def renderRule() = {
-    \ midrule
+    cmidrule()
   }
 
   protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {
