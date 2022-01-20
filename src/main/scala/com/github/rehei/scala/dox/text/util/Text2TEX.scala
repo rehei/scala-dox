@@ -14,9 +14,9 @@ import com.github.rehei.scala.dox.text.TextObjectLetterDeltaLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterDeltaUppercase
 import com.github.rehei.scala.dox.text.TextObjectLetterEpsilonLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
+import com.github.rehei.scala.dox.text.TextObjectMathMode
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
-import com.github.rehei.scala.dox.text.TextObjectMathMode
 import com.github.rehei.scala.dox.text.TextObjectTab
 
 object Text2TEX {
@@ -24,8 +24,9 @@ object Text2TEX {
   val INSTANCE = Text2TEX(false)
 
   protected trait MathSensitiveParsing {
-    def doublestruck(text: TextObjectDoubleStruck): Any
-    def subscript: Any
+    def mathEnvironment(text: String): String
+    def subscript(text: String): String
+    def newline: String
   }
 }
 
@@ -33,27 +34,26 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
   import com.github.rehei.scala.dox.control.tex.TexEscape._
 
-  case class TexMathEnabled() extends Text2TEX.MathSensitiveParsing {
+  case class InMathMode() extends Text2TEX.MathSensitiveParsing {
 
-    def doublestruck(text: TextObjectDoubleStruck) = "\\mathbb{" + text.in + "}"
-    def subscript = "_"
+    def mathEnvironment(text: String) = { text }
+    def subscript(text: String) = "_{" + text + "}"
+    def newline = "\\\\"
 
   }
 
-  case class TexMathDisable() extends Text2TEX.MathSensitiveParsing {
-    def doublestruck(text: TextObjectDoubleStruck) = "$\\mathbb{" + text.in + "}$"
-    def subscript = "\\textsubscript"
+  case class InTextMode() extends Text2TEX.MathSensitiveParsing {
+    def mathEnvironment(text: String) = "$" + text + "$"
+    def subscript(text: String) = "\\textsubscript{" + text + "}"
+    def newline = "\\newline{}"
   }
 
-  val mathSensitiveParsing = {
+  protected val mode = {
     if (isMathMode) {
-      TexMathEnabled()
+      InMathMode()
     } else
-      TexMathDisable()
+      InTextMode()
   }
-
-  def subscript = mathSensitiveParsing.subscript
-  //    def doublestruck = mathSensitiveParsing.doublestruck
 
   case class ParseResult(protected val text: String, protected val size: Int) {
 
@@ -96,13 +96,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
     }
   }
 
-  SpecialSignParser[TextObjectNewline]("\\newline{}")
-  SpecialSignParser[TextObjectArrowRight]("$\\rightarrow$")
-  SpecialSignParser[TextObjectArrowUp]("$\\uparrow$")
-  SpecialSignParser[TextObjectLetterDeltaLowercase]("$\\delta{}$")
-  SpecialSignParser[TextObjectLetterDeltaUppercase]("$\\Delta{}$")
-  SpecialSignParser[TextObjectLetterEpsilonLowercase]("$\\epsilon{}$")
-  SpecialSignParser[TextObjectLetterTauLowercase]("$\\tau{}$")
+  SpecialSignParser[TextObjectNewline](mode.newline)
+  SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
+  SpecialSignParser[TextObjectArrowUp](mode.mathEnvironment("\\uparrow"))
+  SpecialSignParser[TextObjectLetterDeltaLowercase](mode.mathEnvironment("\\delta{}"))
+  SpecialSignParser[TextObjectLetterDeltaUppercase](mode.mathEnvironment("\\Delta{}"))
+  SpecialSignParser[TextObjectLetterEpsilonLowercase](mode.mathEnvironment("\\epsilon{}"))
+  SpecialSignParser[TextObjectLetterTauLowercase](mode.mathEnvironment("\\tau{}"))
 
   def generate(element: TextAST) = {
 
@@ -120,6 +120,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
       val before = base.totalCount
 
+      base.append(textMathMode(next()))
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
@@ -140,15 +141,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
   }
 
-  //    protected def textMathMode(sequence: Seq[TextObject]) = {
-  //      val collection = collect[TextObjectMathMode](sequence)
-  //      val resultString = collection.map(text => "$").mkString
-  //          textMathMode.lift(index).map {
-  //
-  //      ParseResult(resultString, collection.size)
-  //    }
+  protected def textMathMode(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectMathMode](sequence)
+    val resultString = collection.map(text => parseMath(text)).mkString
+    ParseResult(resultString, collection.size)
+  }
 
-  def parseMath(mathObject: TextObjectMathMode) = {
+  def parseMath(mathObject: TextObjectMathMode): String = {
     "$" + Text2TEX(true).generate(mathObject.textAST) + "$"
   }
 
@@ -175,37 +174,20 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
   protected def textDoubleStruck(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectDoubleStruck](sequence)
-    val resultString = collection.map(text => {
-      text.subscript
-        .map(sub => "$\\mathbb{" + text.in + "}$")
-        .getOrElse("$\\mathbb{" + text.in + "}$")
-    }).mkString
+    val resultString = collection.map(text => mode.mathEnvironment("\\mathbb{" + text.in + "}")).mkString
 
     ParseResult(resultString, collection.size)
   }
 
-  protected def textSubscript(sequence: Seq[TextObject]) = {
+  protected def textSubscript(sequence: Seq[TextObject]): ParseResult = {
     val collection = collect[TextObjectSubscript](sequence)
-    val result = textSubScriptExplicit(collection, 0)
-
-    ParseResult(result, collection.size)
-  }
-
-  protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
-    subscriptSeq.lift(index).map {
-      text =>
-        {
-          if (isMathMode) {
-            "_{" + Text2TEX(isMathMode).generate(text.textAST) + "}" + textSubScriptExplicit(subscriptSeq, index + 1)
-          } else {
-            "\\textsubscript{" + Text2TEX(isMathMode).generate(text.textAST) + "}" + textSubScriptExplicit(subscriptSeq, index + 1)
-
-          }
-        }
-    } getOrElse {
-      ""
+    if (collection.isEmpty) {
+      ParseResult("", 0)
+    } else {
+      val mergedSubscriptArgs = collection.map(text => Text2TEX(isMathMode).generate(text.textAST)).mkString
+      val resultString = mode.subscript(mergedSubscriptArgs)
+      ParseResult(resultString, collection.size)
     }
-
   }
 
   protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {

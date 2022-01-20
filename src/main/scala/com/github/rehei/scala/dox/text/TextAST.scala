@@ -12,7 +12,7 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
-  def mathMode(in: TextAST) = {
+  def equation(in: TextAST) = {
     this.copy(sequence = sequence :+ TextObjectMathMode(in))
   }
 
@@ -21,7 +21,7 @@ case class TextAST(val sequence: Seq[TextObject]) {
   }
 
   def subscript(in: TextAST): TextAST = {
-    this.copy(sequence = sequence :+ TextObjectSubscript(sequence.reverse.takeWhile(_.isInstanceOf[TextObjectSubscript]).size, in))
+    this.copy(sequence = sequence :+ TextObjectSubscript(in))
   }
 
   def italic(in: String) = {
@@ -52,8 +52,8 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectRule())
   }
 
-  def doubleStruck(in: Char, subscript: Option[String]) = {
-    this.copy(sequence = sequence :+ TextObjectDoubleStruck(in, subscript))
+  def doubleStruck(in: Char) = {
+    this.copy(sequence = sequence :+ TextObjectDoubleStruck(in))
   }
 
   def letterDeltaUppercase() = {
