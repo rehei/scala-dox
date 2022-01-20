@@ -50,7 +50,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
         \ plain { "{" }
         ($ { _ tabular$ & { (columnConfigTotalSize()) } { ColumnType.c(columnConfigTotalSize) } } {
           \ toprule;
-          \ plain { Text2TEX.generate(text) + "\\\\" }
+          \ plain { Text2TEX(false).generate(text) + "\\\\" }
           \ midrule;
         })
         \ plain { "}" }

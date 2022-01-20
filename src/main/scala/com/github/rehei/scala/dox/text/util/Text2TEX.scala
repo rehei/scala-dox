@@ -16,10 +16,44 @@ import com.github.rehei.scala.dox.text.TextObjectLetterEpsilonLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
+import com.github.rehei.scala.dox.text.TextObjectMathMode
+import com.github.rehei.scala.dox.text.TextObjectTab
 
 object Text2TEX {
 
+  val INSTANCE = Text2TEX(false)
+
+  protected trait MathSensitiveParsing {
+    def doublestruck(text: TextObjectDoubleStruck): Any
+    def subscript: Any
+  }
+}
+
+case class Text2TEX protected (isMathMode: Boolean) {
+
   import com.github.rehei.scala.dox.control.tex.TexEscape._
+
+  case class TexMathEnabled() extends Text2TEX.MathSensitiveParsing {
+
+    def doublestruck(text: TextObjectDoubleStruck) = "\\mathbb{" + text.in + "}"
+    def subscript = "_"
+
+  }
+
+  case class TexMathDisable() extends Text2TEX.MathSensitiveParsing {
+    def doublestruck(text: TextObjectDoubleStruck) = "$\\mathbb{" + text.in + "}$"
+    def subscript = "\\textsubscript"
+  }
+
+  val mathSensitiveParsing = {
+    if (isMathMode) {
+      TexMathEnabled()
+    } else
+      TexMathDisable()
+  }
+
+  def subscript = mathSensitiveParsing.subscript
+  //    def doublestruck = mathSensitiveParsing.doublestruck
 
   case class ParseResult(protected val text: String, protected val size: Int) {
 
@@ -90,6 +124,7 @@ object Text2TEX {
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
       base.append(textDoubleStruck(next()))
+      base.append(textTab(next()))
 
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
@@ -105,9 +140,28 @@ object Text2TEX {
 
   }
 
+  //    protected def textMathMode(sequence: Seq[TextObject]) = {
+  //      val collection = collect[TextObjectMathMode](sequence)
+  //      val resultString = collection.map(text => "$").mkString
+  //          textMathMode.lift(index).map {
+  //
+  //      ParseResult(resultString, collection.size)
+  //    }
+
+  def parseMath(mathObject: TextObjectMathMode) = {
+    "$" + Text2TEX(true).generate(mathObject.textAST) + "$"
+  }
+
   protected def textDefault(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectDefault](sequence)
     val resultString = collection.map(text => escape(text.in)).mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textTab(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectTab](sequence)
+    val resultString = collection.map(text => "\\hspace{5mm}").mkString
 
     ParseResult(resultString, collection.size)
   }
@@ -123,7 +177,7 @@ object Text2TEX {
     val collection = collect[TextObjectDoubleStruck](sequence)
     val resultString = collection.map(text => {
       text.subscript
-        .map(sub => "$\\mathbb{" + text.in + "}_{" + sub + "}$")
+        .map(sub => "$\\mathbb{" + text.in + "}$")
         .getOrElse("$\\mathbb{" + text.in + "}$")
     }).mkString
 
@@ -139,10 +193,19 @@ object Text2TEX {
 
   protected def textSubScriptExplicit(subscriptSeq: Seq[TextObjectSubscript], index: Int): String = {
     subscriptSeq.lift(index).map {
-      text => "\\textsubscript{" + Text2TEX.generate(text.textAST) + "}" + textSubScriptExplicit(subscriptSeq, index + 1)
+      text =>
+        {
+          if (isMathMode) {
+            "_{" + Text2TEX(isMathMode).generate(text.textAST) + "}" + textSubScriptExplicit(subscriptSeq, index + 1)
+          } else {
+            "\\textsubscript{" + Text2TEX(isMathMode).generate(text.textAST) + "}" + textSubScriptExplicit(subscriptSeq, index + 1)
+
+          }
+        }
     } getOrElse {
       ""
     }
+
   }
 
   protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {

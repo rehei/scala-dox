@@ -94,9 +94,9 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
       }
     }
     if (value.key.config.base.alignment == DoxTableAlignment.ROTATED) {
-      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX.generate(value.key.config.base.text) }, ruleOption)
+      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.config.base.text) }, ruleOption)
     } else {
-      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { Text2TEX.generate(value.key.config.base.text) }, ruleOption)
+      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { Text2TEX(false).generate(value.key.config.base.text) }, ruleOption)
     }
   }
 
@@ -116,7 +116,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def renderValue(values: Seq[TextAST]) = {
-    \ plain { values.map(Text2TEX.generate(_)).mkString(" & ") + "\\\\" + "\n" }
+    \ plain { values.map(Text2TEX(false).generate(_)).mkString(" & ") + "\\\\" + "\n" }
   }
 
   protected def renderSpace() = {

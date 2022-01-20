@@ -91,7 +91,7 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
   }
 
   def caption = {
-    Text2TEX.generate(root.config.base.text)
+    Text2TEX(false).generate(root.config.base.text)
   }
 
   def head = {
