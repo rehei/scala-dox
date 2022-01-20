@@ -19,9 +19,7 @@ import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
 
-object Text2TEX {
-
-  val INSTANCE = Text2TEX(false)
+object Text2TEX extends Text2TEX(false) {
 
   protected trait MathSensitiveParsing {
     def mathEnvironment(text: String): String
