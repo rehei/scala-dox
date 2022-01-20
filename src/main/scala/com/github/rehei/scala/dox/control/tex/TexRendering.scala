@@ -94,7 +94,7 @@ class TexRendering(
   }
 
   def text(in: TextAST) = {
-    \ plain { Text2TEX.generate(in) }
+    \ plain { Text2TEX.INSTANCE.generate(in) }
     this
   }
 
