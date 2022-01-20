@@ -4,7 +4,6 @@ import com.github.rehei.scala.dox.text.TextAST
 
 class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
-
   protected val factory = DoxTableKeyNodeFactory()
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
