@@ -14,6 +14,8 @@ import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxEquation
+import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -111,10 +113,9 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  def text(in: String): this.type = {
-    internalText(in)
-    this
-  }
+  def text(in: TextAST): this.type
+
+  def text(in: String): this.type
 
   def textItalic(in: String): this.type
 
@@ -168,7 +169,6 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  protected def internalText(in: String): Unit
   protected def internalPlain(in: String): Unit
 
   protected def internalCiteT(key: String): Unit

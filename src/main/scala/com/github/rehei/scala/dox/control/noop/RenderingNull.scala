@@ -9,6 +9,7 @@ import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.model.DoxEquation
+import com.github.rehei.scala.dox.text.TextAST
 
 class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, handle) {
 
@@ -18,17 +19,18 @@ class RenderingNull(handle: DoxBibKeyRendering) extends DoxRenderingBase(null, h
   def subsection(name: String) = this
   def subsubsection(name: String) = this
 
+
+  def text(ast: TextAST) = this
+  def text(in: String) = this
   def textItalic(in: String) = this
   def textRed(in: String) = this
 
   def ref(reference: DoxReferenceBase) = this
 
-  //  def eqnarray(label: DoxReferencePersistentEquation, expression: String) = this
   def clearpage() = this
 
   def nonBreakingSpace = this
 
-  protected def internalText(in: String) = Unit
   protected def internalPlain(in: String) = Unit
 
   protected def internalCiteT(key: String) = Unit

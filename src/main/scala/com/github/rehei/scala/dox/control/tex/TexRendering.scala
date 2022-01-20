@@ -19,6 +19,7 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.control.DoxHandleEquation
 import com.github.rehei.scala.dox.model.DoxEquationFile
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
 class TexRendering(
   baseAST:        TexAST,
@@ -84,6 +85,16 @@ class TexRendering(
 
   def subsubsection(name: String) = {
     \ subsubsection & { escape(name) }
+    this
+  }
+
+  def text(in: String) = {
+    \ plain { escape(in) }
+    this
+  }
+
+  def text(in: TextAST) = {
+    \ plain { Text2TEX.generate(in) }
     this
   }
 
@@ -189,10 +200,6 @@ class TexRendering(
         \ item & { escape(item) }
       }
     }
-  }
-
-  protected def internalText(in: String) {
-    \ plain { escape(in) }
   }
 
   protected def internalPlain(input: String) {

@@ -11,6 +11,7 @@ import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
 import com.github.rehei.scala.dox.control.DoxBuilderTable
 import com.github.rehei.scala.dox.control.DoxBuilderEquation
 import com.github.rehei.scala.dox.model.DoxEquation
+import com.github.rehei.scala.dox.text.TextAST
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null, null) {
 
@@ -25,18 +26,19 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def tableSequence(callback: DoxBuilderTableSequence.type => DoxTableViewModelSequence) = this
   override def table(callback: DoxBuilderTable.type => DoxTableViewModel[_]): this.type = this
   override def equation(callback: DoxBuilderEquation.type => DoxEquation) = this
+
+  override def text(ast: TextAST) = this
+  override def text(in: String) = this
   override def textItalic(in: String) = this
   override def textRed(in: String) = this
 
   override def ref(reference: DoxReferenceBase) = this
 
-  //  override def eqnarray(label: DoxReferencePersistentEquation, expression: String) = this
   override def clearpage() = this
 
   override def nonBreakingSpace = this
 
-  override protected def internalText(in: String) = Unit
-  override protected def internalPlain(in: String) = Unit
+  override protected def internalPlain(in:  String) = Unit
 
   override protected def internalCiteT(key: String) = Unit
   override protected def internalCiteP(key: String) = Unit
