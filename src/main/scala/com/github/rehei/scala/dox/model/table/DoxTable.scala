@@ -14,7 +14,6 @@ object DoxTable {
 }
 
 case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
-
   object DoxOptionBuilder {
 
     def value[A <: AnyRef, X <: AnyRef](callback1: A => X) = new {
@@ -26,12 +25,13 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     }
   }
   case class DoxOptionBuilder[A <: AnyRef, X <: AnyRef](valueCallback: A => X, ruleCallback: () => X, spaceCallback: () => X)
-
+  
   sealed case class DoxValue[+A](value: A) extends DoxOption[A]
   case object DoxSpace extends DoxOption[Nothing]
   case object DoxRule extends DoxOption[Nothing]
 
   sealed abstract class DoxOption[+A] extends Product with Serializable {
+
     def render[X <: AnyRef](valueCallback: A => X, spaceCallback: () => X, ruleCallback: () => X) = {
       this match {
         case DoxValue(value) => valueCallback(value)
@@ -39,6 +39,15 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
         case DoxSpace        => spaceCallback()
       }
     }
+    //    def render2[X <: AnyRef](callbacks: DoxOptionBuilder[A, X] => DoxOptionBuilder[A, X]) = {
+    //
+    //      this match {
+    //        case DoxValue(value) => callbacks(DoxOptionBuilder[A, X]()).valueCallback(value)
+    //        case DoxRule         => callbacks(DoxOptionBuilder[A, X]()).ruleCallback()
+    //        case DoxSpace        => callbacks(DoxOptionBuilder[A, X]()).spaceCallback()
+    //      }
+    //    }
+
   }
 
   protected val _data = ArrayBuffer[DoxOption[T]]()
