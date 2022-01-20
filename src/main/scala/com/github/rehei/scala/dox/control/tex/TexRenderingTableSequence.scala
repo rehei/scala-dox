@@ -35,13 +35,10 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   def createTables() = {
-    modelSequence
-      .sequence
-      .filterNot(_ == DoxTable.NONE)
-      .map(model => {
-        \ plain { "{" + getTable(model) + "}" }
-        endRowEntry()
-      })
+    for (model <- modelSequence.sequence if (model != DoxTable.NONE)) {
+      \ plain { "{" + getTable(model) + "}" }
+      endRowEntry()
+    }
   }
 
   protected def appendTitle() = {
@@ -71,10 +68,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def getTable(model: DoxTable[_]) = {
-    model match {
-      //      case horizontal: DoxTableWrapper.TableLeftToRight[_] => new TexRenderingTableTransposed(baseAST, horizontal, true).createTableString()
-      case vertical: DoxTable[_] => new TexRenderingTable(baseAST, vertical, true).createTableString()
-    }
+    new TexRenderingTable(baseAST, model, true).createTableString()
   }
 
   protected def endRowEntry() = {
