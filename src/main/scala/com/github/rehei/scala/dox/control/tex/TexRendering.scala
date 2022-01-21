@@ -131,7 +131,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModelSequence) {
     if (!table.models.sequence.filterNot(_ == DoxTable.NONE).isEmpty) {
-      val texTable = new TexRenderingTableSequence(baseAST, table.models, table.titleOption).createTableString()
+      val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title).createTableString()
       val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
       if (!floating) {
         \ FloatBarrier;

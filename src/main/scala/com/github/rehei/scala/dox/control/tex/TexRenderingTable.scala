@@ -14,8 +14,18 @@ import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
+  protected object ColumnType {
+    private val baseString = """\arraybackslash}p"""
+    def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
+    def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
+    def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
+    def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
+    private def sizeString(size: Double) = "{" + size + "cm}"
+  }
+
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
-  protected case class InnerTableOn() extends TableMode {
+  protected case class InnerTableOn(factory: TexMarkupFactory) extends TableMode {
+    import factory._
     def toprule = Unit
     def bottomrule = {
       cmidrule()
@@ -32,31 +42,21 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   abstract class TableMode {
-
     def toprule: Unit
     def bottomrule: Unit
   }
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
-
-  protected object ColumnType {
-    private val baseString = """\arraybackslash}p"""
-    def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
-    def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
-    def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
-    def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
-    private def sizeString(size: Double) = "{" + size + "cm}"
-  }
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
   protected val tableMode = {
     if (isInnerTable) {
-      InnerTableOn()
+      InnerTableOn(tmpMarkup)
     } else {
       InnerTableOff(tmpMarkup)
     }
   }
-  
+
   import tmpMarkup._
 
   def createTableString() = {
@@ -72,10 +72,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       appendTableBody()
       tableMode.bottomrule
     }
-  }
-
-  protected def cmidrule() = {
-    \ plain { (\\ cmidrule { s"1-${model.columnCount()}" }).generate() + "\n" }
   }
 
   protected def columnConfigTotalSize() = {
@@ -147,6 +143,10 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   protected def renderRule() = {
     cmidrule()
+  }
+
+  protected def cmidrule() = {
+    \ plain { (\\ cmidrule { s"1-${model.columnCount()}" }).generate() + "\n" }
   }
 
   protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {

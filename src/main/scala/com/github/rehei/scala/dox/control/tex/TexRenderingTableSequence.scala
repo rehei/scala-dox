@@ -6,28 +6,21 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, titleOption: Option[TextAST]) {
+class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, title: TextAST) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
 
-  protected val verticalSpace = "\n\\vspace*{0.5cm}" + "\n"
   protected val COLUMN_SIZE_DEFAULT = 2.0
-
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
   import tmpMarkup._
 
-  protected object ColumnType {
-    private val baseString = """\arraybackslash}m{"""
-    def c(size: String) = """>{\centering""" + baseString + size + "}"
-  }
-
   def createTableString() = {
-    createTitleTable()
+    createTableSequence()
     tmpAST.build()
   }
 
-  protected def createTitleTable() {
-    $ { _ tabular$ & { (columnConfigTotalSize()) } { "l" } } {
+  protected def createTableSequence() {
+    $ { _ tabular$ & { (totalSizeTex()) } { "l" } } {
       appendTitle()
       createTables()
       appendBottom()
@@ -42,29 +35,23 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def appendTitle() = {
-    titleOption.map(
-      text => {
-        \ plain { "{" }
-        ($ { _ tabular$ & { (columnConfigTotalSize()) } { ColumnType.c(columnConfigTotalSize) } } {
-          \ toprule;
-          \ plain { Text2TEX(false).generate(text) + "\\\\" }
-          \ midrule;
-        })
-        \ plain { "}" }
-        endRowEntry()
-      }).getOrElse(None)
+    \ plain { "{" }
+    ($ { _ tabular$ & { (totalSizeTex()) } { columnTex() } } {
+      \ toprule;
+      \ plain { Text2TEX(false).generate(title) + "\\\\" }
+      \ midrule;
+    })
+    \ plain { "}" }
+    endRowEntry()
   }
 
   protected def appendBottom() = {
-    titleOption.map(
-      text => {
-        \ plain { "{" }
-        $ { _ tabular$ & { (columnConfigTotalSize()) } { ColumnType.c(columnConfigTotalSize) } } {
-          \ bottomrule;
-        }
-        \ plain { "}" }
-        endRowEntry()
-      }).getOrElse(None)
+    \ plain { "{" }
+    $ { _ tabular$ & { (totalSizeTex()) } { columnTex() } } {
+      \ bottomrule;
+    }
+    \ plain { "}" }
+    endRowEntry()
   }
 
   protected def getTable(model: DoxTable[_]) = {
@@ -72,13 +59,18 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def endRowEntry() = {
-    \ plain { verticalSpace + "\\\\ \n" }
+    \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
 
-  protected def columnConfigTotalSize() = {
+  protected def columnTex() = {
+    ">{\\centering\\arraybackslash}m{" + totalSizeTex() + "}"
+  }
+
+  protected def totalSizeTex() = {
     val width = modelSequence.totalWidth(COLUMN_SIZE_DEFAULT)
     val tabColSeps = modelSequence.tabcolSeps()
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + width + "cm"
   }
+
 }

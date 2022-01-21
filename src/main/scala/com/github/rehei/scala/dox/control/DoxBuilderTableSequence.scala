@@ -12,16 +12,9 @@ object DoxBuilderTableSequence {
 
   def label(_labelOption: Option[DoxReferencePersistentTable]) = new {
     def data(_tables: Seq[DoxTable[_]]) = new {
-      def title(_title: Option[String]) = {
-        DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables), titleOption(_title))
+      def title(_title: String) = {
+        DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables), TextFactory.text(_title))
       }
-    }
-  }
-
-  protected def titleOption(text: Option[String]) = {
-    text match {
-      case Some(m) => Some(TextFactory.text(m))
-      case None    => None
     }
   }
 }
