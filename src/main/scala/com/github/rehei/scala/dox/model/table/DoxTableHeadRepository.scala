@@ -28,7 +28,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
-            Seq(factory.Whitespace(base.config.width))
+            Seq(factory.Whitespace(base.config.widthOption))
           } else {
             Seq.empty
           }

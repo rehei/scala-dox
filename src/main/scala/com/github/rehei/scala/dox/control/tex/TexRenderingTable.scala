@@ -11,9 +11,33 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.text.TextObjectDefault
 
-class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, protected val sourceModel: DoxTable[_], isInnerTable: Boolean) {
 
-  case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
+  protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
+
+  protected case class DoxTableExplicit() {
+
+    def columnCount() = {
+      columns().size
+    }
+
+    def columns() = {
+      sourceModel.root.leavesRecursive().map(_.config)
+    }
+
+    def data() = {
+      sourceModel.data()
+    }
+
+    def head() = {
+      sourceModel.head
+    }
+
+  }
+
+  protected val model = DoxTableExplicit()
+
+  protected val COLUMN_SIZE_DEFAULT = 2.0
 
   protected object ColumnType {
     private val baseString = """\arraybackslash}p"""
@@ -24,8 +48,6 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
 
-  protected val COLUMN_SIZE_DEFAULT = 2.0
-  protected val leavesAmount = model.root.leavesAmount()
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
 
@@ -53,21 +75,21 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def cmidrule() = {
-    \ plain { (\\ cmidrule { s"1-${leavesAmount}" }).generate() + "\n" }
+    \ plain { (\\ cmidrule { s"1-${model.columnCount()}" }).generate() + "\n" }
   }
 
   protected def columnConfigTotalSize() = {
-    val columnSizes = model.root.leavesWidths(COLUMN_SIZE_DEFAULT)
-    val tabColSeps = leavesAmount * 2
+    val columnSizes = model.columns().map(_.widthOption.getOrElse(COLUMN_SIZE_DEFAULT))
+    val tabColSeps = model.columnCount() * 2
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
   }
 
   protected def columnConfigEachColumnSize() = {
-    model.root.leavesRecursive().map(column => getTexAlignment(column.config)).mkString
+    model.columns().map(column => getTexAlignment(column)).mkString
   }
 
   protected def appendTableHead() {
-    for (row <- model.head.list()) {
+    for (row <- model.head) {
       setCategories(getMappedHead(row))
     }
   }
@@ -110,7 +132,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
   }
 
   protected def appendTableBody() {
-    for (row <- model.data) {
+    for (row <- sourceModel.data()) {
       row.render(renderValue, renderSpace, renderRule)
     }
   }
@@ -138,7 +160,7 @@ class TexRenderingTable(baseAST: TexAST, model: DoxTable[_], isInnerTable: Boole
     }
   }
   protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
-    val size = config.width.getOrElse(COLUMN_SIZE_DEFAULT)
+    val size = config.widthOption.getOrElse(COLUMN_SIZE_DEFAULT)
     config.base.alignment match {
       case DoxTableAlignment.LEFT    => ColumnType.l(size)
       case DoxTableAlignment.RIGHT   => ColumnType.r(size)

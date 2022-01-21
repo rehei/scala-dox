@@ -4,10 +4,10 @@ object DoxTableKeyConfigExtended extends DoxTableKeyConfigExtended(DoxTableKeyCo
   val NONE = this
 }
 
-case class DoxTableKeyConfigExtended(base: DoxTableKeyConfig, width: Option[Double]) {
+case class DoxTableKeyConfigExtended(base: DoxTableKeyConfig, widthOption: Option[Double]) {
 
   def setCategoryWidth(_width: Option[Double]) = {
-    this.copy(width = _width)
+    this.copy(widthOption = _width)
   }
 
 }

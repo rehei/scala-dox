@@ -99,12 +99,8 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     }
   }
 
-  def caption = {
-    Text2TEX(false).generate(root.config.base.text)
-  }
-
-  def head = {
-    new DoxTableHeadRepository(root)
+  def head() = {
+    new DoxTableHeadRepository(root).list()
   }
 
   def withColumnSpace = {

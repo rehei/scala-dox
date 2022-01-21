@@ -39,18 +39,6 @@ case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyCon
     children.isEmpty
   }
 
-  def leavesConfigs() = {
-    leavesRecursive().map(_.config)
-  }
-
-  def leavesWidths(defaultSize: Double) = {
-    leavesRecursive().map(_.config.width.map(size => size).getOrElse(defaultSize))
-  }
-
-  def leavesAmount() = {
-    leavesRecursive().length
-  }
-
   def leavesRecursive(): Seq[DoxTableKeyNode] = {
     children.flatMap {
       child =>
