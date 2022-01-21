@@ -15,6 +15,27 @@ import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
+  protected case class InnerTableOn() extends TableMode {
+    def toprule = Unit
+    def bottomrule = {
+      cmidrule()
+    }
+  }
+  protected case class InnerTableOff(factory: TexMarkupFactory) extends TableMode {
+    import factory._
+    def toprule = {
+      \ toprule
+    }
+    def bottomrule = {
+      \ bottomrule
+    }
+  }
+
+  abstract class TableMode {
+
+    def toprule: Unit
+    def bottomrule: Unit
+  }
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
 
@@ -26,10 +47,16 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
     private def sizeString(size: Double) = "{" + size + "cm}"
   }
-
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
-
+  protected val tableMode = {
+    if (isInnerTable) {
+      InnerTableOn()
+    } else {
+      InnerTableOff(tmpMarkup)
+    }
+  }
+  
   import tmpMarkup._
 
   def createTableString() = {
@@ -39,17 +66,11 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   protected def create() {
     $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-      if (!isInnerTable) {
-        \ toprule;
-      }
+      tableMode.toprule
       appendTableHead()
       \ midrule;
       appendTableBody()
-      if (isInnerTable) {
-        cmidrule()
-      } else {
-        \ bottomrule
-      }
+      tableMode.bottomrule
     }
   }
 
