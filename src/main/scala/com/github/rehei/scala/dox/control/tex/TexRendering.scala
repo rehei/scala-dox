@@ -214,6 +214,6 @@ class TexRendering(
   }
 
   protected def fileLabel(label: Option[DoxReferenceBase]) = {
-    label.map(m => m.referenceID + "__" + HashUtils.hash(m.referenceID)).getOrElse("dummylabel")
+    label.map(m => m.referenceID + " | " + HashUtils.hash(m.referenceID)).getOrElse("dummylabel")
   }
 }

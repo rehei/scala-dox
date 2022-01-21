@@ -2,12 +2,19 @@ package com.github.rehei.scala.dox.model.table
 
 import scala.collection.Seq
 import com.github.rehei.scala.dox.text.TextFactory
+import com.github.rehei.scala.macros.Query
+import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.macros.util.QReflection
 
 object DoxTableKeyNode {
-  val NONE = DoxTableKeyNode(DoxTableKeyNodeType.NONE, DoxTableKeyConfigExtended.NONE, Seq.empty)
+  val NONE = DoxTableKeyNode(DoxTableKeyNodeType.NONE, DoxTableKeyConfigExtended.NONE, Seq.empty, None)
 }
 
-case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyConfigExtended, children: Seq[DoxTableKeyNode]) {
+case class DoxTableKeyNode(
+  nodeType:    DoxTableKeyNodeType,
+  config:      DoxTableKeyConfigExtended,
+  children:    Seq[DoxTableKeyNode],
+  queryOption: Option[Query[_]]) {
 
   protected val tableSupport = DoxTableSupport(this)
 
@@ -24,7 +31,9 @@ case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyCon
   }
 
   def valueOf(index: Int, element: AnyRef) = {
-    nodeType.valueOf(index, element)
+    queryOption
+      .map(query => queryReflection(element, query))
+      .getOrElse(nodeType.valueOf(index, element))
   }
 
   def depth(): Int = {
@@ -54,6 +63,14 @@ case class DoxTableKeyNode(nodeType: DoxTableKeyNodeType, config: DoxTableKeyCon
 
   protected def leaves() = {
     children.filter(_.isLeaf())
+  }
+
+  protected def queryReflection(element: AnyRef, query: Query[_]) = {
+    val value = new QReflection(element).get(query)
+    value match {
+      case m: TextAST => m
+      case m          => TextFactory.text(m.toString())
+    }
   }
 
 }

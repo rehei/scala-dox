@@ -13,11 +13,11 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren, None) with Writeable
     }
 
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren, None) with Writeable
     }
   }
 
@@ -29,7 +29,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty) with Writeable
+      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty, None) with Writeable
     }
   }
 
@@ -66,12 +66,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Blank {
     def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
-      val config = DoxTableKeyConfig(TextFactory.NONE,_alignment(DoxTableAlignment))
-      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK, configExt(config), Seq.empty) with Writeable {
+      val config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment))
+      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK, configExt(config), Seq.empty, None) with Writeable {
         def width(_width: Option[Double]) = new {
           def finalize(callback: Query[T] => Query[_]) = {
             val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.key(query), config.setCategoryWidth(_width), Seq.empty)
+            DoxTableKeyNode(DoxTableKeyNodeType.BLANK, config.setCategoryWidth(_width), Seq.empty, Some(query))
           }
         }
       }
@@ -80,11 +80,11 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Node {
     def apply(_config: DoxTableKeyConfig) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, configExt(_config), Seq.empty) with Writeable {
+      new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, configExt(_config), Seq.empty, None) with Writeable {
         def width(_width: Option[Double]) = new {
           def finalize(callback: Query[T] => Query[_]) = {
             val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.key(query), config.setCategoryWidth(_width), Seq.empty)
+            DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, config.setCategoryWidth(_width), Seq.empty, Some(query))
           }
         }
       }
@@ -92,20 +92,20 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   protected def nodeWritable(_nodeType: DoxTableKeyNodeType) = {
-    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) with Writeable {
-      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) with Writeable {
+    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty, None) with Writeable {
+      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children, None) with Writeable {
         def width(_width: Option[Double]) = {
-          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children) with Writeable
+          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children, None) with Writeable
         }
       }
     }
   }
 
   protected def node(_nodeType: DoxTableKeyNodeType) = {
-    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty) {
-      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children) {
+    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty, None) {
+      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children, None) {
         def width(_width: Option[Double]) = {
-          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children)
+          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children, None)
         }
       }
     }
