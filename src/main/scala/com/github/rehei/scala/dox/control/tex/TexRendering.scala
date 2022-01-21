@@ -152,7 +152,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModel[_]) {
     if (table.model != DoxTable.NONE) {
-      val texTable = new TexRenderingTable(baseAST, table.model, false).createTableString()
+      val texTable = new TexRenderingTable(baseAST, table.model.transform(), false).createTableString()
       val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
       if (!floating) {
         \ FloatBarrier;

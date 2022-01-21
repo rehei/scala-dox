@@ -10,32 +10,11 @@ import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.text.TextObjectDefault
+import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 
-class TexRenderingTable(baseAST: TexAST, protected val sourceModel: DoxTable[_], isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
-
-  protected case class DoxTableExplicit() {
-
-    def columnCount() = {
-      columns().size
-    }
-
-    def columns() = {
-      sourceModel.root.leavesRecursive().map(_.config)
-    }
-
-    def data() = {
-      sourceModel.data()
-    }
-
-    def head() = {
-      sourceModel.head
-    }
-
-  }
-
-  protected val model = DoxTableExplicit()
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
 
@@ -132,7 +111,7 @@ class TexRenderingTable(baseAST: TexAST, protected val sourceModel: DoxTable[_],
   }
 
   protected def appendTableBody() {
-    for (row <- sourceModel.data()) {
+    for (row <- model.data()) {
       row.render(renderValue, renderSpace, renderRule)
     }
   }

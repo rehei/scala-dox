@@ -68,7 +68,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def getTable(model: DoxTable[_]) = {
-    new TexRenderingTable(baseAST, model, true).createTableString()
+    new TexRenderingTable(baseAST, model.transform(), true).createTableString()
   }
 
   protected def endRowEntry() = {

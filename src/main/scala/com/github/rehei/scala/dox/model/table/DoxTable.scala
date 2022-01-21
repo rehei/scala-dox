@@ -112,5 +112,9 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
       node.valueOf(index, element)
     }
   }
+  
+  def transform() = {
+    new DoxTableMatrix(this)
+  }
 
 }
