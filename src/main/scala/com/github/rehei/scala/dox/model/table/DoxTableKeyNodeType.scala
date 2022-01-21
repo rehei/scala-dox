@@ -16,10 +16,7 @@ object DoxTableKeyNodeType {
     }
   }
   object ROOT extends DoxTableKeyNodeType("ROOT")
-
   object WHITESPACE extends DoxTableKeyNodeType("WHITESPACE")
-  object RULE extends DoxTableKeyNodeType("RULE")
-
   object BLANK extends DoxTableKeyNodeType("BLANK")
   object INDEX extends DoxTableKeyNodeType("INDEX") {
     override def valueOf(index: Int, element: AnyRef) = {
