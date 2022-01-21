@@ -5,6 +5,7 @@ import com.github.rehei.scala.macros.Query
 import scala.reflect.ClassTag
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
@@ -59,6 +60,20 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def apply(name: String) = new {
       def width(_width: Option[Double]) = {
         nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name).copy(alignment = DoxTableAlignment.CENTER)).width(_width)
+      }
+    }
+  }
+
+  object Blank {
+    def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
+      val config = DoxTableKeyConfig(TextFactory.NONE,_alignment(DoxTableAlignment))
+      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK, configExt(config), Seq.empty) with Writeable {
+        def width(_width: Option[Double]) = new {
+          def finalize(callback: Query[T] => Query[_]) = {
+            val query = callback(new Query[T])
+            DoxTableKeyNode(DoxTableKeyNodeType.key(query), config.setCategoryWidth(_width), Seq.empty)
+          }
+        }
       }
     }
   }

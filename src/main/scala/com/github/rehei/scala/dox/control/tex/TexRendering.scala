@@ -20,6 +20,7 @@ import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.control.DoxHandleEquation
 import com.github.rehei.scala.dox.model.DoxEquationFile
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.util.HashUtils
 
 class TexRendering(
   baseAST:        TexAST,
@@ -213,6 +214,6 @@ class TexRendering(
   }
 
   protected def fileLabel(label: Option[DoxReferenceBase]) = {
-    label.map(_.referenceID).getOrElse("dummylabel")
+    label.map(m => m.referenceID + "__" + HashUtils.hash(m.referenceID)).getOrElse("dummylabel")
   }
 }

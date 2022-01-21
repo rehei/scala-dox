@@ -22,6 +22,7 @@ libraryDependencies ++= {
     "commons-io" % "commons-io" % "2.8.0",
     "org.jbibtex" % "jbibtex" % "1.0.17",
     "org.scalaj" %% "scalaj-http" % "2.4.2",
+    "commons-codec" % "commons-codec" % "1.15",
     "com.github.marschall" % "memoryfilesystem" % "2.1.0" % Test, 
     "com.novocode" % "junit-interface" % "0.11" % Test,
     "junit" % "junit" % "4.13" % Test
