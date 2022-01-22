@@ -15,7 +15,7 @@ class DoxTableMatrix(protected val model: DoxTable[_]) {
   }
 
   def head() = {
-    model.head
+    model.head()
   }
 
 }
