@@ -84,7 +84,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
         def width(_width: Option[Double]) = new {
           def finalize(callback: Query[T] => Query[_]) = {
             val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, config.setCategoryWidth(_width), Seq.empty, Some(query))
+            DoxTableKeyNode(DoxTableKeyNodeType.VALUE, config.setCategoryWidth(_width), Seq.empty, Some(query))
           }
         }
       }
