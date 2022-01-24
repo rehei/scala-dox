@@ -62,9 +62,9 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
   protected def nonEmptyChildren(children: Seq[DoxTableKeyNode]) = {
     children
-//      .filter(_.nodeType != DoxTableKeyNodeType.BLANK)
-//      .filter(_.nodeType != DoxTableKeyNodeType.WHITESPACE)
-//      .filter(_.nodeType != DoxTableKeyNodeType.COLUMNSPACE)
+      .filter(_.nodeType != DoxTableKeyNodeType.BLANK)
+      .filter(_.nodeType != DoxTableKeyNodeType.WHITESPACE)
+      .filter(_.nodeType != DoxTableKeyNodeType.COLUMNSPACE)
   }
 
 }
