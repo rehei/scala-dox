@@ -16,6 +16,18 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectMathMode(in))
   }
 
+  def offset(in: TextAST, offsetX: Double) = {
+    this.copy(sequence = sequence :+ TextObjectOffset(in, offsetX))
+  }
+
+  def fixedRight(in: TextAST, subscript: Option[TextAST], offset: Option[Int]) = {
+    this.copy(sequence = sequence :+ TextObjectPositionRight(in, subscript, offset))
+  }
+
+  def fixedLeft(in: TextAST, subscript: Option[TextAST], offset: Option[Int]) = {
+    this.copy(sequence = sequence :+ TextObjectPositionLeft(in, subscript, offset))
+  }
+
   def subscript(in: String): TextAST = {
     this.subscript(TextFactory.text(in))
   }
@@ -35,7 +47,7 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def tab() = {
     this.copy(sequence = sequence :+ TextObjectTab())
   }
-  
+
   def arrowRight() = {
     this.copy(sequence = sequence :+ TextObjectArrowRight())
   }
