@@ -13,11 +13,15 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren, None) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ filterNone(additionalChildren), None) with Writeable
     }
 
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren, None) with Writeable
+      new DoxTableKeyNode(this.nodeType, this.config, this.children ++ filterNone(additionalChildren), None) with Writeable
+    }
+
+    protected def filterNone(additionalChildren: Seq[DoxTableKeyNode]) = {
+      additionalChildren.filterNot(_ == DoxTableKeyNode.NONE)
     }
   }
 
