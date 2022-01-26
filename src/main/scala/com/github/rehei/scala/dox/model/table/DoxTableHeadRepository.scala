@@ -8,8 +8,8 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
-    def hasNonWhitespaceChildren() = {
-      base.children.filter(_.nodeType != DoxTableKeyNodeType.WHITESPACE).size > 0
+    def hasNonEmptyChildren() = {
+      nonEmptyChildren(base.children).size > 0
     }
 
     def byLevel(level: Int): Seq[DoxTableKeyNode] = {
@@ -49,7 +49,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       if (!filteredChildren.isEmpty)
     ) yield {
       DoxTableHeadRow(
-        filteredChildren.map(m => DoxTableHeadRowKey(m.config, m.width(), m.hasNonWhitespaceChildren())))
+        filteredChildren.map(m => DoxTableHeadRowKey(m.config, m.width(), m.hasNonEmptyChildren())))
     }
   }
   protected def filterNotBlank(children: Seq[DoxTableKeyNode]) = {
