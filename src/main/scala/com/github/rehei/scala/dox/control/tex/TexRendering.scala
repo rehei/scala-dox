@@ -173,14 +173,18 @@ class TexRendering(
     if (!floating) {
       \ FloatBarrier;
     }
-    //    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
-    //      \ centering;
-    //      appendTransformableSVG(svg)
-    //      \ caption & { escape(fileLabel(svg.label)) }
-    //    }
-    val filename = svgHandle.serialize(svg).toString()
+    svg.titleOption.map {
+      title =>
+        val filename = svgHandle.serialize(svg).toString()
+        \ includesvgImage & { filename } { escape(fileLabel(svg.label)) } { title }
+    } getOrElse {
+      $ { _ figure & { ###(POSITIONING_FIGURE) } } {
 
-    \ includesvgImage & { "./" + filename } { escape(fileLabel(svg.label)) }
+        \ centering;
+        appendTransformableSVG(svg)
+        \ caption & { escape(fileLabel(svg.label)) }
+      }
+    }
     if (!floating) {
       \ FloatBarrier;
     }

@@ -14,7 +14,7 @@ class TexUtils(target: Path, filename: String, fastAndDirty: Boolean) {
   */
 
   protected val command = {
-    "pdflatex --shell-escape " + filename + ".tex %.tex"
+    "pdflatex " + filename + ".tex %.tex"
   }
 
   protected val bibtex = {
