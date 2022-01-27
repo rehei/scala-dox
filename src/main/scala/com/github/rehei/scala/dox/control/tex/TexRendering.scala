@@ -173,11 +173,14 @@ class TexRendering(
     if (!floating) {
       \ FloatBarrier;
     }
-    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
-      \ centering;
-      appendTransformableSVG(svg)
-      \ caption & { escape(fileLabel(svg.label)) }
-    }
+    //    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
+    //      \ centering;
+    //      appendTransformableSVG(svg)
+    //      \ caption & { escape(fileLabel(svg.label)) }
+    //    }
+    val filename = svgHandle.serialize(svg).toString()
+
+    \ includesvgImage & { "./" + filename } { escape(fileLabel(svg.label)) }
     if (!floating) {
       \ FloatBarrier;
     }
@@ -209,7 +212,6 @@ class TexRendering(
 
   protected def appendTransformableSVG(figure: DoxSvgFigure) {
     val filename = svgHandle.serialize(figure).toString()
-
     \ includegraphics & { filename }
   }
 

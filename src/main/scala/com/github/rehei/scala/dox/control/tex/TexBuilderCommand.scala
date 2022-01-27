@@ -25,7 +25,7 @@ class TexBuilderCommand(ast: TexAST) {
   object subsubsection$ extends TexMarkupObject(false)
   object hline extends TexMarkupObject(false)
   object vspace extends TexMarkupObject(false)
-  
+
   object clearpage extends TexMarkupObject(false)
   object newpage extends TexMarkupObject(false)
   object bigskip extends TexMarkupObject(false)
@@ -49,7 +49,8 @@ class TexBuilderCommand(ast: TexAST) {
   object twocolumn extends TexMarkupObject(false)
 
   object input extends TexMarkupObject(false)
-
+  object includesvgImage extends TexMarkupObject(false)
+  
   object plain {
     def apply(_name: String) = {
       TexPlain(ast, _name)
