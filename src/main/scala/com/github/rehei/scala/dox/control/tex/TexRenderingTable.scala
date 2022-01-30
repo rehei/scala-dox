@@ -1,18 +1,15 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRow
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
-import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.text.TextFactory
-import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
+import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
-class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_], isInnerTable: Boolean) {
 
   protected object ColumnType {
     private val baseString = """\arraybackslash}p"""
@@ -131,8 +128,15 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def appendTableBody() {
+
+    import com.github.rehei.scala.dox.model.table.content.DoxContent._
+
     for (row <- model.body()) {
-      row.render(renderValue, renderSpace, renderRule)
+      row match {
+        case DoxValue(value) => renderValue(value)
+        case DoxRule         => renderRule()
+        case DoxSpace        => renderSpace()
+      }
     }
   }
 

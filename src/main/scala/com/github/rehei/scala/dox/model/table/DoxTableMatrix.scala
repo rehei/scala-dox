@@ -1,21 +1,27 @@
 package com.github.rehei.scala.dox.model.table
 
-class DoxTableMatrix(protected val model: DoxTable[_]) {
+import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.model.table.content.DoxContent
 
-  import model._
+class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
+
+  import DoxContent._
 
   def head() = {
     model.head().filter(m => isNonBlank(m.values))
   }
 
   def body() = {
-
     for ((row, index) <- model.data().zipWithIndex) yield {
       convertRow(index, row)
     }
   }
 
-  protected def convertRow(index: Int, row: DoxOption[_]) = {
+  def dimension() = {
+    lastHead().map(_.config)
+  }
+
+  protected def convertRow(index: Int, row: DoxOption[T]) = {
     row match {
       case DoxValue(content) => DoxValue(convertValue(index + 1, content))
       case DoxSpace          => DoxSpace
@@ -23,14 +29,10 @@ class DoxTableMatrix(protected val model: DoxTable[_]) {
     }
   }
 
-  protected def convertValue(index: Int, value: AnyRef) = {
+  protected def convertValue(index: Int, value: T) = {
     for (head <- lastHead()) yield {
       head.node.valueOf(index, value)
     }
-  }
-
-  def dimension() = {
-    lastHead().map(_.config)
   }
 
   protected def lastHead() = {

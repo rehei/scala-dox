@@ -8,47 +8,15 @@ import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 import org.hamcrest.core.IsEqual
+import com.github.rehei.scala.dox.model.table.content.DoxContent
 
 object DoxTable {
   val NONE = new DoxTable(DoxTableKeyNode.NONE)
 }
 
-case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: ClassTag[T]) {
-  object DoxOptionBuilder {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {
 
-    def value[A <: AnyRef, X <: AnyRef](callback1: A => X) = new {
-      def rule[X <: AnyRef](callback2: () => X) = new {
-        def space[X <: AnyRef](callback3: () => X) = new {
-          DoxOptionBuilder(callback1, callback2, callback3)
-        }
-      }
-    }
-  }
-  case class DoxOptionBuilder[A <: AnyRef, X <: AnyRef](valueCallback: A => X, ruleCallback: () => X, spaceCallback: () => X)
-
-  sealed case class DoxValue[A <: AnyRef](value: A) extends DoxOption[A]
-  case object DoxSpace extends DoxOption[Nothing]
-  case object DoxRule extends DoxOption[Nothing]
-
-  sealed abstract class DoxOption[+A] extends Product with Serializable {
-
-    def render[X <: AnyRef](valueCallback: A => X, spaceCallback: () => X, ruleCallback: () => X) = {
-      this match {
-        case DoxValue(value) => valueCallback(value)
-        case DoxRule         => ruleCallback()
-        case DoxSpace        => spaceCallback()
-      }
-    }
-    //    def render2[X <: AnyRef](callbacks: DoxOptionBuilder[A, X] => DoxOptionBuilder[A, X]) = {
-    //
-    //      this match {
-    //        case DoxValue(value) => callbacks(DoxOptionBuilder[A, X]()).valueCallback(value)
-    //        case DoxRule         => callbacks(DoxOptionBuilder[A, X]()).ruleCallback()
-    //        case DoxSpace        => callbacks(DoxOptionBuilder[A, X]()).spaceCallback()
-    //      }
-    //    }
-
-  }
+  import DoxContent._
 
   protected val content = ArrayBuffer[DoxOption[T]]()
 
