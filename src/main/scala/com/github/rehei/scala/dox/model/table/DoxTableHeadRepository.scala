@@ -60,7 +60,6 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
     children
       .filter(_.nodeType != DoxTableKeyNodeType.BLANK)
       .filter(_.nodeType != DoxTableKeyNodeType.WHITESPACE)
-      .filter(_.nodeType != DoxTableKeyNodeType.COLUMNSPACE)
   }
 
 }

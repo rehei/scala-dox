@@ -28,7 +28,7 @@ case class DoxTableSupport() {
   protected def applyColumnSpace(node: DoxTableKeyNode) = {
     val factory = DoxTableKeyNodeFactory()
     if (!node.isLeaf()) {
-      Seq(node.addSpaces(), factory.Columnspace())
+      Seq(node.addSpaces(), factory.Blank())
     } else {
       Seq(node)
     }

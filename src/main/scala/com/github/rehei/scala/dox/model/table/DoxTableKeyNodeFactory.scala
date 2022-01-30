@@ -46,15 +46,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
-  object Columnspace {
-    def apply() = {
-      node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(WIDTH_MIN))
-    }
-    def apply(width: Double) = {
-      node(DoxTableKeyNodeType.COLUMNSPACE).config(DoxTableKeyConfig.NONE).width(Some(width))
-    }
-  }
-
   object Index {
     def apply() = new {
       def width(_width: Option[Double]) = {
@@ -69,6 +60,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Blank {
+    def apply() = {
+      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.NONE).width(Some(WIDTH_MIN))
+    }
+    def apply(width: Double) = {
+      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.NONE).width(Some(width))
+    }
     def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
       val config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment))
       new DoxTableKeyNode(DoxTableKeyNodeType.BLANK, configExt(config), Seq.empty, None) with Writeable {

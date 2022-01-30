@@ -21,7 +21,11 @@ object DoxTableKeyNodeType {
       TextFactory.NONE
     }
   }
-  object BLANK extends DoxTableKeyNodeType("BLANK")
+  object BLANK extends DoxTableKeyNodeType("BLANK") {
+    override def valueOf(index: Int, element: AnyRef) = {
+      TextFactory.NONE
+    }
+  }
   object VALUE extends DoxTableKeyNodeType("VALUE") {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE
@@ -33,11 +37,6 @@ object DoxTableKeyNodeType {
     }
   }
 
-  object COLUMNSPACE extends DoxTableKeyNodeType("COLUMNSPACE") {
-    override def valueOf(index: Int, element: AnyRef) = {
-      TextFactory.NONE
-    }
-  }
 }
 
 abstract class DoxTableKeyNodeType(typey: String) {

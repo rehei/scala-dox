@@ -43,7 +43,6 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
     list
       .filter(_.node.nodeType != DoxTableKeyNodeType.BLANK)
       .filter(_.node.nodeType != DoxTableKeyNodeType.WHITESPACE)
-      .filter(_.node.nodeType != DoxTableKeyNodeType.COLUMNSPACE)
       .size > 0
   }
 
