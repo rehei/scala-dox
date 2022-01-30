@@ -5,7 +5,7 @@ import java.nio.file.Path
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.model.DoxEquationFile
 
-class TexEquation2File(protected val baseDirectory: Path) {
+class SerializeEquation(protected val baseDirectory: Path) {
 
   protected val prefix = "generated"
   protected val nextID = NextID("equation")

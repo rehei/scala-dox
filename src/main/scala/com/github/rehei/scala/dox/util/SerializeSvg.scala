@@ -6,7 +6,7 @@ import scala.xml.Xhtml
 
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 
-class Svg2File(protected val baseDirectory: Path) {
+class SerializeSvg(protected val baseDirectory: Path) {
 
   protected val nextID = NextID("image")
   protected val prefix = "generated"

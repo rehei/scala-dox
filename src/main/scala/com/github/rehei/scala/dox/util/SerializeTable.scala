@@ -4,7 +4,7 @@ import java.nio.file.Path
 
 import com.github.rehei.scala.dox.model.table.DoxTableFile
 
-class TexTable2File(protected val baseDirectory: Path) {
+class SerializeTable(protected val baseDirectory: Path) {
 
   protected val prefix = "generated"
   protected val nextID = NextID("table")
