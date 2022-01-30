@@ -8,9 +8,12 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.model.table.content.DoxContent
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_], isInnerTable: Boolean) {
 
+  import DoxContent._
+  
   protected object ColumnType {
     private val baseString = """\arraybackslash}p"""
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
@@ -128,8 +131,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   }
 
   protected def appendTableBody() {
-
-    import com.github.rehei.scala.dox.model.table.content.DoxContent._
 
     for (row <- model.body()) {
       row match {
