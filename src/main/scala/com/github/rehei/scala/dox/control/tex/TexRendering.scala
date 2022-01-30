@@ -165,17 +165,10 @@ class TexRendering(
     if (!floating) {
       \ FloatBarrier;
     }
-    svg.titleOption.map {
-      title =>
-        val filename = svgHandle.serialize(svg).toString()
-        \ includesvgImage & { filename } { escape(fileLabel(svg.label)) } { title }
-    } getOrElse {
-      $ { _ figure & { ###(POSITIONING_FIGURE) } } {
-
-        \ centering;
-        appendTransformableSVG(svg)
-        \ caption & { escape(fileLabel(svg.label)) }
-      }
+    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
+      \ centering;
+      appendTransformableSVG(svg)
+      \ caption & { escape(fileLabel(svg.label)) }
     }
     if (!floating) {
       \ FloatBarrier;

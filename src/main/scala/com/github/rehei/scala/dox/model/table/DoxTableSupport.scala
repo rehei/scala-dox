@@ -25,7 +25,7 @@ case class DoxTableSupport() {
       .sliding(2)
       .flatMap({
         case Seq(firstChild, _) => applyColumnSpace(firstChild)
-        case Seq(onlyChild)     => Seq(onlyChild.addSpaces())
+        case Seq(onlyChild)     => Seq(addSpaces(onlyChild))
       }).toSeq
   }
 
