@@ -9,7 +9,9 @@ import scala.Option
 import java.util.Optional
 
 object DoxTableKeyNodeType {
+  
   object INTERMEDIATE extends DoxTableKeyNodeType
+  
   object ROOT extends DoxTableKeyNodeType
 
   object BLANK extends DoxTableKeyNodeType {

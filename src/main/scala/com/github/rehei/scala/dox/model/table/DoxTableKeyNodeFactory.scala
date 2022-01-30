@@ -9,8 +9,6 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
-  protected val WIDTH_MIN = 0.001
-
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
       new DoxTableKeyNode(this.nodeType, this.config, this.children ++ additionalChildren, None) with Writeable
@@ -29,28 +27,28 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.name("Root").alignment(_.CENTER)), Seq.empty, None) with Writeable
+      nodeWritable(DoxTableKeyNodeType.ROOT).config(_.name("Root").alignment(_.CENTER))
     }
   }
 
   object Index {
     def apply() = {
-      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.name("").alignment(_.CENTER))
+      node(DoxTableKeyNodeType.INDEX).config(_.name("").alignment(_.CENTER))
     }
     def apply(name: String) = {
-      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.name(name).alignment(_.CENTER))
+      node(DoxTableKeyNodeType.INDEX).config(_.name(name).alignment(_.CENTER))
     }
   }
 
   object Blank {
     def apply() = {
-      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.name("").alignment(_.CENTER)).width(Some(WIDTH_MIN))
+      node(DoxTableKeyNodeType.BLANK).config(_.name("").alignment(_.CENTER)).width(None)
     }
     def apply(width: Double) = {
-      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.name("").alignment(_.CENTER)).width(Some(width))
+      node(DoxTableKeyNodeType.BLANK).config(_.name("").alignment(_.CENTER)).width(Some(width))
     }
     def apply(widthOption: Option[Double]) = {
-      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.name("").alignment(_.CENTER)).width(widthOption)
+      node(DoxTableKeyNodeType.BLANK).config(_.name("").alignment(_.CENTER)).width(widthOption)
     }
     def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
       val config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment))
@@ -78,22 +76,16 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
-  protected def nodeWritable(_nodeType: DoxTableKeyNodeType) = {
-    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty, None) with Writeable {
-      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children, None) with Writeable {
-        def width(_width: Option[Double]) = {
-          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children, None) with Writeable
-        }
-      }
+  protected def nodeWritable(_nodeType: DoxTableKeyNodeType) = new {
+    def config(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
+      new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended(_config(DoxTableKeyConfig), None), Seq.empty, None) with Writeable
     }
   }
 
-  protected def node(_nodeType: DoxTableKeyNodeType) = {
-    new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended.NONE, Seq.empty, None) {
-      def config(_config: DoxTableKeyConfig) = new DoxTableKeyNode(nodeType, configExt(_config), children, None) {
-        def width(_width: Option[Double]) = {
-          new DoxTableKeyNode(nodeType, config.setCategoryWidth(_width), children, None)
-        }
+  protected def node(_nodeType: DoxTableKeyNodeType) = new {
+    def config(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = new {
+      def width(_width: Option[Double]) = {
+        new DoxTableKeyNode(_nodeType, DoxTableKeyConfigExtended(_config(DoxTableKeyConfig), _width), Seq.empty, None)
       }
     }
   }
