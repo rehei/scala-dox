@@ -29,32 +29,28 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.NONE.name("Root")), Seq.empty, None) with Writeable
+      new DoxTableKeyNode(DoxTableKeyNodeType.ROOT, configExt(DoxTableKeyConfig.name("Root").alignment(_.CENTER)), Seq.empty, None) with Writeable
     }
   }
 
   object Index {
-    def apply() = new {
-      def width(_width: Option[Double]) = {
-        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.copy(alignment = DoxTableAlignment.CENTER)).width(_width)
-      }
+    def apply() = {
+      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.name("").alignment(_.CENTER))
     }
-    def apply(name: String) = new {
-      def width(_width: Option[Double]) = {
-        nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.NONE.name(name).copy(alignment = DoxTableAlignment.CENTER)).width(_width)
-      }
+    def apply(name: String) = {
+      nodeWritable(DoxTableKeyNodeType.INDEX).config(DoxTableKeyConfig.name(name).alignment(_.CENTER))
     }
   }
 
   object Blank {
     def apply() = {
-      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.NONE).width(Some(WIDTH_MIN))
+      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.name("").alignment(_.CENTER)).width(Some(WIDTH_MIN))
     }
     def apply(width: Double) = {
-      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.NONE).width(Some(width))
+      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.name("").alignment(_.CENTER)).width(Some(width))
     }
     def apply(widthOption: Option[Double]) = {
-      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.NONE).width(widthOption)
+      node(DoxTableKeyNodeType.BLANK).config(DoxTableKeyConfig.name("").alignment(_.CENTER)).width(widthOption)
     }
     def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
       val config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment))

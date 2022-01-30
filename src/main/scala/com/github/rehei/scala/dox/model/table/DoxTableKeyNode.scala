@@ -13,9 +13,10 @@ case class DoxTableKeyNode(
   children:    Seq[DoxTableKeyNode],
   queryOption: Option[Query[_]]) {
 
+  protected val tableSupport = DoxTableSupport()
 
   def addSpaces() = {
-    DoxTableSupport().addSpaces(this)
+    DoxTableSupport()addSpaces(this)
   }
 
   def valueOf(index: Int, element: AnyRef) = {

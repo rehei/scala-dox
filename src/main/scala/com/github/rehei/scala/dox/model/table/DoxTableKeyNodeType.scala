@@ -9,25 +9,20 @@ import scala.Option
 import java.util.Optional
 
 object DoxTableKeyNodeType {
-//  object NONE extends DoxTableKeyNodeType("NONE")
-  object INTERMEDIATE extends DoxTableKeyNodeType("INTERMEDIATE") {
-    override def valueOf(index: Int, element: AnyRef) = {
-      TextFactory.NONE
-    }
-  }
-  object ROOT extends DoxTableKeyNodeType("ROOT")
+  object INTERMEDIATE extends DoxTableKeyNodeType
+  object ROOT extends DoxTableKeyNodeType
 
-  object BLANK extends DoxTableKeyNodeType("BLANK") {
+  object BLANK extends DoxTableKeyNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE
     }
   }
-  object VALUE extends DoxTableKeyNodeType("VALUE") {
+  object VALUE extends DoxTableKeyNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE
     }
   }
-  object INDEX extends DoxTableKeyNodeType("INDEX") {
+  object INDEX extends DoxTableKeyNodeType {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.text(index.toString())
     }
@@ -35,14 +30,10 @@ object DoxTableKeyNodeType {
 
 }
 
-abstract class DoxTableKeyNodeType(typey: String) {
-
-  override def toString() = {
-    typey
-  }
+abstract class DoxTableKeyNodeType {
 
   def valueOf(index: Int, element: AnyRef): TextAST = {
-    throw new UnsupportedOperationException(typey)
+    throw new UnsupportedOperationException()
   }
 
 }

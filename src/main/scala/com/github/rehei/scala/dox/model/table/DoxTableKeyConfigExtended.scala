@@ -1,7 +1,7 @@
 package com.github.rehei.scala.dox.model.table
 
-object DoxTableKeyConfigExtended extends DoxTableKeyConfigExtended(DoxTableKeyConfig.NONE, None) {
-  val NONE = this
+object DoxTableKeyConfigExtended {
+  val NONE = DoxTableKeyConfigExtended(DoxTableKeyConfig.name("").alignment(_.CENTER), None)
 }
 
 case class DoxTableKeyConfigExtended(base: DoxTableKeyConfig, widthOption: Option[Double]) {
