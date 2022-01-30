@@ -32,7 +32,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       if (max > 0) {
         val extension = {
           if (base.children.isEmpty) {
-            Seq(factory.Whitespace(base.config.widthOption))
+            Seq(factory.Blank(base.config.widthOption))
           } else {
             Seq.empty
           }
@@ -57,9 +57,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
   }
 
   protected def nonEmptyChildren(children: Seq[DoxTableKeyNode]) = {
-    children
-      .filter(_.nodeType != DoxTableKeyNodeType.BLANK)
-      .filter(_.nodeType != DoxTableKeyNodeType.WHITESPACE)
+    children.filter(_.nodeType != DoxTableKeyNodeType.BLANK)
   }
 
 }

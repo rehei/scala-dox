@@ -16,11 +16,7 @@ object DoxTableKeyNodeType {
     }
   }
   object ROOT extends DoxTableKeyNodeType("ROOT")
-  object WHITESPACE extends DoxTableKeyNodeType("WHITESPACE") {
-    override def valueOf(index: Int, element: AnyRef) = {
-      TextFactory.NONE
-    }
-  }
+
   object BLANK extends DoxTableKeyNodeType("BLANK") {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE
