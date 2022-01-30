@@ -13,7 +13,7 @@ import com.github.rehei.scala.dox.control.DoxBuilderEquation
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.text.TextAST
 
-class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null, null) {
+class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
   override def label(reference: DoxReferenceText) = this
   override def chapter(name: String) = this

@@ -64,12 +64,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Node {
-    def apply(_config: DoxTableKeyConfig) = {
-      new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, DoxTableKeyConfigExtended(_config, None), Seq.empty, None) with Writeable {
+    def apply(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, DoxTableKeyConfigExtended(_config(DoxTableKeyConfig), None), Seq.empty, None) with Writeable {
         def width(_width: Option[Double]) = new {
           def finalize(callback: Query[T] => Query[_]) = {
             val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.VALUE, DoxTableKeyConfigExtended(_config, _width), Seq.empty, Some(query))
+            DoxTableKeyNode(DoxTableKeyNodeType.VALUE, DoxTableKeyConfigExtended(_config(DoxTableKeyConfig), _width), Seq.empty, Some(query))
           }
         }
       }

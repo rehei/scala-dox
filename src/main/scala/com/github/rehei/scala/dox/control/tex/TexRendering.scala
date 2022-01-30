@@ -22,7 +22,6 @@ import com.github.rehei.scala.dox.text.util.Text2TEX
 class TexRendering(
   baseAST:        TexAST,
   floating:       Boolean,
-  indexKeyConfig: DoxTableKeyConfig,
   svgHandle:      DoxHandleSvg,
   i18n:           DoxI18N,
   bibHandle:      DoxBibKeyRendering,
