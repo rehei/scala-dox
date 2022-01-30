@@ -16,14 +16,10 @@ case class DoxTableKeyNode(
   children:    Seq[DoxTableKeyNode],
   queryOption: Option[Query[_]]) {
 
-  protected val tableSupport = DoxTableSupport(this)
+  protected val tableSupport = DoxTableSupport()
 
   def addSpaces() = {
     this.copy(children = tableSupport.addChildrenSpaces(this))
-  }
-
-  def setNodeType(newNodeType: DoxTableKeyNodeType) = {
-    this.copy(nodeType = newNodeType)
   }
 
   def valueOf(index: Int, element: AnyRef) = {

@@ -2,9 +2,10 @@ package com.github.rehei.scala.dox.model.table
 
 import com.github.rehei.scala.dox.text.TextFactory
 
-case class DoxTableSupport(root: DoxTableKeyNode) {
+case class DoxTableSupport() {
 
   def addChildrenSpaces(node: DoxTableKeyNode) = {
+
     spacedColumns(node.children)
   }
 
