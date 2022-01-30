@@ -43,24 +43,10 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       }
     }
 
-    def myUpdate() = {
-      extend(base)
-    }
-
-    protected def extend(node: DoxTableKeyNode): DoxTableKeyNode = {
-
-      if (node.isLeaf()) {
-        node.copy(children = Seq(node.copy(nodeType = DoxTableKeyNodeType.WHITESPACE), factory.Columnspace()))
-      } else {
-        node.copy(children = node.children.map(extend))
-      }
-
-    }
-
   }
 
   def list() = {
-    val transformedRoot = root.fillTreeWithWhitespaceNodes().myUpdate()
+    val transformedRoot = root.withColumnSpace().fillTreeWithWhitespaceNodes()
     for (
       level <- Range.inclusive(1, transformedRoot.depth());
       val filteredChildren = transformedRoot.byLevel(level)

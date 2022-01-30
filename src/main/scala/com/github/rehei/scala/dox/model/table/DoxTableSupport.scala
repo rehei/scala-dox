@@ -5,7 +5,6 @@ import com.github.rehei.scala.dox.text.TextFactory
 case class DoxTableSupport() {
 
   def addChildrenSpaces(node: DoxTableKeyNode) = {
-
     spacedColumns(node.children)
   }
 
@@ -23,7 +22,6 @@ case class DoxTableSupport() {
       .flatMap({
         case Seq(firstChild, _) => applyColumnSpace(firstChild)
         case Seq(onlyChild)     => Seq(onlyChild.addSpaces())
-        case other              => other
       }).toSeq
   }
 
