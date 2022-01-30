@@ -26,24 +26,26 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   protected case class InnerTableOn(factory: TexMarkupFactory) extends TableMode {
     import factory._
-    def toprule = Unit
-    def bottomrule = {
+    def toprule() {
+      // nothing
+    }
+    def bottomrule() {
       cmidrule()
     }
   }
   protected case class InnerTableOff(factory: TexMarkupFactory) extends TableMode {
     import factory._
-    def toprule = {
+    def toprule() {
       \ toprule
     }
-    def bottomrule = {
+    def bottomrule() {
       \ bottomrule
     }
   }
 
   abstract class TableMode {
-    def toprule: Unit
-    def bottomrule: Unit
+    def toprule(): Unit
+    def bottomrule(): Unit
   }
 
   protected val COLUMN_SIZE_DEFAULT = 2.0
@@ -66,37 +68,39 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   protected def create() {
     $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
-      tableMode.toprule
+      tableMode.toprule()
       appendTableHead()
       \ midrule;
       appendTableBody()
-      tableMode.bottomrule
+      tableMode.bottomrule()
     }
   }
 
   protected def columnConfigTotalSize() = {
-    val columnSizes = model.columns().map(_.widthOption.getOrElse(COLUMN_SIZE_DEFAULT))
-    val tabColSeps = model.columnCount() * 2
+    val columnSizes = model.dimension().map(_.widthOption.getOrElse(COLUMN_SIZE_DEFAULT))
+    val tabColSeps = model.dimension().size * 2
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
   }
 
   protected def columnConfigEachColumnSize() = {
-    model.columns().map(column => getTexAlignment(column)).mkString
+    model.dimension().map(config => getTexAlignment(config)).mkString
   }
 
   protected def appendTableHead() {
-    for (row <- model.head) {
-      setCategories(getMappedHead(row))
+    for (row <- model.head()) {
+      appendTableHeadRow(row)
     }
+  }
+
+  protected def appendTableHeadRow(row: DoxTableHeadRow) = {
+    val mappedHead = getMappedHead(row)
+
+    \ plain { mappedHead.map(_.content.generate()).mkString(" & ") + "\\\\" }
+    \ plain { mappedHead.flatMap(_.ruleOption).map(_.generate()).mkString(" ") + "\n" }
   }
 
   protected def getMappedHead(row: DoxTableHeadRow) = {
     withOffset(row.values).map(row => asMappedTableHeadKey(row)).toSeq
-  }
-
-  protected def setCategories(mappedHead: Seq[MappedTableHeadKey]) = {
-    \ plain { mappedHead.map(_.content.generate()).mkString(" & ") + "\\\\" }
-    \ plain { mappedHead.flatMap(_.ruleOption).map(_.generate()).mkString(" ") + "\n" }
   }
 
   protected def asMappedTableHeadKey(value: DoxTableHeadRowKeyWithOffset) = {
@@ -105,7 +109,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     val target = value.offset + value.key.size - 1
 
     val ruleOption = {
-      if (value.key.rule) {
+      if (value.key.hasNonEmptyChildren) {
         Some(\\ cmidrule & { s"${value.offset}-${target}" })
       } else {
         None
@@ -119,16 +123,15 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
-    var offset = 1
-    for (row <- input) yield {
-      val result = DoxTableHeadRowKeyWithOffset(offset, row)
-      offset = offset + row.size
-      result
+    for ((row, index) <- input.zipWithIndex) yield {
+      val offset = 1 + input.take(index).map(_.size).sum
+
+      DoxTableHeadRowKeyWithOffset(offset, row)
     }
   }
 
   protected def appendTableBody() {
-    for (row <- model.data()) {
+    for (row <- model.body()) {
       row.render(renderValue, renderSpace, renderRule)
     }
   }
@@ -146,7 +149,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def cmidrule() = {
-    \ plain { (\\ cmidrule { s"1-${model.columnCount()}" }).generate() + "\n" }
+    \ plain { (\\ cmidrule { s"1-${model.dimension().size}" }).generate() + "\n" }
   }
 
   protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {

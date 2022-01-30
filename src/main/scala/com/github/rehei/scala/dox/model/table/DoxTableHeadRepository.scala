@@ -45,11 +45,10 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
     val transformedRoot = root.fillTreeWithWhitespaceNodes()
     for (
       level <- Range.inclusive(1, transformedRoot.depth());
-      val filteredChildren = filterNotBlank(transformedRoot.byLevel(level));
-      if (!filteredChildren.isEmpty)
+      val filteredChildren = transformedRoot.byLevel(level)
     ) yield {
       DoxTableHeadRow(
-        filteredChildren.map(m => DoxTableHeadRowKey(m.config, m.width(), m.hasNonEmptyChildren())))
+        filteredChildren.map(m => DoxTableHeadRowKey(m, m.config, m.width(), m.hasNonEmptyChildren())))
     }
   }
   protected def filterNotBlank(children: Seq[DoxTableKeyNode]) = {
