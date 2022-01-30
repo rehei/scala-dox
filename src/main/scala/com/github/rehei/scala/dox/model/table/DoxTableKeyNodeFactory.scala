@@ -51,12 +51,12 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(widthOption)
     }
     def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
-      val config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment))
-      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK,  DoxTableKeyConfigExtended(config, None), Seq.empty, None) with Writeable {
+      val _config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment))
+      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK,  DoxTableKeyConfigExtended(_config, None), Seq.empty, None) with Writeable {
         def width(_width: Option[Double]) = new {
           def finalize(callback: Query[T] => Query[_]) = {
             val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.BLANK, config.setCategoryWidth(_width), Seq.empty, Some(query))
+            DoxTableKeyNode(DoxTableKeyNodeType.BLANK, DoxTableKeyConfigExtended(_config, _width), Seq.empty, Some(query))
           }
         }
       }
