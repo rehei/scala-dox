@@ -4,13 +4,17 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableSupport() {
 
+  def addSpaces(node: DoxTableKeyNode) = {
+    node.copy(children = addChildrenSpaces(node))
+  }
+
   def addChildrenSpaces(node: DoxTableKeyNode) = {
     spacedColumns(node.children)
   }
 
   protected def spacedColumns(children: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
     if (children.length > 1) {
-      applyToAllExceptLast(children) ++ children.lastOption.map(last => Seq(last.addSpaces())).getOrElse(Seq())
+      applyToAllExceptLast(children) ++ children.lastOption.map(last => addSpaces(last)).toSeq
     } else {
       applyToAllExceptLast(children)
     }
