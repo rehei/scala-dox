@@ -1,14 +1,11 @@
 package com.github.rehei.scala.dox.model.table
 
 import scala.collection.Seq
+
+import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.macros.Query
-import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.macros.util.QReflection
-
-object DoxTableKeyNode {
-  val NONE = DoxTableKeyNode(DoxTableKeyNodeType.NONE, DoxTableKeyConfigExtended.NONE, Seq.empty, None)
-}
 
 case class DoxTableKeyNode(
   nodeType:    DoxTableKeyNodeType,

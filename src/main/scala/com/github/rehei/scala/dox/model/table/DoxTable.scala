@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox.model.table
 import scala.collection.mutable.ArrayBuffer
 
 object DoxTable {
-  val NONE = new DoxTable(DoxTableKeyNode.NONE)
+//  val NONE = new DoxTable(DoxTableKeyNode.NONE)
 }
 
 case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {

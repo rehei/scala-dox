@@ -27,8 +27,8 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
     }
   }
 
-  def createTables() = {
-    for (model <- modelSequence.sequence if (model != DoxTable.NONE)) {
+  protected def createTables() = {
+    for (model <- modelSequence.sequence) {
       \ plain { "{" + getTable(model) + "}" }
       endRowEntry()
     }

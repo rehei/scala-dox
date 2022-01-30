@@ -9,7 +9,7 @@ import scala.Option
 import java.util.Optional
 
 object DoxTableKeyNodeType {
-  object NONE extends DoxTableKeyNodeType("NONE")
+//  object NONE extends DoxTableKeyNodeType("NONE")
   object INTERMEDIATE extends DoxTableKeyNodeType("INTERMEDIATE") {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.NONE

@@ -13,7 +13,7 @@ import com.github.rehei.scala.dox.model.table.content.DoxContent
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_], isInnerTable: Boolean) {
 
   import DoxContent._
-  
+
   protected object ColumnType {
     private val baseString = """\arraybackslash}p"""
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
@@ -24,8 +24,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   }
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
-  protected case class InnerTableOn(factory: TexMarkupFactory) extends TableMode {
-    import factory._
+  protected case class InnerTableOn() extends TableMode {
     def toprule() {
       // nothing
     }
@@ -33,8 +32,8 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
       cmidrule()
     }
   }
-  protected case class InnerTableOff(factory: TexMarkupFactory) extends TableMode {
-    import factory._
+  protected case class InnerTableOff() extends TableMode {
+    import tmpMarkup._
     def toprule() {
       \ toprule
     }
@@ -53,9 +52,9 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
   protected val tableMode = {
     if (isInnerTable) {
-      InnerTableOn(tmpMarkup)
+      InnerTableOn()
     } else {
-      InnerTableOff(tmpMarkup)
+      InnerTableOff()
     }
   }
 
@@ -125,7 +124,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
     for ((row, index) <- input.zipWithIndex) yield {
       val offset = 1 + input.take(index).map(_.size).sum
-
       DoxTableHeadRowKeyWithOffset(offset, row)
     }
   }

@@ -128,41 +128,37 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxTableViewModelSequence) {
-    if (!table.models.sequence.filterNot(_ == DoxTable.NONE).isEmpty) {
-      val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title).createTableString()
-      val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
-      if (!floating) {
-        \ FloatBarrier;
-      }
+    val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title).createTableString()
+    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+    if (!floating) {
+      \ FloatBarrier;
+    }
 
-      $ { _ table & { ###("H") } } {
+    $ { _ table & { ###("H") } } {
 
-        \ centering;
-        \ input { filename }
-        \ caption & { escape(fileLabel(table.label)) }
-      }
+      \ centering;
+      \ input { filename }
+      \ caption & { escape(fileLabel(table.label)) }
+    }
 
-      if (!floating) {
-        \ FloatBarrier;
-      }
+    if (!floating) {
+      \ FloatBarrier;
     }
   }
 
   protected def internalTable(table: DoxTableViewModel[_]) {
-    if (table.model != DoxTable.NONE) {
-      val texTable = new TexRenderingTable(baseAST, table.model.transform(), false).createTableString()
-      val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
-      if (!floating) {
-        \ FloatBarrier;
-      }
-      $ { _ table & { ###("H") } } {
-        \ centering;
-        \ input { filename }
-        \ caption & { escape(fileLabel(table.label)) }
-      }
-      if (!floating) {
-        \ FloatBarrier;
-      }
+    val texTable = new TexRenderingTable(baseAST, table.model.transform(), false).createTableString()
+    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+    if (!floating) {
+      \ FloatBarrier;
+    }
+    $ { _ table & { ###("H") } } {
+      \ centering;
+      \ input { filename }
+      \ caption & { escape(fileLabel(table.label)) }
+    }
+    if (!floating) {
+      \ FloatBarrier;
     }
   }
 

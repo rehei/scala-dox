@@ -47,10 +47,11 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
   def list() = {
     val transformedRoot = root.withColumnSpace().fillTreeWithWhitespaceNodes()
-    for (
-      level <- Range.inclusive(1, transformedRoot.depth());
+
+    for (level <- Range.inclusive(1, transformedRoot.depth())) yield {
+
       val filteredChildren = transformedRoot.byLevel(level)
-    ) yield {
+
       DoxTableHeadRow(
         filteredChildren.map(m => DoxTableHeadRowKey(m, m.config, m.width(), m.hasNonEmptyChildren())))
     }
