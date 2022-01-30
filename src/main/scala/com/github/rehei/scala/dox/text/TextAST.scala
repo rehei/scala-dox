@@ -8,6 +8,10 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence ++ in.sequence)
   }
 
+  def space() = {
+    text(" ")
+  }
+
   def text(in: String) = {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
@@ -42,10 +46,6 @@ case class TextAST(val sequence: Seq[TextObject]) {
 
   def arrowUp() = {
     this.copy(sequence = sequence :+ TextObjectArrowUp())
-  }
-
-  def space() = {
-    this.copy(sequence = sequence :+ TextObjectSpace())
   }
 
   def rule() = {
