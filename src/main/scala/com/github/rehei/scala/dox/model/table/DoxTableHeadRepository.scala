@@ -24,6 +24,10 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
       fillTreeWithWhitespaceNodesByLevel(base.depth())
     }
 
+    def withColumnSpace() = {
+      base.addSpaces()
+    }
+
     protected def fillTreeWithWhitespaceNodesByLevel(max: Int): DoxTableKeyNode = {
       if (max > 0) {
         val extension = {
@@ -42,20 +46,13 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
   }
 
   def list() = {
-    val transformedRoot = root.fillTreeWithWhitespaceNodes()
+    val transformedRoot = root.withColumnSpace().fillTreeWithWhitespaceNodes()
     for (
       level <- Range.inclusive(1, transformedRoot.depth());
       val filteredChildren = transformedRoot.byLevel(level)
     ) yield {
       DoxTableHeadRow(
         filteredChildren.map(m => DoxTableHeadRowKey(m, m.config, m.width(), m.hasNonEmptyChildren())))
-    }
-  }
-  protected def filterNotBlank(children: Seq[DoxTableKeyNode]) = {
-    if (children.exists(_.nodeType == DoxTableKeyNodeType.BLANK)) {
-      nonEmptyChildren(children)
-    } else {
-      children
     }
   }
 

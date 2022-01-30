@@ -18,10 +18,6 @@ case class DoxTableKeyNode(
 
   protected val tableSupport = DoxTableSupport(this)
 
-  def removeObsoleteSpaces() = {
-    this.copy(children = tableSupport.removeChildrenObsoleteSpaces())
-  }
-
   def addSpaces() = {
     this.copy(children = tableSupport.addChildrenSpaces(this))
   }

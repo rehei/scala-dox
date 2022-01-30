@@ -25,8 +25,8 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
     }
   }
   case class DoxOptionBuilder[A <: AnyRef, X <: AnyRef](valueCallback: A => X, ruleCallback: () => X, spaceCallback: () => X)
-  
-  sealed case class DoxValue[+A](value: A) extends DoxOption[A]
+
+  sealed case class DoxValue[A <: AnyRef](value: A) extends DoxOption[A]
   case object DoxSpace extends DoxOption[Nothing]
   case object DoxRule extends DoxOption[Nothing]
 
@@ -50,7 +50,7 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
 
   }
 
-  protected val _data = ArrayBuffer[DoxOption[T]]()
+  protected val content = ArrayBuffer[DoxOption[T]]()
 
   def addAll(elementSeq: Iterable[T]) {
     for (element <- elementSeq) {
@@ -59,15 +59,15 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
   }
 
   def add(element: T) {
-    _data.append(DoxValue(element))
+    content.append(DoxValue(element))
   }
 
   def addSpace() = {
-    _data.append(DoxSpace)
+    content.append(DoxSpace)
   }
 
   def addRule() = {
-    _data.append(DoxRule)
+    content.append(DoxRule)
   }
 
   def addWithIntermediateSpacing(elementSeq: Iterable[T]) = {
@@ -76,6 +76,18 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
 
   def addWithIntermediateRule(elementSeq: Iterable[T]) = {
     addWithIntermediateCallback(elementSeq, _.addRule())
+  }
+
+  def data() = {
+    content
+  }
+
+  def head() = {
+    new DoxTableHeadRepository(root).list()
+  }
+
+  def transform() = {
+    new DoxTableMatrix(this)
   }
 
   protected def addWithIntermediateCallback(elementSeq: Iterable[T], callback: this.type => Unit) = {
@@ -87,34 +99,6 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode)(implicit clazzTag: C
         this.add(element)
       }
     }
-  }
-
-  def data() = {
-    for ((element, index) <- _data.zipWithIndex) yield {
-      element match {
-        case DoxValue(content) => DoxValue(extract(content, index + 1))
-        case DoxSpace          => DoxSpace
-        case DoxRule           => DoxRule
-      }
-    }
-  }
-
-  def head() = {
-    new DoxTableHeadRepository(root).list()
-  }
-
-  def withColumnSpace = {
-    this.copy(root = root.addSpaces())
-  }
-
-  protected def extract(element: T, index: Int) = {
-    for (node <- root.leavesRecursive()) yield {
-      node.valueOf(index, element)
-    }
-  }
-  
-  def transform() = {
-    new DoxTableMatrix(this)
   }
 
 }

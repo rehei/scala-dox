@@ -35,37 +35,4 @@ case class DoxTableSupport(root: DoxTableKeyNode) {
     }
   }
 
-  def removeChildrenObsoleteSpaces() = {
-    removeObsoleteColumnSpace(root.children)
-  }
-
-  protected def removeObsoleteColumnSpace(parentChildren: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
-    parentChildren.length match {
-      case x if (x == 0) => Seq()
-      case y if (y == 1) => getLastChild(parentChildren.head)
-      case z if (z > 1) => {
-        val cleaned = cleanSides(parentChildren)
-        getCleanedChildren(cleaned) ++ getLastChild(cleaned.last)
-      }
-    }
-  }
-
-  protected def cleanSides(children: Seq[DoxTableKeyNode]) = {
-    children.dropWhile(_.nodeType == DoxTableKeyNodeType.COLUMNSPACE).reverse.dropWhile(_.nodeType == DoxTableKeyNodeType.COLUMNSPACE).reverse
-  }
-
-  protected def getCleanedChildren(parentChildren: Seq[DoxTableKeyNode]) = {
-    (parentChildren.sliding(2).map {
-      case Seq(first, _) => first.copy(children = removeObsoleteColumnSpace(first.children))
-      case other         => DoxTableKeyNode.NONE
-    }).filterNot(_.nodeType == DoxTableKeyNodeType.NONE).toSeq
-  }
-
-  protected def getLastChild(child: DoxTableKeyNode) = {
-    (child.nodeType match {
-      case DoxTableKeyNodeType.COLUMNSPACE => Seq()
-      case other                           => Seq(child.copy(children = removeObsoleteColumnSpace(child.children)))
-    }).toSeq
-  }
-
 }
