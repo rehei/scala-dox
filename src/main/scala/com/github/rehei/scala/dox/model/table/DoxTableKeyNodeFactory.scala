@@ -42,7 +42,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Blank {
     def apply() = {
-      node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(None)
+      node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(Some(0.001))
     }
     def apply(width: Double) = {
       node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(Some(width))
