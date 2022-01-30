@@ -1,7 +1,17 @@
 package com.github.rehei.scala.dox.model.reference
 
-trait DoxReferenceBase {
+import java.math.BigInteger
+import org.apache.commons.codec.digest.MessageDigestAlgorithms
+import org.apache.commons.codec.digest.DigestUtils
+import com.github.rehei.scala.dox.util.HashUtils
 
-  def referenceID: String
+
+abstract class DoxReferenceBase {
+
+  val name: String
+
+  def hashID = {
+   HashUtils.hash(name)
+  }
 
 }

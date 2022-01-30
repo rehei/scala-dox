@@ -18,7 +18,7 @@ class Svg2File(protected val baseDirectory: Path) {
   }
 
   protected def target(figure: DoxSvgFigure) = {
-    val filename = figure.label.map(m => HashUtils.hash(m.referenceID) + ".svg").getOrElse(generateName)
+    val filename = figure.label.map(_.hashID + ".svg").getOrElse(generateName)
     baseDirectory.resolve(filename)
   }
 

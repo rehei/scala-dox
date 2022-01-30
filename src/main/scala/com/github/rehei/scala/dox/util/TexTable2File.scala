@@ -16,7 +16,7 @@ class TexTable2File(protected val baseDirectory: Path) {
   }
 
   protected def target(table: DoxTableFile) = {
-    val filename = table.label.map(m => HashUtils.hash(m.referenceID) + ".tex").getOrElse(generateName)
+    val filename = table.label.map(_.hashID + ".tex").getOrElse(generateName)
     baseDirectory.resolve(filename)
   }
 

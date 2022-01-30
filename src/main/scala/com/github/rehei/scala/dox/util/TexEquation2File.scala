@@ -17,7 +17,7 @@ class TexEquation2File(protected val baseDirectory: Path) {
   }
 
   protected def target(equation: DoxEquationFile) = {
-    val filename = equation.label.map(m => HashUtils.hash(m.referenceID) + ".tex").getOrElse(generateName)
+    val filename = equation.label.map(_.hashID + ".tex").getOrElse(generateName)
     baseDirectory.resolve(filename)
   }
 

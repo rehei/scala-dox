@@ -18,7 +18,7 @@ class TexRenderingEquation(baseAST: TexAST, equation: DoxEquation) {
       \ plain { equation.equation }
       equation
         .label
-        .map(reference => { \ label { reference.referenceID } })
+        .map(reference => { \ label { reference.name } })
     }
   }
 }

@@ -1,14 +1,6 @@
 package com.github.rehei.scala.dox.model.table
 
 import scala.collection.mutable.ArrayBuffer
-import scala.reflect._
-import com.github.rehei.scala.macros.Query
-import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.text.TextFactory
-import org.hamcrest.core.IsEqual
-import com.github.rehei.scala.dox.model.table.content.DoxContent
 
 object DoxTable {
   val NONE = new DoxTable(DoxTableKeyNode.NONE)
@@ -16,7 +8,7 @@ object DoxTable {
 
 case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {
 
-  import DoxContent._
+  import com.github.rehei.scala.dox.model.table.content.DoxContent._
 
   protected val content = ArrayBuffer[DoxOption[T]]()
 

@@ -1,26 +1,23 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
-import com.github.rehei.scala.dox.control.DoxHandleSvg
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
-import com.github.rehei.scala.dox.control.DoxHandleTable
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
-import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.DoxSvgFigure
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.control.DoxRenderingBase
-import com.github.rehei.scala.dox.model.DoxTableViewModel
-import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
-import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
-import com.github.rehei.scala.dox.model.table.DoxTableFile
-import com.github.rehei.scala.dox.model.reference.DoxReferenceText
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.control.DoxHandleEquation
+import com.github.rehei.scala.dox.control.DoxHandleSvg
+import com.github.rehei.scala.dox.control.DoxHandleTable
+import com.github.rehei.scala.dox.control.DoxRenderingBase
+import com.github.rehei.scala.dox.i18n.DoxI18N
+import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.model.DoxEquationFile
+import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.DoxTableViewModel
+import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.reference.DoxReferenceText
+import com.github.rehei.scala.dox.model.table.DoxTable
+import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
+import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.util.HashUtils
 
 class TexRendering(
   baseAST:        TexAST,
@@ -38,7 +35,7 @@ class TexRendering(
   protected val POSITIONING_FIGURE = "H"
 
   def label(reference: DoxReferenceText) = {
-    \ label { reference.referenceID }
+    \ label { reference.name }
     this
   }
 
@@ -115,7 +112,7 @@ class TexRendering(
   }
 
   def ref(reference: DoxReferenceBase) = {
-    \ ref { reference.referenceID }
+    \ ref { reference.name }
     this
   }
 
@@ -220,6 +217,6 @@ class TexRendering(
   }
 
   protected def fileLabel(label: Option[DoxReferenceBase]) = {
-    label.map(m => m.referenceID + " | " + HashUtils.hash(m.referenceID)).getOrElse("dummylabel")
+    label.map(m => m.name + " | " + m.hashID).getOrElse("dummylabel")
   }
 }
