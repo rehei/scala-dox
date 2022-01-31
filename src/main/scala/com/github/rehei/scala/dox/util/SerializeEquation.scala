@@ -1,27 +1,14 @@
 package com.github.rehei.scala.dox.util
 
-import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.model.DoxFileTable
 import java.nio.file.Path
 import com.github.rehei.scala.dox.model.DoxEquation
-import com.github.rehei.scala.dox.model.DoxEquationFile
+import com.github.rehei.scala.dox.model.DoxFileEquation
 
-class SerializeEquation(protected val baseDirectory: Path) {
+class SerializeEquation(baseDirectory: Path) extends SerializeBase(baseDirectory, "equation") {
 
-  protected val prefix = "generated"
-  protected val nextID = NextID("equation")
-
-  def generate(equation: DoxEquationFile) = {
-    val file = target(equation)
-    IOUtils.writeStringUnique(file, equation.fileContent)
-    file
+  def generate(equation: DoxFileEquation) = {
+    super.write(equation.content, equation.label, ".tex")
   }
 
-  protected def target(equation: DoxEquationFile) = {
-    val filename = equation.label.map(_.hashID + ".tex").getOrElse(generateName)
-    baseDirectory.resolve(filename)
-  }
-
-  protected def generateName() = {
-    s"${prefix}_${nextID.nextID()}.tex"
-  }
 }

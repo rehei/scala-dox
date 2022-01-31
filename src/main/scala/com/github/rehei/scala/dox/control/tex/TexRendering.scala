@@ -6,7 +6,7 @@ import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxEquation
-import com.github.rehei.scala.dox.model.DoxEquationFile
+import com.github.rehei.scala.dox.model.DoxFileEquation
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
@@ -14,7 +14,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
@@ -117,7 +117,7 @@ class TexRendering(
 
   protected def internalEquation(equation: DoxEquation) = {
     val texEquations = new TexRenderingEquation(baseAST, equation).createEquationString()
-    val filename = equationHandle.serialize(DoxEquationFile(texEquations, equation.label))
+    val filename = equationHandle.serialize(DoxFileEquation(texEquations, equation.label))
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
         \ input { filename }
@@ -128,7 +128,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModelSequence) {
     val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title).createTableString()
-    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+    val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;
     }
@@ -147,7 +147,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModel[_]) {
     val texTable = new TexRenderingTable(baseAST, table.model.transform(), false).createTableString()
-    val filename = tableHandle.serialize(DoxTableFile(texTable, table.label))
+    val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;
     }

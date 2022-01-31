@@ -4,7 +4,7 @@ import java.nio.file.Path
 
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.util.SerializeEquation
-import com.github.rehei.scala.dox.model.DoxEquationFile
+import com.github.rehei.scala.dox.model.DoxFileEquation
 
 case class DoxHandleEquation(_targetTex: Path, _targetTexEquation: Path) {
 
@@ -15,7 +15,7 @@ case class DoxHandleEquation(_targetTex: Path, _targetTexEquation: Path) {
 
   protected val tableFileGen = new SerializeEquation(targetTexTable)
 
-  def serialize(equationFile: DoxEquationFile): String = {
+  def serialize(equationFile: DoxFileEquation): String = {
     val nameTable = tableFileGen.generate(equationFile).getFileName.toString()
 
     targetTex.relativize(targetTexTable.resolve(nameTable)).toString()

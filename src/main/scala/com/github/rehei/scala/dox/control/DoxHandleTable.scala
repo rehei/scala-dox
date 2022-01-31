@@ -8,7 +8,7 @@ import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.SerializeSvg
 import com.github.rehei.scala.dox.util.SvgMode
-import com.github.rehei.scala.dox.model.table.DoxTableFile
+import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.util.SerializeTable
 
 case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path) {
@@ -20,7 +20,7 @@ case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path) {
 
   protected val tableFileGen = new SerializeTable(targetTexTable)
 
-  def serialize(table: DoxTableFile): String = {
+  def serialize(table: DoxFileTable): String = {
     val nameTable = tableFileGen.generate(table).getFileName.toString()
 
     targetTex.relativize(targetTexTable.resolve(nameTable)).toString()

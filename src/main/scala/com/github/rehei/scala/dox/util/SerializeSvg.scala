@@ -6,24 +6,14 @@ import scala.xml.Xhtml
 
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 
-class SerializeSvg(protected val baseDirectory: Path) {
-
-  protected val nextID = NextID("image")
-  protected val prefix = "generated"
+class SerializeSvg(baseDirectory: Path) extends SerializeBase(baseDirectory, "image") {
 
   def generate(figure: DoxSvgFigure) = {
-    val file = target(figure)
-    IOUtils.writeStringUnique(file, Xhtml.toXhtml(figure.image))
-    file
+    super.write(content(figure), figure.label, ".svg")
   }
 
-  protected def target(figure: DoxSvgFigure) = {
-    val filename = figure.label.map(_.hashID + ".svg").getOrElse(generateName)
-    baseDirectory.resolve(filename)
-  }
-
-  protected def generateName() = {
-    s"${prefix}_${nextID.nextID()}.svg"
+  protected def content(figure: DoxSvgFigure) = {
+    Xhtml.toXhtml(figure.image)
   }
 
 }
