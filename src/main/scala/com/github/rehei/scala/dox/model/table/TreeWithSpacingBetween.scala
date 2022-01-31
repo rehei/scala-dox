@@ -4,38 +4,36 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class TreeWithSpacingBetween() {
 
-  def addSpaces(node: DoxTableKeyNode) = {
-    node.copy(children = addChildrenSpaces(node))
-  }
+  case class SiblingLookahead(node: Option[DoxTableKeyNode], next: Option[DoxTableKeyNode])
 
-  protected def addChildrenSpaces(node: DoxTableKeyNode) = {
-    spacedColumns(node.children)
-  }
+  protected val factory = DoxTableKeyNodeFactory()
 
-  protected def spacedColumns(children: Seq[DoxTableKeyNode]): Seq[DoxTableKeyNode] = {
-    if (children.length > 1) {
-      applyToAllExceptLast(children) ++ children.lastOption.map(last => addSpaces(last)).toSeq
-    } else {
-      applyToAllExceptLast(children)
+  def addSpaces(base: DoxTableKeyNode): DoxTableKeyNode = {
+
+    val all = base.children.indices.map(index => toLookahead(base, index))
+
+    val children = {
+      {
+        for (wrapper <- all) yield {
+          wrapper match {
+            case SiblingLookahead(Some(node), Some(next)) if node.isLeaf() => Seq(node, factory.Blank())
+            case SiblingLookahead(Some(node), Some(next))                  => Seq(addSpaces(node), factory.Blank())
+            case SiblingLookahead(Some(node), None) if (node.isLeaf())     => Seq(node)
+            case SiblingLookahead(Some(node), None)                        => Seq(addSpaces(node))
+          }
+        }
+      }
     }
+
+    base.copy(children = children.flatten)
   }
 
-  protected def applyToAllExceptLast(children: Seq[DoxTableKeyNode]) = {
-    children
-      .sliding(2)
-      .flatMap({
-        case Seq(firstChild, _) => applyColumnSpace(firstChild)
-        case Seq(onlyChild)     => Seq(addSpaces(onlyChild))
-      }).toSeq
-  }
+  protected def toLookahead(base: DoxTableKeyNode, index: Int) = {
 
-  protected def applyColumnSpace(node: DoxTableKeyNode) = {
-    val factory = DoxTableKeyNodeFactory()
-    if (!node.isLeaf()) {
-      Seq(addSpaces(node), factory.Blank())
-    } else {
-      Seq(node)
-    }
+    val node = base.children.lift(index)
+    val next = base.children.lift(index + 1)
+
+    SiblingLookahead(node, next)
   }
 
 }

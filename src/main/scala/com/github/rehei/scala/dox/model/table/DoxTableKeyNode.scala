@@ -18,7 +18,7 @@ case class DoxTableKeyNode(
       .map(query => queryReflection(element, query))
       .getOrElse(nodeType.valueOf(index, element))
   }
-
+  
   def hasNonEmptyChildren() = {
     children.filter(_.nodeType != DoxTableKeyNodeType.BLANK).size > 0
   }
