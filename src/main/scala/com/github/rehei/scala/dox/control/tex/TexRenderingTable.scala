@@ -76,9 +76,9 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   }
 
   protected def columnConfigTotalSize() = {
-    val columnSizes = model.dimension().map(_.widthOption.getOrElse(COLUMN_SIZE_DEFAULT))
-    val tabColSeps = model.dimension().size * 2
-    "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + columnSizes.sum + "cm"
+    val totalWidth = model.totalWidth(COLUMN_SIZE_DEFAULT)
+    val totalSeparatorCount = model.totalSeparatorCount()
+    "\\dimexpr(\\tabcolsep*" + totalSeparatorCount + ")+" + totalWidth + "cm"
   }
 
   protected def columnConfigEachColumnSize() = {

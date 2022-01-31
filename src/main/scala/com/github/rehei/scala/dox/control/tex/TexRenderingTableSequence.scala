@@ -69,7 +69,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
 
   protected def totalSizeTex() = {
     val width = modelSequence.totalWidth(COLUMN_SIZE_DEFAULT)
-    val tabColSeps = modelSequence.tabcolSeps()
+    val tabColSeps = modelSequence.totalSeparatorCount()
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + width + "cm"
   }

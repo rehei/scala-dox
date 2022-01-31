@@ -17,6 +17,14 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
     }
   }
 
+  def totalWidth(widthDefault: Double) = {
+    dimension().map(_.widthOption.getOrElse(widthDefault)).sum
+  }
+
+  def totalSeparatorCount() = {
+    dimension().size * 2
+  }
+
   def dimension() = {
     lastHead().map(_.node.config)
   }
