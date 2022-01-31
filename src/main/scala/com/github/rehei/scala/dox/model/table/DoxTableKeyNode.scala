@@ -13,16 +13,14 @@ case class DoxTableKeyNode(
   children:    Seq[DoxTableKeyNode],
   queryOption: Option[Query[_]]) {
 
-  protected val tableSupport = DoxTableSupport()
-
-  def addSpaces() = {
-    DoxTableSupport()addSpaces(this)
-  }
-
   def valueOf(index: Int, element: AnyRef) = {
     queryOption
       .map(query => queryReflection(element, query))
       .getOrElse(nodeType.valueOf(index, element))
+  }
+
+  def hasNonEmptyChildren() = {
+    children.filter(_.nodeType != DoxTableKeyNodeType.BLANK).size > 0
   }
 
   def depth(): Int = {

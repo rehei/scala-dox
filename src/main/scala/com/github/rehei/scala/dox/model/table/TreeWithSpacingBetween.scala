@@ -2,13 +2,13 @@ package com.github.rehei.scala.dox.model.table
 
 import com.github.rehei.scala.dox.text.TextFactory
 
-case class DoxTableSupport() {
+case class TreeWithSpacingBetween() {
 
   def addSpaces(node: DoxTableKeyNode) = {
     node.copy(children = addChildrenSpaces(node))
   }
 
-  def addChildrenSpaces(node: DoxTableKeyNode) = {
+  protected def addChildrenSpaces(node: DoxTableKeyNode) = {
     spacedColumns(node.children)
   }
 
@@ -32,7 +32,7 @@ case class DoxTableSupport() {
   protected def applyColumnSpace(node: DoxTableKeyNode) = {
     val factory = DoxTableKeyNodeFactory()
     if (!node.isLeaf()) {
-      Seq(node.addSpaces(), factory.Blank())
+      Seq(addSpaces(node), factory.Blank())
     } else {
       Seq(node)
     }

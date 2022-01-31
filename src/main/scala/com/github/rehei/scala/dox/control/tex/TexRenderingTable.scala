@@ -114,10 +114,10 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
         None
       }
     }
-    if (value.key.config.base.alignment == DoxTableAlignment.ROTATED) {
-      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.config.base.text) }, ruleOption)
+    if (value.key.node.config.base.alignment == DoxTableAlignment.ROTATED) {
+      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.node.config.base.text) }, ruleOption)
     } else {
-      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.config) } { Text2TEX(false).generate(value.key.config.base.text) }, ruleOption)
+      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node.config) } { Text2TEX(false).generate(value.key.node.config.base.text) }, ruleOption)
     }
   }
 

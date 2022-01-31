@@ -18,7 +18,7 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
   }
 
   def dimension() = {
-    lastHead().map(_.config)
+    lastHead().map(_.node.config)
   }
 
   protected def convertRow(index: Int, row: DoxOption[T]) = {
