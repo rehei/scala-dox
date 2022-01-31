@@ -13,7 +13,7 @@ object DoxBuilderTableSequence {
   def label(_labelOption: Option[DoxReferencePersistentTable]) = new {
     def data(_tables: Seq[DoxTable[_]]) = new {
       def title(_title: String) = {
-        DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables), TextFactory.text(_title))
+        DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables.map(_.transform())), TextFactory.text(_title))
       }
     }
   }

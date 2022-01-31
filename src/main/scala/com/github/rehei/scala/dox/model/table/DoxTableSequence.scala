@@ -1,11 +1,13 @@
 package com.github.rehei.scala.dox.model.table
 
-case class DoxTableSequence(sequence: Seq[DoxTable[_]]) {
+case class DoxTableSequence(sequence: Seq[DoxTableMatrix[_]]) {
 
   def totalWidth(defaultWidth: Double) = {
-    sequence.map(_.root.leavesRecursive().map(_.config.widthOption.getOrElse(defaultWidth))).maxBy(_.sum).sum
+    sequence.map(_.dimension().map(_.widthOption.getOrElse(defaultWidth))).map(_.sum).max
   }
+
   def tabcolSeps() = {
-    sequence.map(_.root.leavesRecursive().size).max * 2
+    sequence.map(_.dimension().size).max * 2
   }
+
 }

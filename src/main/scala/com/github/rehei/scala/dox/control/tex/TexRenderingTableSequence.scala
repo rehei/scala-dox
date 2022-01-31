@@ -5,6 +5,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableSequence
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
+import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 
 class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, title: TextAST) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
@@ -54,8 +55,8 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
     endRowEntry()
   }
 
-  protected def getTable(model: DoxTable[_]) = {
-    new TexRenderingTable(baseAST, model.transform(), true).createTableString()
+  protected def getTable(model: DoxTableMatrix[_]) = {
+    new TexRenderingTable(baseAST, model, true).createTableString()
   }
 
   protected def endRowEntry() = {
