@@ -32,6 +32,7 @@ class TexRendering(
   import markup._
 
   protected val POSITIONING_FIGURE = "H"
+  protected val MAX_WIDTH = 450
 
   def label(reference: DoxReferenceText) = {
     \ label { reference.name }
@@ -162,17 +163,27 @@ class TexRendering(
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {
+
     if (!floating) {
       \ FloatBarrier;
     }
-    $ { _ figure & { ###(POSITIONING_FIGURE) } } {
-      \ centering;
-      appendTransformableSVG(svg)
-      \ caption & { escape(fileLabel(svg.label)) }
+    svg.titleOption.map {
+      title =>
+        {
+          val filename = svgHandle.serialize(svg).toString()
+          \ includesvgImage & { filename } { escape(fileLabel(svg.label)) } { title } { MAX_WIDTH.toString() }
+        }
+    } getOrElse {
+      $ { _ figure & { ###(POSITIONING_FIGURE) } } {
+        \ centering;
+        appendTransformableSVG(svg)
+        \ caption & { escape(fileLabel(svg.label)) }
+      }
     }
     if (!floating) {
       \ FloatBarrier;
     }
+
   }
 
   protected def internalCiteT(key: String) {
