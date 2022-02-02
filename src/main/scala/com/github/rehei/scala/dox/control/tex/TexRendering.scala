@@ -18,6 +18,8 @@ import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.control.DoxHandleTex
+import com.github.rehei.scala.dox.model.DoxFileTex
 
 class TexRendering(
   baseAST:        TexAST,
@@ -26,13 +28,33 @@ class TexRendering(
   i18n:           DoxI18N,
   bibHandle:      DoxBibKeyRendering,
   tableHandle:    DoxHandleTable,
-  equationHandle: DoxHandleEquation) extends DoxRenderingBase(i18n, bibHandle) {
+  equationHandle: DoxHandleEquation,
+  texHandle:      DoxHandleTex) extends DoxRenderingBase(i18n, bibHandle) {
 
-  protected val markup = new TexMarkupFactory(baseAST)
-  import markup._
+  case class TexRenderingSVG(svg: DoxSvgFigure) {
+    protected val MAX_WIDTH = 450
+    protected val tmpAST = new TexAST
+    protected val tmpMarkup = new TexMarkupFactory(tmpAST)
+
+    import tmpMarkup._
+
+    def generate() = {
+      createTex()
+      texHandle.serialize(DoxFileTex(tmpAST.build(), svg.label)).toString()
+    }
+
+    protected def createTex() = {
+      \ includesvgImage & { getFile() } { escape(fileLabel(svg.label)) } { svg.titleOption.getOrElse("") } { MAX_WIDTH.toString() }
+    }
+    protected def getFile() = {
+      assume(svg.titleOption.map(m => !(m.contains("\n"))).getOrElse(true))
+      svgHandle.serialize(svg).toString()
+    }
+  }
 
   protected val POSITIONING_FIGURE = "H"
-  protected val MAX_WIDTH = 450
+  protected val markup = new TexMarkupFactory(baseAST)
+  import markup._
 
   def label(reference: DoxReferenceText) = {
     \ label { reference.name }
@@ -167,19 +189,9 @@ class TexRendering(
     if (!floating) {
       \ FloatBarrier;
     }
-    svg.titleOption.map {
-      title =>
-        {
-          val filename = svgHandle.serialize(svg).toString()
-          \ includesvgImage & { filename } { escape(fileLabel(svg.label)) } { title } { MAX_WIDTH.toString() }
-        }
-    } getOrElse {
-      $ { _ figure & { ###(POSITIONING_FIGURE) } } {
-        \ centering;
-        appendTransformableSVG(svg)
-        \ caption & { escape(fileLabel(svg.label)) }
-      }
-    }
+    
+    \ input { TexRenderingSVG(svg).generate() }
+    
     if (!floating) {
       \ FloatBarrier;
     }

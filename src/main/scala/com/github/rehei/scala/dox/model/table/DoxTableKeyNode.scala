@@ -18,7 +18,7 @@ case class DoxTableKeyNode(
       .map(query => queryReflection(element, query))
       .getOrElse(nodeType.valueOf(index, element))
   }
-  
+
   def hasNonEmptyChildren() = {
     children.filter(_.nodeType != DoxTableKeyNodeType.BLANK).size > 0
   }
@@ -35,19 +35,16 @@ case class DoxTableKeyNode(
     children.isEmpty
   }
 
-  def leavesRecursive(): Seq[DoxTableKeyNode] = {
+  protected def leavesRecursive(): Seq[DoxTableKeyNode] = {
+    childrenRecursive.filter(_.isLeaf())
+  }
+  
+  def childrenRecursive(): Seq[DoxTableKeyNode] = {
     children.flatMap {
-      child =>
-        {
-          if (child.isLeaf()) {
-            Seq(child)
-          } else {
-            child.leavesRecursive()
-          }
-        }
+      child => Seq(child) ++ child.childrenRecursive()
     }
   }
-
+  
   protected def leaves() = {
     children.filter(_.isLeaf())
   }
