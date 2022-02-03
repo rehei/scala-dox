@@ -32,30 +32,70 @@ class TexRendering(
   texHandle:      DoxHandleTex) extends DoxRenderingBase(i18n, bibHandle) {
 
   case class TexRenderingSVG(svg: DoxSvgFigure) {
-    protected val tmpAST = new TexAST
-    protected val tmpMarkup = new TexMarkupFactory(tmpAST)
-    import tmpMarkup._
 
     case class HasTitle() extends SvgMode {
-      def appendSvg() = \ includesvgImage & { createFileAndGetPath() } { svg.titleOption.get }
+      protected val tmpAST = new TexAST
+      protected val tmpMarkup = new TexMarkupFactory(tmpAST)
+      import tmpMarkup._
 
+      protected val factor = 0.9
+      protected val tableTotalSize = "\\dimexpr(\\tabcolsep*2)+" + factor + "\\textwidth"
+      protected val columnTotalSize = " >{\\raggedright\\arraybackslash}p{" + factor + "\\textwidth}"
+
+      def appendSvgToAST() = {
+        \ vspace { "4pt" };
+        \ centering;
+        appendTitle()
+        \ includegraphics { createFileAndGetPath() }
+        appendBottom()
+      }
+
+      def buildAST() = {
+        tmpAST.build()
+      }
+
+      protected def appendTitle() {
+        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
+          \ toprule;
+          \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
+          \ midrule;
+        }
+      }
+
+      protected def appendBottom() {
+        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
+          \ bottomrule;
+        }
+      }
     }
+
     case class HasNoTitle() extends SvgMode {
-      def appendSvg() = {
+      protected val tmpAST = new TexAST
+      protected val tmpMarkup = new TexMarkupFactory(tmpAST)
+      import tmpMarkup._
+
+      def appendSvgToAST() = {
         \ vspace { "4pt" };
         \ centering;
         \ includegraphics { createFileAndGetPath() }
       }
 
+      def buildAST() = {
+        tmpAST.build()
+      }
     }
+
     abstract class SvgMode() {
-      def appendSvg(): Unit
+
+      def appendSvgToAST(): Unit
+      def buildAST(): String
+      
+      protected def createFileAndGetPath() = {
+        assume(svg.titleOption.map(m => !(m.contains("\n"))).getOrElse(true))
+        svgHandle.serialize(svg).toString()
+      }
     }
-    //    protected val MAX_WIDTH = 680
-    //    protected val factor = 0.9
-    //    protected val hasTitle = svg.titleOption.isDefined
-    //    protected val tableTotalSize = "\\dimexpr(\\tabcolsep*2)+" + factor + "\\textwidth"
-    //    protected val columnTotalSize = " >{\\raggedright\\arraybackslash}p{" + factor + "\\textwidth}"
+
     protected val svgMode = {
       if (svg.titleOption.isDefined) {
         HasTitle()
@@ -65,52 +105,9 @@ class TexRendering(
     }
 
     def generate() = {
-      createTex()
-      texHandle.serialize(DoxFileTex(tmpAST.build(), svg.label)).toString()
+      svgMode.appendSvgToAST()
+      texHandle.serialize(DoxFileTex(svgMode.buildAST(), svg.label)).toString()
     }
-
-    protected def createTex() {
-      svgMode.appendSvg()
-    }
-    //    protected def createTex() {
-    //      if (!floating) {
-    //        \ FloatBarrier;
-    //      }
-    //
-    //      \ centering;
-    //      appendTitle()
-    //      \ includegraphics { createFileAndGetPath() }
-    //      appendBottom()
-    //
-    //      if (!floating) {
-    //        \ FloatBarrier;
-    //      }
-    //
-    //    }
-
-    //    protected def appendTitle() {
-    //      if (hasTitle) {
-    //        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
-    //          \ toprule;
-    //          \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
-    //          \ midrule;
-    //        }
-    //      }
-    //    }
-    //
-    //    protected def appendBottom() {
-    //      if (hasTitle) {
-    //        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
-    //          \ bottomrule;
-    //        }
-    //      }
-    //    }
-
-    protected def createFileAndGetPath() = {
-      assume(svg.titleOption.map(m => !(m.contains("\n"))).getOrElse(true))
-      svgHandle.serialize(svg).toString()
-    }
-
   }
 
   protected val POSITIONING_FIGURE = "H"
