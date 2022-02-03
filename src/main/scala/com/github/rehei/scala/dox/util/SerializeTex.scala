@@ -8,8 +8,8 @@ import org.apache.commons.io.FilenameUtils
 class SerializeTex(baseDirectory: Path) {
 
   def generate(content: String, svgPath: Path) = {
-    val filePathString = FilenameUtils.removeExtension(svgPath.getFileName.toString()) + ".tex"
-    val file = baseDirectory.resolve(filePathString)
+    val filename = FilenameUtils.removeExtension(svgPath.getFileName.toString()) + ".tex"
+    val file = baseDirectory.resolve(filename)
     IOUtils.writeStringUnique(file, content)
     file
   }

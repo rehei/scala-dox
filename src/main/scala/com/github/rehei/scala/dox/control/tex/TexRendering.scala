@@ -18,7 +18,7 @@ import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.control.DoxHandleTex
+import com.github.rehei.scala.dox.control.DoxHandleSvgTex
 import com.github.rehei.scala.dox.model.DoxFileTex
 import org.apache.commons.io.FilenameUtils
 import java.nio.file.Path
@@ -26,12 +26,11 @@ import java.nio.file.Path
 class TexRendering(
   baseAST:        TexAST,
   floating:       Boolean,
-  svgHandle:      DoxHandleSvg,
   i18n:           DoxI18N,
   bibHandle:      DoxBibKeyRendering,
   tableHandle:    DoxHandleTable,
   equationHandle: DoxHandleEquation,
-  texHandle:      DoxHandleTex) extends DoxRenderingBase(i18n, bibHandle) {
+  svgTexHandle:   DoxHandleSvgTex) extends DoxRenderingBase(i18n, bibHandle) {
 
   protected val POSITIONING_FIGURE = "H"
   protected val markup = new TexMarkupFactory(baseAST)
@@ -171,7 +170,7 @@ class TexRendering(
     }
 
     $ { _ figure & { ###("H") } } {
-      \ input { texHandle.serialize(svg, svgHandle) }
+      \ input { svgTexHandle.serialize(svg) }
       \ caption & { escape(fileCaption(svg.label)) }
       \ label { fileLabel(svg.label) }
     }
@@ -204,11 +203,6 @@ class TexRendering(
 
   protected def internalPlain(input: String) {
     \ plain (input)
-  }
-
-  protected def appendTransformableSVG(figure: DoxSvgFigure) {
-    val filename = svgHandle.serialize(figure).toString()
-    \ includegraphics & { filename }
   }
 
   protected def fileCaption(label: Option[DoxReferenceBase]) = {
