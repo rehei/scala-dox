@@ -20,10 +20,10 @@ case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
   protected val svgFileGen = new SerializeSvg(targetTexSVG)
 
-  def serialize(figure: DoxSvgFigure): String = {
+  def serialize(figure: DoxSvgFigure) = {
     val nameSVG = svgFileGen.generate(figure).getFileName.toString()
     val filename = FilenameUtils.removeExtension(nameSVG)
-    targetTex.relativize(targetTexSVG.resolve(mode.file(filename))).toString()
+    targetTex.relativize(targetTexSVG.resolve(mode.file(filename)))
   }
 
   def transform() = {

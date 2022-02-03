@@ -20,6 +20,8 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.control.DoxHandleTex
 import com.github.rehei.scala.dox.model.DoxFileTex
+import org.apache.commons.io.FilenameUtils
+import java.nio.file.Path
 
 class TexRendering(
   baseAST:        TexAST,
@@ -30,85 +32,6 @@ class TexRendering(
   tableHandle:    DoxHandleTable,
   equationHandle: DoxHandleEquation,
   texHandle:      DoxHandleTex) extends DoxRenderingBase(i18n, bibHandle) {
-
-  case class TexRenderingSVG(svg: DoxSvgFigure) {
-
-    case class HasTitle() extends SvgMode {
-      protected val tmpAST = new TexAST
-      protected val tmpMarkup = new TexMarkupFactory(tmpAST)
-      import tmpMarkup._
-
-      protected val factor = 0.9
-      protected val tableTotalSize = "\\dimexpr(\\tabcolsep*2)+" + factor + "\\textwidth"
-      protected val columnTotalSize = " >{\\raggedright\\arraybackslash}p{" + factor + "\\textwidth}"
-
-      def appendSvgToAST() = {
-        \ vspace { "4pt" };
-        \ centering;
-        appendTitle()
-        \ includegraphics { createFileAndGetPath() }
-        appendBottom()
-      }
-
-      def buildAST() = {
-        tmpAST.build()
-      }
-
-      protected def appendTitle() {
-        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
-          \ toprule;
-          \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
-          \ midrule;
-        }
-      }
-
-      protected def appendBottom() {
-        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
-          \ bottomrule;
-        }
-      }
-    }
-
-    case class HasNoTitle() extends SvgMode {
-      protected val tmpAST = new TexAST
-      protected val tmpMarkup = new TexMarkupFactory(tmpAST)
-      import tmpMarkup._
-
-      def appendSvgToAST() = {
-        \ vspace { "4pt" };
-        \ centering;
-        \ includegraphics { createFileAndGetPath() }
-      }
-
-      def buildAST() = {
-        tmpAST.build()
-      }
-    }
-
-    abstract class SvgMode() {
-
-      def appendSvgToAST(): Unit
-      def buildAST(): String
-      
-      protected def createFileAndGetPath() = {
-        assume(svg.titleOption.map(m => !(m.contains("\n"))).getOrElse(true))
-        svgHandle.serialize(svg).toString()
-      }
-    }
-
-    protected val svgMode = {
-      if (svg.titleOption.isDefined) {
-        HasTitle()
-      } else {
-        HasNoTitle()
-      }
-    }
-
-    def generate() = {
-      svgMode.appendSvgToAST()
-      texHandle.serialize(DoxFileTex(svgMode.buildAST(), svg.label)).toString()
-    }
-  }
 
   protected val POSITIONING_FIGURE = "H"
   protected val markup = new TexMarkupFactory(baseAST)
@@ -243,13 +166,12 @@ class TexRendering(
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {
-    // INFO: Label MUST NOT contain backslash -> escaping introduces \
     if (!floating) {
       \ FloatBarrier;
     }
 
     $ { _ figure & { ###("H") } } {
-      \ input { TexRenderingSVG(svg).generate() }
+      \ input { texHandle.serialize(svg, svgHandle) }
       \ caption & { escape(fileCaption(svg.label)) }
       \ label { fileLabel(svg.label) }
     }
