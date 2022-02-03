@@ -30,9 +30,4 @@ case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
     inkscape.transform()
   }
 
-  def filename(figure: DoxSvgFigure) = {
-    val svgName = svgFileGen.targetFilename(figure).getFileName.toString()
-    FilenameUtils.removeExtension(svgName)
-  }
-
 }

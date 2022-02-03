@@ -42,20 +42,20 @@ class TexRendering(
     }
     case class HasNoTitle() extends SvgMode {
       def appendSvg() = {
-        $ { _ table & { ###("H") } } {
-          \ centering;
-          \ includegraphics { createFileAndGetPath() }
-        }
+        \ vspace { "4pt" };
+        \ centering;
+        \ includegraphics { createFileAndGetPath() }
       }
+
     }
     abstract class SvgMode() {
       def appendSvg(): Unit
     }
-    protected val MAX_WIDTH = 680
-    protected val factor = 0.9
-    protected val hasTitle = svg.titleOption.isDefined
-    protected val tableTotalSize = "\\dimexpr(\\tabcolsep*2)+" + factor + "\\textwidth"
-    protected val columnTotalSize = " >{\\raggedright\\arraybackslash}p{" + factor + "\\textwidth}"
+    //    protected val MAX_WIDTH = 680
+    //    protected val factor = 0.9
+    //    protected val hasTitle = svg.titleOption.isDefined
+    //    protected val tableTotalSize = "\\dimexpr(\\tabcolsep*2)+" + factor + "\\textwidth"
+    //    protected val columnTotalSize = " >{\\raggedright\\arraybackslash}p{" + factor + "\\textwidth}"
     protected val svgMode = {
       if (svg.titleOption.isDefined) {
         HasTitle()
@@ -88,23 +88,23 @@ class TexRendering(
     //
     //    }
 
-    protected def appendTitle() {
-      if (hasTitle) {
-        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
-          \ toprule;
-          \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
-          \ midrule;
-        }
-      }
-    }
-
-    protected def appendBottom() {
-      if (hasTitle) {
-        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
-          \ bottomrule;
-        }
-      }
-    }
+    //    protected def appendTitle() {
+    //      if (hasTitle) {
+    //        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
+    //          \ toprule;
+    //          \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
+    //          \ midrule;
+    //        }
+    //      }
+    //    }
+    //
+    //    protected def appendBottom() {
+    //      if (hasTitle) {
+    //        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
+    //          \ bottomrule;
+    //        }
+    //      }
+    //    }
 
     protected def createFileAndGetPath() = {
       assume(svg.titleOption.map(m => !(m.contains("\n"))).getOrElse(true))
@@ -254,7 +254,7 @@ class TexRendering(
     $ { _ figure & { ###("H") } } {
       \ input { TexRenderingSVG(svg).generate() }
       \ caption & { escape(fileCaption(svg.label)) }
-      \ label { svgHandle.filename(svg).toString() }
+      \ label { fileLabel(svg.label) }
     }
 
     if (!floating) {
