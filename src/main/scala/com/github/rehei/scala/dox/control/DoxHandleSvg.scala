@@ -22,12 +22,17 @@ case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
   def serialize(figure: DoxSvgFigure): String = {
     val nameSVG = svgFileGen.generate(figure).getFileName.toString()
-    val name = FilenameUtils.removeExtension(nameSVG)
-    targetTex.relativize(targetTexSVG.resolve(mode.file(name))).toString()
+    val filename = FilenameUtils.removeExtension(nameSVG)
+    targetTex.relativize(targetTexSVG.resolve(mode.file(filename))).toString()
   }
 
   def transform() = {
     inkscape.transform()
+  }
+
+  def filename(figure: DoxSvgFigure) = {
+    val svgName = svgFileGen.targetFilename(figure).getFileName.toString()
+    FilenameUtils.removeExtension(svgName)
   }
 
 }

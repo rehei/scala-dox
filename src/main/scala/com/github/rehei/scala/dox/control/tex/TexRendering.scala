@@ -32,24 +32,85 @@ class TexRendering(
   texHandle:      DoxHandleTex) extends DoxRenderingBase(i18n, bibHandle) {
 
   case class TexRenderingSVG(svg: DoxSvgFigure) {
-    protected val MAX_WIDTH = 450
     protected val tmpAST = new TexAST
     protected val tmpMarkup = new TexMarkupFactory(tmpAST)
-
     import tmpMarkup._
+
+    case class HasTitle() extends SvgMode {
+      def appendSvg() = \ includesvgImage & { createFileAndGetPath() } { svg.titleOption.get }
+
+    }
+    case class HasNoTitle() extends SvgMode {
+      def appendSvg() = {
+        $ { _ table & { ###("H") } } {
+          \ centering;
+          \ includegraphics { createFileAndGetPath() }
+        }
+      }
+    }
+    abstract class SvgMode() {
+      def appendSvg(): Unit
+    }
+    protected val MAX_WIDTH = 680
+    protected val factor = 0.9
+    protected val hasTitle = svg.titleOption.isDefined
+    protected val tableTotalSize = "\\dimexpr(\\tabcolsep*2)+" + factor + "\\textwidth"
+    protected val columnTotalSize = " >{\\raggedright\\arraybackslash}p{" + factor + "\\textwidth}"
+    protected val svgMode = {
+      if (svg.titleOption.isDefined) {
+        HasTitle()
+      } else {
+        HasNoTitle()
+      }
+    }
 
     def generate() = {
       createTex()
       texHandle.serialize(DoxFileTex(tmpAST.build(), svg.label)).toString()
     }
 
-    protected def createTex() = {
-      \ includesvgImage & { getFile() } { escape(fileLabel(svg.label)) } { svg.titleOption.getOrElse("") } { MAX_WIDTH.toString() }
+    protected def createTex() {
+      svgMode.appendSvg()
     }
-    protected def getFile() = {
+    //    protected def createTex() {
+    //      if (!floating) {
+    //        \ FloatBarrier;
+    //      }
+    //
+    //      \ centering;
+    //      appendTitle()
+    //      \ includegraphics { createFileAndGetPath() }
+    //      appendBottom()
+    //
+    //      if (!floating) {
+    //        \ FloatBarrier;
+    //      }
+    //
+    //    }
+
+    protected def appendTitle() {
+      if (hasTitle) {
+        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
+          \ toprule;
+          \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
+          \ midrule;
+        }
+      }
+    }
+
+    protected def appendBottom() {
+      if (hasTitle) {
+        $ { _ tabular$ & { (tableTotalSize) } { columnTotalSize } } {
+          \ bottomrule;
+        }
+      }
+    }
+
+    protected def createFileAndGetPath() = {
       assume(svg.titleOption.map(m => !(m.contains("\n"))).getOrElse(true))
       svgHandle.serialize(svg).toString()
     }
+
   }
 
   protected val POSITIONING_FIGURE = "H"
@@ -144,7 +205,7 @@ class TexRendering(
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
         \ input { filename }
-        \ caption & { escape(fileLabel(equation.label)) }
+        \ caption & { escape(fileCaption(equation.label)) }
       }
     }
   }
@@ -160,7 +221,7 @@ class TexRendering(
 
       \ centering;
       \ input { filename }
-      \ caption & { escape(fileLabel(table.label)) }
+      \ caption & { escape(fileCaption(table.label)) }
     }
 
     if (!floating) {
@@ -177,7 +238,7 @@ class TexRendering(
     $ { _ table & { ###("H") } } {
       \ centering;
       \ input { filename }
-      \ caption & { escape(fileLabel(table.label)) }
+      \ caption & { escape(fileCaption(table.label)) }
     }
     if (!floating) {
       \ FloatBarrier;
@@ -185,13 +246,17 @@ class TexRendering(
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {
-
+    // INFO: Label MUST NOT contain backslash -> escaping introduces \
     if (!floating) {
       \ FloatBarrier;
     }
-    
-    \ input { TexRenderingSVG(svg).generate() }
-    
+
+    $ { _ figure & { ###("H") } } {
+      \ input { TexRenderingSVG(svg).generate() }
+      \ caption & { escape(fileCaption(svg.label)) }
+      \ label { svgHandle.filename(svg).toString() }
+    }
+
     if (!floating) {
       \ FloatBarrier;
     }
@@ -227,7 +292,11 @@ class TexRendering(
     \ includegraphics & { filename }
   }
 
-  protected def fileLabel(label: Option[DoxReferenceBase]) = {
+  protected def fileCaption(label: Option[DoxReferenceBase]) = {
     label.map(m => m.name + " | " + m.hashID).getOrElse("dummylabel")
+  }
+
+  protected def fileLabel(label: Option[DoxReferenceBase]) = {
+    label.map(_.hashID).getOrElse("dummylabel")
   }
 }

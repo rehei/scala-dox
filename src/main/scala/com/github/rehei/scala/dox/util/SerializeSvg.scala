@@ -11,7 +11,11 @@ class SerializeSvg(baseDirectory: Path) extends SerializeBase(baseDirectory, "im
   def generate(figure: DoxSvgFigure) = {
     super.write(content(figure), figure.label, ".svg")
   }
-
+  
+  def targetFilename(figure: DoxSvgFigure) = {
+    super.target(figure.label, ".svg")
+  }
+  
   protected def content(figure: DoxSvgFigure) = {
     Xhtml.toXhtml(figure.image)
   }
