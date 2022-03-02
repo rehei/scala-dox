@@ -7,13 +7,25 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import org.junit.Test
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameAsciiException
+import org.junit.Assert
+import scala.reflect.ClassTag
 
+//kann weg?
 class TestBibKeyHandleAscii {
 
-  @Test(expected = classOf[DoxBibKeyNameAsciiException])
+  @Test()
   def testAsciiNameAsciiException() {
     val handle = createBibTexHandle()
-    handle.append(DoxBibKeyValueRAW("kalaycı2020", null))
+    testException[DoxBibKeyNameAsciiException](() => handle.append(DoxBibKeyValueRAW("kalaycı2020", null)))
+  }
+
+  protected def testException[T](callback: () => Unit)(implicit clazztag: ClassTag[T]) {
+    try {
+      callback()
+      Assert.fail()
+    } catch {
+      case ex: Throwable => assert(ex.getClass() == clazztag.runtimeClass) // everything is ok
+    }
   }
 
   protected def createBibTexHandle() = {

@@ -12,7 +12,7 @@ import org.junit.Assert
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameUniqueException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameUniqueException
 import com.github.rehei.scala.dox.model.validation.DoxBibKeyValidationNameUnique
-
+//kann weg?
 class TestBibKeyHandleUniqueName {
 
   @Test

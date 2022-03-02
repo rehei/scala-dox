@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyValueRAW
-
+//kann weg?
 class TestBibKeyHandleUniqueContent {
 
   @Test(expected = classOf[DoxBibKeyContentUniqueException])
