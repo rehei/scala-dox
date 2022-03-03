@@ -8,7 +8,7 @@ import org.junit.Test
 import com.github.rehei.scala.dox.ExampleReference.REINHARDT
 
 class TestSimple {
-
+//Kein test!
   object Test extends DoxBibKeyEnum {
     val REINHARDT_2019 = {
       fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")

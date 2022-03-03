@@ -12,29 +12,23 @@ import org.junit.Assert
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameUniqueException
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameUniqueException
 import com.github.rehei.scala.dox.model.validation.DoxBibKeyValidationNameUnique
-//kann weg?
+import com.github.rehei.scala.dox.test.util.Checking
+
 class TestBibKeyHandleUniqueName {
+  object Example extends DoxBibKeyEnum {
+
+    val REINHARDT_2019a = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
+    }
+  }
 
   @Test
   def testUniqueNameException() {
-
-    object Example extends DoxBibKeyEnum {
-
-      val REINHARDT_2019a = {
-        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
-          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
-      }
-    }
-
     val handle = createBibTexHandle()
     handle.append(Example.REINHARDT_2019a)
-
-    try {
-      handle.append(Example.REINHARDT_2019a)
-      Assert.fail()
-    } catch {
-      case ex: DoxBibKeyNameUniqueException => // everything is ok
-    }
+    
+    Checking.testException[DoxBibKeyNameUniqueException](() => handle.append(Example.REINHARDT_2019a))
   }
 
   protected def createBibTexHandle() = {

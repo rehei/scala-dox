@@ -10,15 +10,27 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyValueRAW
-//kann weg?
+import com.github.rehei.scala.dox.test.util.Checking
+
 class TestBibKeyHandleUniqueContent {
 
-  @Test(expected = classOf[DoxBibKeyContentUniqueException])
-  def testUniquePlain() {
+  object ExamplePOI extends DoxBibKeyEnum {
 
-    object Example extends DoxBibKeyEnum {
-      val plain1 = fromRAW {
-        """
+    val REINHARDT_2019a = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
+    }
+
+    val REINHARDT_2019b = {
+      fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
+        .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
+    }
+
+  }
+  
+  object ExamplePlain extends DoxBibKeyEnum {
+    val plain1 = fromRAW {
+      """
         @inproceedings{anything,
           title={Mathematical computations for linked data applications with openmath},
           author={Wenzel, Ken and Reinhardt, Heiner},
@@ -27,10 +39,10 @@ class TestBibKeyHandleUniqueContent {
           year={2012}
         }
         """
-      }
+    }
 
-      val plain2 = fromRAW {
-        """
+    val plain2 = fromRAW {
+      """
         @inproceedings{foobar,
           title={Mathematical computations for linked data applications with openmath},
           author={Wenzel, Ken and Reinhardt, Heiner},
@@ -39,36 +51,26 @@ class TestBibKeyHandleUniqueContent {
           year={2012}
         }
         """
-      }
     }
+  }
+  
+  @Test()
+  def testUniquePlain() {
 
     val handle = createBibTexHandle()
+    handle.append(ExamplePlain.plain1)
+    
+    Checking.testException[DoxBibKeyContentUniqueException](() => handle.append(ExamplePlain.plain2))
 
-    handle.append(Example.plain1)
-    handle.append(Example.plain2)
   }
 
-  @Test(expected = classOf[DoxBibKeyContentUniqueException])
+  @Test()
   def testUniquePOI() {
 
-    object Example extends DoxBibKeyEnum {
-
-      val REINHARDT_2019a = {
-        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
-          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
-      }
-
-      val REINHARDT_2019b = {
-        fromDOI("https://doi.org/10.1016/j.procir.2019.03.022")
-          .year(2019).by("Heiner Reinhardt and Marek Weber and Matthias Putz").title("A Survey on Automatic Model Generation for Material Flow Simulation in Discrete Manufacturing")
-      }
-
-    }
-
     val handle = createBibTexHandle()
-
-    handle.append(Example.REINHARDT_2019a)
-    handle.append(Example.REINHARDT_2019b)
+    handle.append(ExamplePOI.REINHARDT_2019a)
+    
+    Checking.testException[DoxBibKeyContentUniqueException](() => handle.append(ExamplePOI.REINHARDT_2019b))
 
   }
 

@@ -9,23 +9,14 @@ import org.junit.Test
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNameAsciiException
 import org.junit.Assert
 import scala.reflect.ClassTag
+import com.github.rehei.scala.dox.test.util.Checking
 
-//kann weg?
 class TestBibKeyHandleAscii {
 
   @Test()
   def testAsciiNameAsciiException() {
     val handle = createBibTexHandle()
-    testException[DoxBibKeyNameAsciiException](() => handle.append(DoxBibKeyValueRAW("kalaycı2020", null)))
-  }
-
-  protected def testException[T](callback: () => Unit)(implicit clazztag: ClassTag[T]) {
-    try {
-      callback()
-      Assert.fail()
-    } catch {
-      case ex: Throwable => assert(ex.getClass() == clazztag.runtimeClass) // everything is ok
-    }
+    Checking.testException[DoxBibKeyNameAsciiException](() => handle.append(DoxBibKeyValueRAW("kalaycı2020", null)))
   }
 
   protected def createBibTexHandle() = {

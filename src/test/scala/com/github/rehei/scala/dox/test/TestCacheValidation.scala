@@ -10,6 +10,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.rehei.scala.dox.ExampleReference.REINHARDT
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
 import org.junit.Assert
+import com.github.rehei.scala.dox.test.util.Checking
 
 class TestCacheValidation {
 
@@ -40,12 +41,7 @@ class TestCacheValidation {
     val map2 = DoxBibKeyCountMap(DoxBibKeyScanner(Example).list())
     val handle2 = DoxBibKeyRendering(cache2, map2)
 
-    try {
-      cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019_INVALID)
-      Assert.fail()
-    } catch {
-      case ex: DoxBibKeyIntegrityException => //OK
-    }
+    Checking.testException[DoxBibKeyIntegrityException](() => cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019_INVALID))
 
     assert(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).isDefined)
   }

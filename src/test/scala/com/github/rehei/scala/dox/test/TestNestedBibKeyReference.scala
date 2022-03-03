@@ -5,6 +5,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyNotFoundException
+import com.github.rehei.scala.dox.test.util.Checking
 
 class TestNestedBibKeyReference {
 
@@ -47,9 +48,9 @@ class TestNestedBibKeyReference {
     assert(tmp.startsWith("@article{com-github-rehei-scala-dox-test-TestNestedBibKeyReference-Test-Example-Inner-REINHARDT_2019-UUUUUUUUU-----"))
   }
 
-  @Test(expected = classOf[DoxBibKeyNotFoundException])
+  @Test()
   def test3() {
-    val tmp = Test.Example.Inner.BLI.lookup().resolveValidated().get()
+    Checking.testException[DoxBibKeyNotFoundException](() => Test.Example.Inner.BLI.lookup().resolveValidated().get())
   }
 
   @Test
