@@ -60,7 +60,7 @@ class TestBibKeyHandleUniqueContent {
     val handle = createBibTexHandle()
     handle.append(ExamplePlain.plain1)
     
-    Checking.testException[DoxBibKeyContentUniqueException](() => handle.append(ExamplePlain.plain2))
+    Checking.expectException[DoxBibKeyContentUniqueException](() => handle.append(ExamplePlain.plain2))
 
   }
 
@@ -70,7 +70,7 @@ class TestBibKeyHandleUniqueContent {
     val handle = createBibTexHandle()
     handle.append(ExamplePOI.REINHARDT_2019a)
     
-    Checking.testException[DoxBibKeyContentUniqueException](() => handle.append(ExamplePOI.REINHARDT_2019b))
+    Checking.expectException[DoxBibKeyContentUniqueException](() => handle.append(ExamplePOI.REINHARDT_2019b))
 
   }
 

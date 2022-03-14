@@ -16,7 +16,7 @@ class TestBibKeyHandleAscii {
   @Test()
   def testAsciiNameAsciiException() {
     val handle = createBibTexHandle()
-    Checking.testException[DoxBibKeyNameAsciiException](() => handle.append(DoxBibKeyValueRAW("kalaycı2020", null)))
+    Checking.expectException[DoxBibKeyNameAsciiException](() => handle.append(DoxBibKeyValueRAW("kalaycı2020", null)))
   }
 
   protected def createBibTexHandle() = {

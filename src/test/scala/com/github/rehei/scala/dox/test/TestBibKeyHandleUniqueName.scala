@@ -28,7 +28,7 @@ class TestBibKeyHandleUniqueName {
     val handle = createBibTexHandle()
     handle.append(Example.REINHARDT_2019a)
     
-    Checking.testException[DoxBibKeyNameUniqueException](() => handle.append(Example.REINHARDT_2019a))
+    Checking.expectException[DoxBibKeyNameUniqueException](() => handle.append(Example.REINHARDT_2019a))
   }
 
   protected def createBibTexHandle() = {

@@ -50,7 +50,7 @@ class TestNestedBibKeyReference {
 
   @Test()
   def test3() {
-    Checking.testException[DoxBibKeyNotFoundException](() => Test.Example.Inner.BLI.lookup().resolveValidated().get())
+    Checking.expectException[DoxBibKeyNotFoundException](() => Test.Example.Inner.BLI.lookup().resolveValidated().get())
   }
 
   @Test

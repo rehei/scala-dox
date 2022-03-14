@@ -4,7 +4,7 @@ import scala.reflect.ClassTag
 import org.junit.Assert
 
 object Checking {
-  def testException[T](callback: () => Unit)(implicit clazztag: ClassTag[T]) {
+  def expectException[T](callback: () => Unit)(implicit clazztag: ClassTag[T]) {
     try {
       callback()
       Assert.fail()

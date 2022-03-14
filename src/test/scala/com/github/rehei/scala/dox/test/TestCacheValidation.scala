@@ -41,7 +41,7 @@ class TestCacheValidation {
     val map2 = DoxBibKeyCountMap(DoxBibKeyScanner(Example).list())
     val handle2 = DoxBibKeyRendering(cache2, map2)
 
-    Checking.testException[DoxBibKeyIntegrityException](() => cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019_INVALID))
+    Checking.expectException[DoxBibKeyIntegrityException](() => cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019_INVALID))
 
     assert(cache2.lookupPersistentCacheValidated(Example.REINHARDT_2019).isDefined)
   }
