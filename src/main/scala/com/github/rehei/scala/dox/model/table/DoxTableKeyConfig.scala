@@ -12,10 +12,21 @@ object DoxTableKeyConfig {
   }
   protected def nameInternal(in: TextAST) = new {
     def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
-      DoxTableKeyConfig(in, _alignment(DoxTableAlignment))
+      new DoxTableKeyConfig(in, _alignment(DoxTableAlignment), None) {
+        def width(in: Double) = {
+          this.copy(widthOption = Some(in))
+        }
+      }
     }
   }
 }
 
-case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment)
+case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, widthOption: Option[Double]) {
+
+  def width(in: Option[Double]) = {
+    this.copy(widthOption = in)
+  }
+
+}
+
 

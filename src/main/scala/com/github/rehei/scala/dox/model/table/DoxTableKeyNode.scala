@@ -9,7 +9,7 @@ import com.github.rehei.scala.macros.util.QReflection
 
 case class DoxTableKeyNode(
   nodeType:    DoxTableKeyNodeType,
-  config:      DoxTableKeyConfigExtended,
+  config:      DoxTableKeyConfig,
   children:    Seq[DoxTableKeyNode],
   queryOption: Option[Query[_]]) {
 

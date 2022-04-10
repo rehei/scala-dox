@@ -4,11 +4,11 @@ import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRow
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfigExtended
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.table.content.DoxContent
+import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_], isInnerTable: Boolean) {
 
@@ -114,10 +114,10 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
         None
       }
     }
-    if (value.key.node.config.base.alignment == DoxTableAlignment.ROTATED) {
-      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.node.config.base.text) }, ruleOption)
+    if (value.key.node.config.alignment == DoxTableAlignment.ROTATED) {
+      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.node.config.text) }, ruleOption)
     } else {
-      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node.config) } { Text2TEX(false).generate(value.key.node.config.base.text) }, ruleOption)
+      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node.config) } { Text2TEX(false).generate(value.key.node.config.text) }, ruleOption)
     }
   }
 
@@ -155,8 +155,8 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
     \ plain { (\\ cmidrule { s"1-${model.dimension().size}" }).generate() + "\n" }
   }
 
-  protected def getHeadAlignment(config: DoxTableKeyConfigExtended) = {
-    config.base.alignment match {
+  protected def getHeadAlignment(config: DoxTableKeyConfig) = {
+    config.alignment match {
       case DoxTableAlignment.LEFT    => "l"
       case DoxTableAlignment.RIGHT   => "r"
       case DoxTableAlignment.CENTER  => "c"
@@ -165,9 +165,9 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
       case _                         => "l"
     }
   }
-  protected def getTexAlignment(config: DoxTableKeyConfigExtended) = {
+  protected def getTexAlignment(config: DoxTableKeyConfig) = {
     val size = config.widthOption.getOrElse(COLUMN_SIZE_DEFAULT)
-    config.base.alignment match {
+    config.alignment match {
       case DoxTableAlignment.LEFT    => ColumnType.l(size)
       case DoxTableAlignment.RIGHT   => ColumnType.r(size)
       case DoxTableAlignment.CENTER  => ColumnType.c(size)
