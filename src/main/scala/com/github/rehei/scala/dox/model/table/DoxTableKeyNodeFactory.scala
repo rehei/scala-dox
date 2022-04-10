@@ -32,32 +32,36 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Index {
-    def apply() = {
-      node(DoxTableKeyNodeType.INDEX).config(_.name(TextFactory.NONE).alignment(_.CENTER))
+    def apply(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
+      node(DoxTableKeyNodeType.INDEX).config(_config)
     }
-    def apply(name: String) = {
-      node(DoxTableKeyNodeType.INDEX).config(_.name(name).alignment(_.CENTER))
+  }
+
+  object IndexDefault {
+    def apply() = {
+      node(DoxTableKeyNodeType.INDEX).config(_.name("#").alignment(_.CENTER).width(0.5))
+    }
+  }
+
+  object IndexBig {
+    def apply() = {
+      node(DoxTableKeyNodeType.INDEX).config(_.name("#").alignment(_.CENTER).width(0.7))
     }
   }
 
   object Blank {
     def apply() = {
-      node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(Some(0.001))
-    }
-    def apply(width: Double) = {
-      node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(Some(width))
+      node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER).width(0.001))
     }
     def apply(widthOption: Option[Double]) = {
-      node(DoxTableKeyNodeType.BLANK).config(_.name(TextFactory.NONE).alignment(_.CENTER)).width(widthOption)
+      val config = DoxTableKeyConfig(TextFactory.NONE, DoxTableAlignment.CENTER, widthOption)
+      node(DoxTableKeyNodeType.BLANK).config(config)
     }
-    def apply(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
-      val _config = DoxTableKeyConfig(TextFactory.NONE, _alignment(DoxTableAlignment), None)
-      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK, _config, Seq.empty, None) with Writeable {
-        def width(_width: Option[Double]) = new {
-          def finalize(callback: Query[T] => Query[_]) = {
-            val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.BLANK, _config.width(_width), Seq.empty, Some(query))
-          }
+    def apply(_config: DoxTableKeyConfig.NO_NAME.type => DoxTableKeyConfig) = {
+      new DoxTableKeyNode(DoxTableKeyNodeType.BLANK, _config(DoxTableKeyConfig.NO_NAME), Seq.empty, None) with Writeable {
+        def finalize(callback: Query[T] => Query[_]) = {
+          val query = callback(new Query[T])
+          DoxTableKeyNode(DoxTableKeyNodeType.BLANK, _config(DoxTableKeyConfig.NO_NAME), Seq.empty, Some(query))
         }
       }
     }
@@ -66,11 +70,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Node {
     def apply(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
       new DoxTableKeyNode(DoxTableKeyNodeType.INTERMEDIATE, _config(DoxTableKeyConfig), Seq.empty, None) with Writeable {
-        def width(_width: Option[Double]) = new {
-          def finalize(callback: Query[T] => Query[_]) = {
-            val query = callback(new Query[T])
-            DoxTableKeyNode(DoxTableKeyNodeType.VALUE, _config(DoxTableKeyConfig).width(_width), Seq.empty, Some(query))
-          }
+        def finalize(callback: Query[T] => Query[_]) = {
+          val query = callback(new Query[T])
+          DoxTableKeyNode(DoxTableKeyNodeType.VALUE, _config(DoxTableKeyConfig), Seq.empty, Some(query))
         }
       }
     }
@@ -83,10 +85,11 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   protected def node(_nodeType: DoxTableKeyNodeType) = new {
-    def config(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = new {
-      def width(_width: Option[Double]) = {
-        new DoxTableKeyNode(_nodeType, _config(DoxTableKeyConfig).width(_width), Seq.empty, None)
-      }
+    def config(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
+      DoxTableKeyNode(_nodeType, _config(DoxTableKeyConfig), Seq.empty, None)
+    }
+    def config(_config: DoxTableKeyConfig) = {
+      DoxTableKeyNode(_nodeType, _config, Seq.empty, None)
     }
   }
 

@@ -4,6 +4,9 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextFactory
 
 object DoxTableKeyConfig {
+
+  val NO_NAME = nameInternal(TextFactory.NONE)
+
   def name(in: String) = {
     nameInternal(TextFactory.text(in))
   }
@@ -21,12 +24,6 @@ object DoxTableKeyConfig {
   }
 }
 
-case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, widthOption: Option[Double]) {
-
-  def width(in: Option[Double]) = {
-    this.copy(widthOption = in)
-  }
-
-}
+case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, widthOption: Option[Double])
 
 
