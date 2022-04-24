@@ -12,6 +12,7 @@ import com.github.rehei.scala.dox.control.DoxBuilderTable
 import com.github.rehei.scala.dox.control.DoxBuilderEquation
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.control.DoxBuilderSvg
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
@@ -26,6 +27,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def tableSequence(callback: DoxBuilderTableSequence.type => DoxTableViewModelSequence) = this
   override def table(callback: DoxBuilderTable.type => DoxTableViewModel[_]): this.type = this
   override def equation(callback: DoxBuilderEquation.type => DoxEquation) = this
+  override def svg(callback: DoxBuilderSvg.type => DoxSvgFigure) = this
 
   override def text(ast: TextAST) = this
   override def text(in: String) = this
@@ -37,6 +39,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def clearpage() = this
 
   override def nonBreakingSpace = this
+
 
   override protected def internalPlain(in: String) = Unit
 
