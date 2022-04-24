@@ -162,15 +162,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
-  protected def svg(imageSetSequence: Seq[DoxSvgFigure]): this.type = {
-    for (sequence <- imageSetSequence) {
-      internalSvg(sequence)
-    }
-    this
-  }
-
   protected def internalPlain(in: String): Unit
-
   protected def internalCiteT(key: String): Unit
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
