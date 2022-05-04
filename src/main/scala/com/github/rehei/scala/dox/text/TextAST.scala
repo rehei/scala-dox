@@ -16,10 +16,6 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
-  def equation(in: TextAST) = {
-    this.copy(sequence = sequence :+ TextObjectMathMode(in))
-  }
-
   def subscript(in: String): TextAST = {
     this.subscript(TextFactory.text(in))
   }

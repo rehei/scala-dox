@@ -14,7 +14,6 @@ import com.github.rehei.scala.dox.text.TextObjectLetterDeltaLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterDeltaUppercase
 import com.github.rehei.scala.dox.text.TextObjectLetterEpsilonLowercase
 import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
-import com.github.rehei.scala.dox.text.TextObjectMathMode
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
@@ -118,7 +117,6 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
       val before = base.totalCount
 
-      base.append(textMathMode(next()))
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
@@ -136,17 +134,6 @@ case class Text2TEX protected (isMathMode: Boolean) {
     }
 
     base.totalText
-
-  }
-
-  protected def textMathMode(sequence: Seq[TextObject]) = {
-    val collection = collect[TextObjectMathMode](sequence)
-    val resultString = collection.map(text => parseMath(text)).mkString
-    ParseResult(resultString, collection.size)
-  }
-
-  def parseMath(mathObject: TextObjectMathMode): String = {
-    "$" + Text2TEX(true).generate(mathObject.textAST) + "$"
   }
 
   protected def textDefault(sequence: Seq[TextObject]) = {

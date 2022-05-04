@@ -13,7 +13,7 @@ object DoxBuilderEquation {
       DoxEquation(_equation, _labelOption)
     }
     def data(_equation: TextAST) = {
-      DoxEquation(Text2TEX.apply(true).generate(_equation), _labelOption)
+      DoxEquation(Text2TEX(true).generate(_equation), _labelOption)
     }
   }
 }
