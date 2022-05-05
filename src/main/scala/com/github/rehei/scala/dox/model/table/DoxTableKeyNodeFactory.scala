@@ -38,14 +38,17 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object IndexDefault {
-    def apply() = {
-      node(DoxTableKeyNodeType.INDEX).config(_.name("#").alignment(_.CENTER).width(0.5))
+    def small() = {
+      create(0.5)
     }
-  }
-
-  object IndexBig {
-    def apply() = {
-      node(DoxTableKeyNodeType.INDEX).config(_.name("#").alignment(_.CENTER).width(0.7))
+    def big() = {
+      create(0.7)
+    }
+    def bigger() = {
+      create(1.5)
+    }
+    protected def create(width: Double) = {
+      node(DoxTableKeyNodeType.INDEX).config(_.name("#").alignment(_.CENTER).width(width))
     }
   }
 
