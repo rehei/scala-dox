@@ -17,6 +17,8 @@ import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
+import com.github.rehei.scala.dox.text.TextObjectLetterLambdaLowercase
+import com.github.rehei.scala.dox.text.TextObjectLetterZetaLowercase
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -100,6 +102,8 @@ case class Text2TEX protected (isMathMode: Boolean) {
   SpecialSignParser[TextObjectLetterDeltaUppercase](mode.mathEnvironment("\\Delta{}"))
   SpecialSignParser[TextObjectLetterEpsilonLowercase](mode.mathEnvironment("\\epsilon{}"))
   SpecialSignParser[TextObjectLetterTauLowercase](mode.mathEnvironment("\\tau{}"))
+  SpecialSignParser[TextObjectLetterLambdaLowercase](mode.mathEnvironment("\\lambda{}"))
+  SpecialSignParser[TextObjectLetterZetaLowercase](mode.mathEnvironment("\\zeta{}"))
 
   def generate(element: TextAST) = {
 
