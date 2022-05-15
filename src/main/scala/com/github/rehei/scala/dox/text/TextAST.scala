@@ -52,28 +52,11 @@ case class TextAST(val sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDoubleStruck(in))
   }
 
-  def letterDeltaUppercase() = {
-    this.copy(sequence = sequence :+ TextObjectLetterDeltaUppercase())
-  }
-
-  def letterDeltaLowercase() = {
-    this.copy(sequence = sequence :+ TextObjectLetterDeltaLowercase())
-  }
-
-  def letterEpsilonLowercase() = {
-    this.copy(sequence = sequence :+ TextObjectLetterEpsilonLowercase())
-  }
-
-  def letterTauLowercase() = {
-    this.copy(sequence = sequence :+ TextObjectLetterTauLowercase())
+  def greek(letterCallback: TextObjectGreekLetter.type => TextObjectGreekLetter, caseCallback: TextObjectCase.type => TextObjectCase) = {
+    val effectiveLetter = letterCallback(TextObjectGreekLetter)
+    val effectiveCase = caseCallback(TextObjectCase)
+    
+    this.copy(sequence = sequence :+ TextObjectGreekLetterWithCase(effectiveLetter, effectiveCase))
   }
   
-  def letterLambdaLowercase() = {
-    this.copy(sequence = sequence :+ TextObjectLetterLambdaLowercase())
-  }
-  
-  def letterZetaLowercase() = {
-    this.copy(sequence = sequence :+ TextObjectLetterZetaLowercase())
-  }
-
 }

@@ -7,18 +7,15 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectArrowRight
 import com.github.rehei.scala.dox.text.TextObjectArrowUp
+import com.github.rehei.scala.dox.text.TextObjectCase
 import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.text.TextObjectDoubleStruck
+import com.github.rehei.scala.dox.text.TextObjectGreekLetter
+import com.github.rehei.scala.dox.text.TextObjectGreekLetterWithCase
 import com.github.rehei.scala.dox.text.TextObjectItalic
-import com.github.rehei.scala.dox.text.TextObjectLetterDeltaLowercase
-import com.github.rehei.scala.dox.text.TextObjectLetterDeltaUppercase
-import com.github.rehei.scala.dox.text.TextObjectLetterEpsilonLowercase
-import com.github.rehei.scala.dox.text.TextObjectLetterTauLowercase
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
-import com.github.rehei.scala.dox.text.TextObjectLetterLambdaLowercase
-import com.github.rehei.scala.dox.text.TextObjectLetterZetaLowercase
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -98,12 +95,85 @@ case class Text2TEX protected (isMathMode: Boolean) {
   SpecialSignParser[TextObjectNewline](mode.newline)
   SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
   SpecialSignParser[TextObjectArrowUp](mode.mathEnvironment("\\uparrow"))
-  SpecialSignParser[TextObjectLetterDeltaLowercase](mode.mathEnvironment("\\delta{}"))
-  SpecialSignParser[TextObjectLetterDeltaUppercase](mode.mathEnvironment("\\Delta{}"))
-  SpecialSignParser[TextObjectLetterEpsilonLowercase](mode.mathEnvironment("\\epsilon{}"))
-  SpecialSignParser[TextObjectLetterTauLowercase](mode.mathEnvironment("\\tau{}"))
-  SpecialSignParser[TextObjectLetterLambdaLowercase](mode.mathEnvironment("\\lambda{}"))
-  SpecialSignParser[TextObjectLetterZetaLowercase](mode.mathEnvironment("\\zeta{}"))
+
+  protected val GREEK_LOOKUP = {
+    Map(
+      (greek(_.ALPHA, _.UPPERCASE), "A"),
+      (greek(_.ALPHA, _.LOWERCASE), mode.mathEnvironment("\\alpha{}")),
+
+      (greek(_.BETA, _.UPPERCASE), "B"),
+      (greek(_.BETA, _.LOWERCASE), mode.mathEnvironment("\\beta{}")),
+
+      (greek(_.GAMMA, _.UPPERCASE), mode.mathEnvironment("\\Gamma{}")),
+      (greek(_.GAMMA, _.LOWERCASE), mode.mathEnvironment("\\gamma{}")),
+
+      (greek(_.DELTA, _.UPPERCASE), mode.mathEnvironment("\\Delta{}")),
+      (greek(_.DELTA, _.LOWERCASE), mode.mathEnvironment("\\delta{}")),
+
+      (greek(_.EPSILON, _.UPPERCASE), "E"),
+      (greek(_.EPSILON, _.LOWERCASE), mode.mathEnvironment("\\epsilon{}")),
+      (greek(_.EPSILON, _.VARIANT), mode.mathEnvironment("\\varepsilon{}")),
+
+      (greek(_.ZETA, _.UPPERCASE), "Z"),
+      (greek(_.ZETA, _.LOWERCASE), mode.mathEnvironment("\\zeta{}")),
+
+      (greek(_.ETA, _.UPPERCASE), "H"),
+      (greek(_.ETA, _.LOWERCASE), mode.mathEnvironment("\\eta{}")),
+
+      (greek(_.THETA, _.UPPERCASE), mode.mathEnvironment("\\Theta{}")),
+      (greek(_.THETA, _.LOWERCASE), mode.mathEnvironment("\\theta{}")),
+      (greek(_.THETA, _.VARIANT), mode.mathEnvironment("\\vartheta{}")),
+
+      (greek(_.IOTA, _.UPPERCASE), "I"),
+      (greek(_.IOTA, _.LOWERCASE), mode.mathEnvironment("\\iota{}")),
+
+      (greek(_.KAPPA, _.UPPERCASE), "K"),
+      (greek(_.KAPPA, _.LOWERCASE), mode.mathEnvironment("\\kappa{}")),
+
+      (greek(_.LAMBDA, _.UPPERCASE), mode.mathEnvironment("\\Lambda{}")),
+      (greek(_.LAMBDA, _.LOWERCASE), mode.mathEnvironment("\\lambda{}")),
+
+      (greek(_.MU, _.UPPERCASE), "M"),
+      (greek(_.MU, _.LOWERCASE), mode.mathEnvironment("\\mu{}")),
+
+      (greek(_.NU, _.UPPERCASE), "N"),
+      (greek(_.NU, _.LOWERCASE), mode.mathEnvironment("\\nu{}")),
+
+      (greek(_.XI, _.UPPERCASE), mode.mathEnvironment("\\Xi{}")),
+      (greek(_.XI, _.LOWERCASE), mode.mathEnvironment("\\xi{}")),
+
+      (greek(_.OMICRON, _.UPPERCASE), "O"),
+      (greek(_.OMICRON, _.LOWERCASE), "o"),
+
+      (greek(_.PI, _.UPPERCASE), mode.mathEnvironment("\\Pi{}")),
+      (greek(_.PI, _.LOWERCASE), mode.mathEnvironment("\\pi{}")),
+
+      (greek(_.RHO, _.UPPERCASE), "P"),
+      (greek(_.RHO, _.LOWERCASE), mode.mathEnvironment("\\rho{}")),
+      (greek(_.RHO, _.VARIANT), mode.mathEnvironment("\\varrho{}")),
+
+      (greek(_.SIGMA, _.UPPERCASE), mode.mathEnvironment("\\Sigma{}")),
+      (greek(_.SIGMA, _.LOWERCASE), mode.mathEnvironment("\\sigma{}")),
+
+      (greek(_.TAU, _.UPPERCASE), "T"),
+      (greek(_.TAU, _.LOWERCASE), mode.mathEnvironment("\\tau{}")),
+
+      (greek(_.UPSILON, _.UPPERCASE), mode.mathEnvironment("\\Upsilon{}")),
+      (greek(_.UPSILON, _.LOWERCASE), mode.mathEnvironment("\\upsilon{}")),
+
+      (greek(_.PHI, _.UPPERCASE), mode.mathEnvironment("\\Phi{}")),
+      (greek(_.PHI, _.LOWERCASE), mode.mathEnvironment("\\phi{}")),
+      (greek(_.PHI, _.VARIANT), mode.mathEnvironment("\\varphi{}")),
+      
+      (greek(_.CHI, _.UPPERCASE), "X"),
+      (greek(_.CHI, _.LOWERCASE), mode.mathEnvironment("\\chi{}")),
+
+      (greek(_.PSI, _.UPPERCASE), mode.mathEnvironment("\\Psi{}")),
+      (greek(_.PSI, _.LOWERCASE), mode.mathEnvironment("\\psi{}")),
+
+      (greek(_.OMEGA, _.UPPERCASE), mode.mathEnvironment("\\Omega{}")),
+      (greek(_.OMEGA, _.LOWERCASE), mode.mathEnvironment("\\omega{}")))
+  }
 
   def generate(element: TextAST) = {
 
@@ -126,6 +196,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textItalic(next()))
       base.append(textDoubleStruck(next()))
       base.append(textTab(next()))
+      base.append(textGreek(next()))
 
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
@@ -138,6 +209,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
     }
 
     base.totalText
+  }
+
+  protected def textGreek(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectGreekLetterWithCase](sequence)
+    val resultString = collection.map(GREEK_LOOKUP.get(_).get).mkString
+
+    ParseResult(resultString, collection.size)
   }
 
   protected def textDefault(sequence: Seq[TextObject]) = {
@@ -182,6 +260,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
   protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {
     val subSequence = sequence.takeWhile(classTag.runtimeClass.isInstance(_))
     subSequence.map(_.asInstanceOf[T])
+  }
+
+  def greek(letterCallback: TextObjectGreekLetter.type => TextObjectGreekLetter, caseCallback: TextObjectCase.type => TextObjectCase) = {
+    val effectiveLetter = letterCallback(TextObjectGreekLetter)
+    val effectiveCase = caseCallback(TextObjectCase)
+
+    TextObjectGreekLetterWithCase(effectiveLetter, effectiveCase)
   }
 
 }
