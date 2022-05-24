@@ -1,6 +1,7 @@
 package com.github.rehei.scala.dox.model.table
 
 import scala.collection.mutable.ArrayBuffer
+import com.github.rehei.scala.dox.text.TextAST
 
 case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {
 
@@ -24,6 +25,10 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {
 
   def addRule() = {
     content.append(DoxRule)
+  }
+
+  def addLegend(heading: String, items: Seq[TextAST]) = {
+    content.append(DoxLegend(heading, items))
   }
 
   def addWithIntermediateSpacing(elementSeq: Iterable[T]) = {

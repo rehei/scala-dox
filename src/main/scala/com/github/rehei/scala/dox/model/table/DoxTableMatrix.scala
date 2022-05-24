@@ -12,9 +12,15 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
   }
 
   def body() = {
-    for ((row, index) <- model.data().zipWithIndex) yield {
-      convertRow(index, row)
-    }
+    (for ((row, index) <- model.data().zipWithIndex) yield {
+      bodyRow(index, row)
+    }).flatten
+  }
+  
+  def legend() = {
+    (for (row <- model.data()) yield {
+      legendRow(row)
+    }).flatten
   }
 
   def totalWidth(widthDefault: Double) = {
@@ -29,14 +35,22 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
     lastHead().map(_.node.config)
   }
 
-  protected def convertRow(index: Int, row: DoxOption[T]) = {
+  protected def bodyRow(index: Int, row: DoxOption[T]) = {
     row match {
-      case DoxValue(content) => DoxValue(convertValue(index + 1, content))
-      case DoxSpace          => DoxSpace
-      case DoxRule           => DoxRule
+      case DoxValue(content) => Some(DoxValue(convertValue(index + 1, content)))
+      case DoxSpace          => Some(DoxSpace)
+      case DoxRule           => Some(DoxRule)
+      case DoxLegend(_, _)   => None
     }
   }
 
+  protected def legendRow(row: DoxOption[T]) = {
+    row match {
+      case a: DoxLegend => Some(a)
+      case _            => None
+    }
+  }
+  
   protected def convertValue(index: Int, value: T) = {
     for (head <- lastHead()) yield {
       head.node.valueOf(index, value)

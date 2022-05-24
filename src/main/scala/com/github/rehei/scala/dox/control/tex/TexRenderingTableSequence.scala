@@ -31,7 +31,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   protected def createTables() = {
     for (model <- modelSequence.sequence) {
       \ plain { "{" + getTable(model) + "}" }
-      endRowEntry()
+      verticalSpacing()
     }
   }
 
@@ -43,7 +43,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
       \ midrule;
     })
     \ plain { "}" }
-    endRowEntry()
+    verticalSpacing()
   }
 
   protected def appendBottom() = {
@@ -52,14 +52,14 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
       \ bottomrule;
     }
     \ plain { "}" }
-    endRowEntry()
+    verticalSpacing()
   }
 
   protected def getTable(model: DoxTableMatrix[_]) = {
     new TexRenderingTable(baseAST, model, true).createTableString()
   }
 
-  protected def endRowEntry() = {
+  protected def verticalSpacing() = {
     \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
 
