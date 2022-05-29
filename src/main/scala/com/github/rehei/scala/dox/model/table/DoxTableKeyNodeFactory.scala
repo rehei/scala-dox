@@ -44,9 +44,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     def big() = {
       create(0.7)
     }
-    def bigger() = {
-      create(1.5)
-    }
     protected def create(width: Double) = {
       node(DoxTableKeyNodeType.INDEX).config(_.name("#").alignment(_.CENTER).width(width))
     }
