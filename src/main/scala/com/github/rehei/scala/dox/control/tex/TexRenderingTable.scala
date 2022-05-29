@@ -136,7 +136,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
         case DoxValue(value) => renderValue(value)
         case DoxRule         => renderRule()
         case DoxSpace        => renderSpace()
-        case DoxLegend(_, _) =>
+        case DoxLegend(_)    =>
       }
     }
   }
@@ -144,8 +144,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   protected def appendTableLegend() {
 
     for (row <- model.legend()) {
-      verticalSpacing()
-      \ plain { row.heading + model.dimension().drop(1).map(m => " & ").mkString + "\\\\" + "\n" }
       for (item <- row.content) {
         \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { Text2TEX(false).generate(item) }).generate() + "\\\\" + "\n" }
       }
@@ -167,11 +165,11 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_],
   protected def cmidrule() = {
     \ plain { (\\ cmidrule { s"1-${model.dimension().size}" }).generate() + "\n" }
   }
-  
+
   protected def verticalSpacing() = {
     \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
-  
+
   protected def getHeadAlignment(config: DoxTableKeyConfig) = {
     config.alignment match {
       case DoxTableAlignment.LEFT    => "l"

@@ -16,7 +16,7 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
       bodyRow(index, row)
     }).flatten
   }
-  
+
   def legend() = {
     (for (row <- model.data()) yield {
       legendRow(row)
@@ -40,7 +40,7 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
       case DoxValue(content) => Some(DoxValue(convertValue(index + 1, content)))
       case DoxSpace          => Some(DoxSpace)
       case DoxRule           => Some(DoxRule)
-      case DoxLegend(_, _)   => None
+      case DoxLegend(_)      => None
     }
   }
 
@@ -50,7 +50,7 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
       case _            => None
     }
   }
-  
+
   protected def convertValue(index: Int, value: T) = {
     for (head <- lastHead()) yield {
       head.node.valueOf(index, value)

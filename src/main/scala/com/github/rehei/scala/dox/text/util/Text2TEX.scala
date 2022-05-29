@@ -16,6 +16,7 @@ import com.github.rehei.scala.dox.text.TextObjectItalic
 import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
+import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -92,6 +93,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
     }
   }
 
+  SpecialSignParser[TextObjectSpaceSmall]("\\,")
   SpecialSignParser[TextObjectNewline](mode.newline)
   SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
   SpecialSignParser[TextObjectArrowUp](mode.mathEnvironment("\\uparrow"))
@@ -164,7 +166,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
       (greek(_.PHI, _.UPPERCASE), mode.mathEnvironment("\\Phi{}")),
       (greek(_.PHI, _.LOWERCASE), mode.mathEnvironment("\\phi{}")),
       (greek(_.PHI, _.VARIANT), mode.mathEnvironment("\\varphi{}")),
-      
+
       (greek(_.CHI, _.UPPERCASE), "X"),
       (greek(_.CHI, _.LOWERCASE), mode.mathEnvironment("\\chi{}")),
 

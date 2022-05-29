@@ -27,8 +27,8 @@ case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {
     content.append(DoxRule)
   }
 
-  def addLegend(heading: String, items: Seq[TextAST]) = {
-    content.append(DoxLegend(heading, items))
+  def addLegend(items: Seq[TextAST]) = {
+    content.append(DoxLegend(items))
   }
 
   def addWithIntermediateSpacing(elementSeq: Iterable[T]) = {

@@ -11,6 +11,10 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def space() = {
     text(" ")
   }
+  
+  def spaceSmall() = {
+    this.copy(sequence = sequence :+ TextObjectSpaceSmall())
+  }
 
   def text(in: String) = {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
