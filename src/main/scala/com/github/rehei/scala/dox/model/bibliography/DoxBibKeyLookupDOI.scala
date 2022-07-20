@@ -39,7 +39,7 @@ class DoxBibKeyLookupDOI(bibKeyName: String, doi: DoxValueDOI,
   def validate(result: DoxBibKeyLookupResult) {
     val entry = DoxBibtexParseSingleEntry(bibKeyName, result.database)
 
-    entry.expectNormalized(BibTeXEntry.KEY_DOI, doi.value.stripPrefix("https://doi.org/").stripPrefix("http://dx.doi.org/"))
+    entry.expectNormalized(BibTeXEntry.KEY_DOI, doi.value.stripPrefix("https://doi.org/").stripPrefix("https://dx.doi.org/"))
 
     for (by <- byOption) {
       entry.expectAnyWordNormalized(BibTeXEntry.KEY_AUTHOR, by.toString())
