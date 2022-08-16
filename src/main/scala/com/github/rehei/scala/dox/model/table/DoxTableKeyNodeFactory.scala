@@ -61,8 +61,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       new DoxTableKeyNode(DoxTableKeyNodeValueStrategy.blank(), _config(DoxTableKeyConfig.NO_NAME), Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
           val query = callback(new Query[T])
-          //TODO
-          DoxTableKeyNode(DoxTableKeyNodeValueStrategy.blank(), _config(DoxTableKeyConfig.NO_NAME), Seq.empty)
+          DoxTableKeyNode(DoxTableKeyNodeValueStrategy.byValueQuery(query), _config(DoxTableKeyConfig.NO_NAME), Seq.empty)
         }
       }
     }
