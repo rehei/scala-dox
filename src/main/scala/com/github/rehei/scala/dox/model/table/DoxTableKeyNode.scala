@@ -7,20 +7,14 @@ import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 
-case class DoxTableKeyNode(
-  nodeType:    DoxTableKeyNodeType,
-  config:      DoxTableKeyConfig,
-  children:    Seq[DoxTableKeyNode],
-  queryOption: Option[Query[_]]) {
+case class DoxTableKeyNode(val strategy: DoxTableKeyNodeValueStrategy, config: DoxTableKeyConfig, children: Seq[DoxTableKeyNode]) {
 
   def valueOf(index: Int, element: AnyRef) = {
-    queryOption
-      .map(query => queryReflection(element, query))
-      .getOrElse(nodeType.valueOf(index, element))
+    strategy.valueOf(index, element)
   }
 
   def hasNonEmptyChildren() = {
-    children.filter(_.nodeType != DoxTableKeyNodeType.BLANK).size > 0
+    children.filter(_.strategy.isNotBlank()).size > 0
   }
 
   def depth(): Int = {
@@ -38,13 +32,13 @@ case class DoxTableKeyNode(
   protected def leavesRecursive(): Seq[DoxTableKeyNode] = {
     childrenRecursive.filter(_.isLeaf())
   }
-  
+
   def childrenRecursive(): Seq[DoxTableKeyNode] = {
     children.flatMap {
       child => Seq(child) ++ child.childrenRecursive()
     }
   }
-  
+
   protected def leaves() = {
     children.filter(_.isLeaf())
   }

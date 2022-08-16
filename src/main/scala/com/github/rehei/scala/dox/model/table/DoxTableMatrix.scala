@@ -63,7 +63,7 @@ class DoxTableMatrix(protected val model: DoxTable[_ <: AnyRef]) {
 
   protected def isNonBlank(list: Seq[DoxTableHeadRowKey]) = {
     list
-      .filter(_.node.nodeType != DoxTableKeyNodeType.BLANK)
+      .filter(_.node.strategy.isNotBlank())
       .size > 0
   }
 
