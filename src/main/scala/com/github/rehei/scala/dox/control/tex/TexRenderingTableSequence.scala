@@ -55,7 +55,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
     verticalSpacing()
   }
 
-  protected def getTable(model: DoxTableMatrix[_]) = {
+  protected def getTable(model: DoxTableMatrix) = {
     new TexRenderingTable(baseAST, model, true).createTableString()
   }
 

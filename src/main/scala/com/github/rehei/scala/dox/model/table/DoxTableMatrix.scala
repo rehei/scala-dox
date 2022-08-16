@@ -3,7 +3,7 @@ package com.github.rehei.scala.dox.model.table
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.model.table.content.DoxContent
 
-class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
+class DoxTableMatrix(protected val model: DoxTable[_ <: AnyRef]) {
 
   import DoxContent._
 
@@ -32,10 +32,14 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
   }
 
   def dimension() = {
-    lastHead().map(_.node.config)
+    headRowLast().map(_.node.config)
   }
 
-  protected def bodyRow(index: Int, row: DoxOption[T]) = {
+  protected def headRowLast() = {
+    model.head().lastOption.map(_.values).getOrElse(Seq.empty)
+  }
+
+  protected def bodyRow(index: Int, row: DoxOption[_]) = {
     row match {
       case DoxValue(content) => Some(DoxValue(convertValue(index + 1, content)))
       case DoxSpace          => Some(DoxSpace)
@@ -44,21 +48,17 @@ class DoxTableMatrix[T <: AnyRef](protected val model: DoxTable[T]) {
     }
   }
 
-  protected def legendRow(row: DoxOption[T]) = {
+  protected def legendRow(row: DoxOption[_]) = {
     row match {
       case a: DoxLegend => Some(a)
       case _            => None
     }
   }
 
-  protected def convertValue(index: Int, value: T) = {
-    for (head <- lastHead()) yield {
+  protected def convertValue(index: Int, value: AnyRef) = {
+    for (head <- headRowLast()) yield {
       head.node.valueOf(index, value)
     }
-  }
-
-  protected def lastHead() = {
-    model.head().lastOption.map(_.values).getOrElse(Seq.empty)
   }
 
   protected def isNonBlank(list: Seq[DoxTableHeadRowKey]) = {

@@ -17,6 +17,7 @@ import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
 import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
+import com.github.rehei.scala.dox.text.TextObjectCite
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -199,6 +200,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textDoubleStruck(next()))
       base.append(textTab(next()))
       base.append(textGreek(next()))
+      base.append(textCite(next()))
 
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
@@ -211,6 +213,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
     }
 
     base.totalText
+  }
+
+  protected def textCite(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectCite](sequence)
+    val resultString = collection.map(text => "\\cite{" + text.in + "}").mkString(", ")
+
+    ParseResult(resultString, collection.size)
   }
 
   protected def textGreek(sequence: Seq[TextObject]) = {

@@ -1,6 +1,8 @@
 package com.github.rehei.scala.dox.text
 
 import scala.xml.NodeSeq
+import com.github.rehei.scala.dox.control.DoxRenderingBase
+import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 
 case class TextAST(val sequence: Seq[TextObject]) {
 
@@ -50,6 +52,10 @@ case class TextAST(val sequence: Seq[TextObject]) {
 
   def rule() = {
     this.copy(sequence = sequence :+ TextObjectRule())
+  }
+  
+  def cite(value: String) = {
+    this.copy(sequence = sequence :+ TextObjectCite(value)) 
   }
 
   def doubleStruck(in: Char) = {

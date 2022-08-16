@@ -10,7 +10,7 @@ import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.table.content.DoxContent
 import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 
-class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix[_], isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
   import DoxContent._
 
