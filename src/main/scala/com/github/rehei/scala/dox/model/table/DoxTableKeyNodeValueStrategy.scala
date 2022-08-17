@@ -20,13 +20,13 @@ object DoxTableKeyNodeValueStrategy {
     }
   }
 
-  case class ByQueryAndSequenceIndex(givenWidth: Double, query: Query[_], sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy {
+  case class ByQueryAndMapKey(givenWidth: Double, query: Query[_], key: String) extends DoxTableKeyNodeValueStrategy {
 
     override def width() = givenWidth
 
     override def valueOf(row: Int, element: AnyRef) = {
-      val sequence = new QReflection(element).get(query).asInstanceOf[Seq[_ <: AnyRef]]
-      val value = sequence(sequenceIndex)
+      val map = new QReflection(element).get(query).asInstanceOf[scala.collection.Map[String, _ <: AnyRef]]
+      val value = map.get(key).get
       convertAnyRef(value)
     }
   }

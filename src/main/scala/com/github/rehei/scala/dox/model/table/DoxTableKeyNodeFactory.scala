@@ -80,9 +80,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       def finalizeIndex(index: Int) = {
         DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignment, Seq.empty)
       }
-      def finalizeQueryIndex(callback: Query[T] => Query[_], index: Int) = {
+      def finalizeQueryMap(callback: Query[T] => Query[_], key: String) = {
         val query = callback(new Query[T])
-        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQueryAndSequenceIndex(config.width, query, index)), config.alignment, Seq.empty)
+        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQueryAndMapKey(config.width, query, key)), config.alignment, Seq.empty)
       }
     }
   }
