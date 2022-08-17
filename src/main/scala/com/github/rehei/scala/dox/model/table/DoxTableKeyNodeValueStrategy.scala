@@ -11,22 +11,31 @@ import com.github.rehei.scala.dox.util.NextID
 
 object DoxTableKeyNodeValueStrategy {
 
-  case class ByRowIndex() extends DoxTableKeyNodeValueStrategy {
-    override def valueOf(index: Int, element: AnyRef) = {
-      TextFactory.text(index.toString())
+  case class ByRowIndex(givenWidth: Double) extends DoxTableKeyNodeValueStrategy {
+
+    override def width() = givenWidth
+
+    override def valueOf(row: Int, element: AnyRef) = {
+      TextFactory.text(row.toString())
     }
   }
 
-  case class BySequenceIndex(sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy {
-    override def valueOf(index: Int, element: AnyRef) = {
+  case class BySequenceIndex(givenWidth: Double, sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy {
+
+    override def width() = givenWidth
+
+    override def valueOf(row: Int, element: AnyRef) = {
       val sequence = element.asInstanceOf[Seq[_ <: AnyRef]]
       val value = sequence(sequenceIndex)
       convertAnyRef(value)
     }
   }
 
-  case class ByQuery(query: Query[_]) extends DoxTableKeyNodeValueStrategy {
-    override def valueOf(index: Int, element: AnyRef) = {
+  case class ByQuery(givenWidth: Double, query: Query[_]) extends DoxTableKeyNodeValueStrategy {
+
+    override def width() = givenWidth
+
+    override def valueOf(row: Int, element: AnyRef) = {
       val value = new QReflection(element).get(query)
       convertAnyRef(value)
     }
@@ -36,8 +45,10 @@ object DoxTableKeyNodeValueStrategy {
 
 abstract class DoxTableKeyNodeValueStrategy {
 
-  def valueOf(index: Int, element: AnyRef): TextAST
-  
+  def width(): Double
+
+  def valueOf(row: Int, element: AnyRef): TextAST
+
   protected def convertAnyRef(value: AnyRef) = {
     value match {
       case m: TextAST => m

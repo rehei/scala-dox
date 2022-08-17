@@ -23,8 +23,8 @@ class DoxTableMatrix(protected val model: DoxTable[_ <: AnyRef]) {
     }).flatten
   }
 
-  def totalWidth(widthDefault: Double) = {
-    dimension().map(_.widthOption.getOrElse(widthDefault)).sum
+  def totalWidth() = {
+    dimension().map(_.width).sum
   }
 
   def totalSeparatorCount() = {
@@ -32,7 +32,7 @@ class DoxTableMatrix(protected val model: DoxTable[_ <: AnyRef]) {
   }
 
   def dimension() = {
-    headRowLast().map(_.node.config)
+    headRowLast().map(_.node.format())
   }
 
   protected def headRowLast() = {

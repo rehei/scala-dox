@@ -10,7 +10,6 @@ import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, title: TextAST) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
 
-  protected val COLUMN_SIZE_DEFAULT = 2.0
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
   import tmpMarkup._
@@ -68,7 +67,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def totalSizeTex() = {
-    val width = modelSequence.totalWidth(COLUMN_SIZE_DEFAULT)
+    val width = modelSequence.totalWidth()
     val tabColSeps = modelSequence.totalSeparatorCount()
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + width + "cm"

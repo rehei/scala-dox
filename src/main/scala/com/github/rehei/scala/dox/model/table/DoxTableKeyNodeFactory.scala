@@ -9,6 +9,8 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
+  val SUPPORT = 100
+  
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
       new DoxTableKeyNode(this.strategyOption, this.config, this.children ++ additionalChildren) with Writeable
@@ -33,7 +35,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Index {
     def apply(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
-      node(Some(DoxTableKeyNodeValueStrategy.ByRowIndex())).config(_config)
+      node(Some(DoxTableKeyNodeValueStrategy.ByRowIndex(10))).config(_config)
     }
   }
 
@@ -45,7 +47,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(0.7)
     }
     protected def create(width: Double) = {
-      node(Some(DoxTableKeyNodeValueStrategy.ByRowIndex())).config(_.name("#").alignment(_.CENTER).width(width))
+      DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByRowIndex(width)), null, Seq.empty)
     }
   }
 
@@ -61,7 +63,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       new DoxTableKeyNode(None, _config(DoxTableKeyConfig.NO_NAME), Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
           val query = callback(new Query[T])
-          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByQuery(query)), _config(DoxTableKeyConfig.NO_NAME), Seq.empty)
+          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByQuery(SUPPORT, query)), _config(DoxTableKeyConfig.NO_NAME), Seq.empty)
         }
       }
     }
@@ -72,10 +74,10 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       new DoxTableKeyNode(None, _config(DoxTableKeyConfig), Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
           val query = callback(new Query[T])
-          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByQuery(query)), _config(DoxTableKeyConfig), Seq.empty)
+          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByQuery(SUPPORT, query)), _config(DoxTableKeyConfig), Seq.empty)
         }
         def finalizeIndex(index: Int) = {
-          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(index)), _config(DoxTableKeyConfig), Seq.empty)
+          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(SUPPORT, index)), _config(DoxTableKeyConfig), Seq.empty)
         }
       }
     }

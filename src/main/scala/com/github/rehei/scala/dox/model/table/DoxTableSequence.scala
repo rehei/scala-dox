@@ -2,8 +2,8 @@ package com.github.rehei.scala.dox.model.table
 
 case class DoxTableSequence(sequence: Seq[DoxTableMatrix]) {
 
-  def totalWidth(defaultWidth: Double) = {
-    sequence.map(_.totalWidth(defaultWidth)).max
+  def totalWidth() = {
+    sequence.map(_.totalWidth()).max
   }
 
   def totalSeparatorCount() = {
