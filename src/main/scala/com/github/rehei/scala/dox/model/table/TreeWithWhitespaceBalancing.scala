@@ -12,7 +12,7 @@ case class TreeWithWhitespaceBalancing() {
     if (max > 0) {
       val extension = {
         if (node.children.isEmpty) {
-          Seq(factory.Blank(Some(node.format.width)))
+          Seq(node.copy(textHeadOption = None))
         } else {
           Seq.empty
         }

@@ -99,11 +99,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       DoxTableKeyNode(None, None, None, Seq.empty)
     }
 
-    def apply(widthOption: Option[Double]) = {
-      // this should not be used!!!!
-      DoxTableKeyNode(None, None, None, Seq.empty)
-    }
-
     def apply(_config: DoxTableKeyConfig.NO_NAME.type => DoxTableKeyConfig) = {
       new DoxTableKeyNode(None, None, None, Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
