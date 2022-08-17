@@ -34,7 +34,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   object Index {
     def apply(_config: DoxTableKeyConfigFixed.type => DoxTableKeyConfigFixed) = {
       val config = _config(DoxTableKeyConfigFixed)
-      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(config.width)), config.alignment, Seq.empty)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(new DoxTableKeyNodeValueStrategy.ByRowIndex(config.width)), config.alignment, Seq.empty)
     }
   }
 
@@ -46,7 +46,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(0.7)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(width)), DoxTableAlignment.CENTER, Seq.empty)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(new DoxTableKeyNodeValueStrategy.ByRowIndex(width)), DoxTableAlignment.CENTER, Seq.empty)
     }
   }
 
@@ -58,7 +58,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(width)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.Spacing(width)), DoxTableAlignment.CENTER, Seq.empty)
+      DoxTableKeyNode(None, Some(new DoxTableKeyNodeValueStrategy.Spacing(width)), DoxTableAlignment.CENTER, Seq.empty)
     }
   }
 
@@ -75,14 +75,14 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
       def finalize(callback: Query[T] => Query[_]) = {
         val query = callback(new Query[T])
-        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQuery(config.width, query)), config.alignment, Seq.empty)
+        DoxTableKeyNode(config.nameAST, Some(new DoxTableKeyNodeValueStrategy.ByQuery(config.width, query)), config.alignment, Seq.empty)
       }
       def finalizeIndex(index: Int) = {
-        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignment, Seq.empty)
+        DoxTableKeyNode(config.nameAST, Some(new DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignment, Seq.empty)
       }
       def finalizeQueryMap(callback: Query[T] => Query[_], key: String) = {
         val query = callback(new Query[T])
-        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQueryAndMapKey(config.width, query, key)), config.alignment, Seq.empty)
+        DoxTableKeyNode(config.nameAST, Some(new DoxTableKeyNodeValueStrategy.ByQueryAndMapKey(config.width, query, key)), config.alignment, Seq.empty)
       }
     }
   }

@@ -11,19 +11,13 @@ import com.github.rehei.scala.dox.util.NextID
 
 object DoxTableKeyNodeValueStrategy {
 
-  case class ByRowIndex(givenWidth: Double) extends DoxTableKeyNodeValueStrategy {
-
-    override def width() = givenWidth
-
+  class ByRowIndex(givenWidth: Double) extends DoxTableKeyNodeValueStrategy(givenWidth) {
     override def valueOf(row: Int, element: AnyRef) = {
       TextFactory.text(row.toString())
     }
   }
 
-  case class ByQueryAndMapKey(givenWidth: Double, query: Query[_], key: String) extends DoxTableKeyNodeValueStrategy {
-
-    override def width() = givenWidth
-
+  class ByQueryAndMapKey(givenWidth: Double, query: Query[_], key: String) extends DoxTableKeyNodeValueStrategy(givenWidth) {
     override def valueOf(row: Int, element: AnyRef) = {
       val map = new QReflection(element).get(query).asInstanceOf[scala.collection.Map[String, _ <: AnyRef]]
       val value = map.get(key).get
@@ -31,10 +25,7 @@ object DoxTableKeyNodeValueStrategy {
     }
   }
 
-  case class BySequenceIndex(givenWidth: Double, sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy {
-
-    override def width() = givenWidth
-
+  class BySequenceIndex(givenWidth: Double, sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy(givenWidth) {
     override def valueOf(row: Int, element: AnyRef) = {
       val sequence = element.asInstanceOf[Seq[_ <: AnyRef]]
       val value = sequence(sequenceIndex)
@@ -42,29 +33,21 @@ object DoxTableKeyNodeValueStrategy {
     }
   }
 
-  case class ByQuery(givenWidth: Double, query: Query[_]) extends DoxTableKeyNodeValueStrategy {
-
-    override def width() = givenWidth
-
+  class ByQuery(givenWidth: Double, query: Query[_]) extends DoxTableKeyNodeValueStrategy(givenWidth) {
     override def valueOf(row: Int, element: AnyRef) = {
       val value = new QReflection(element).get(query)
       convertAnyRef(value)
     }
   }
 
-  case class Spacing(givenWidth: Double) extends DoxTableKeyNodeValueStrategy {
-
-    override def width() = givenWidth
-
+  class Spacing(givenWidth: Double) extends DoxTableKeyNodeValueStrategy(givenWidth) {
     override def valueOf(row: Int, element: AnyRef) = {
       TextFactory.NONE
     }
   }
 }
 
-abstract class DoxTableKeyNodeValueStrategy {
-
-  def width(): Double
+abstract class DoxTableKeyNodeValueStrategy(val givenWidth: Double) {
 
   def valueOf(row: Int, element: AnyRef): TextAST
 

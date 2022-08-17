@@ -14,13 +14,8 @@ case class DoxTableKeyNode(
   val children:               Seq[DoxTableKeyNode]) {
 
   def format(): DoxTableKeyNodeFormat = {
-
     val width = {
-      textBodyStrategyOption.map {
-        m => m.width()
-      } getOrElse {
-        this.children.map(_.format().width).sum
-      }
+      textBodyStrategyOption.map { _.givenWidth } getOrElse { this.children.map(_.format().width).sum }
     }
 
     DoxTableKeyNodeFormat(width)
