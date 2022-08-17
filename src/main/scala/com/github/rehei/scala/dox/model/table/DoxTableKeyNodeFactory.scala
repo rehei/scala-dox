@@ -9,50 +9,6 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
-  object DoxTableKeyConfigFixed {
-    def name(in: String) = {
-      nameInternal(TextFactory.text(in))
-    }
-    def name(in: TextAST) = {
-      nameInternal(in)
-    }
-    protected def nameInternal(in: TextAST) = new {
-      def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = new {
-        def widthDefault() = {
-          width(2)
-        }
-        def width(width: Double) = {
-          DoxTableKeyConfigFixed(in, _alignment(DoxTableAlignment), width)
-        }
-      }
-    }
-  }
-
-  object DoxTableKeyConfigTransient {
-    def name(in: String) = {
-      nameInternal(TextFactory.text(in))
-    }
-    def name(in: TextAST) = {
-      nameInternal(in)
-    }
-    protected def nameInternal(in: TextAST) = new {
-      def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
-        DoxTableKeyConfigTransient(in, _alignment(DoxTableAlignment))
-      }
-    }
-  }
-
-  case class DoxTableKeyConfigFixed(name: TextAST, alignment: DoxTableAlignment, width: Double) {
-    val nameAST = Some(name)
-    val alignmentOption = Some(alignment)
-  }
-  case class DoxTableKeyConfigTransient(name: TextAST, alignment: DoxTableAlignment) {
-    val nameAST = Some(name)
-    val alignmentOption = Some(alignment)
-  }
-
-  val SUPPORT = 100
-
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
       new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.alignment, this.children ++ additionalChildren) with Writeable
@@ -96,18 +52,13 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Space {
     def apply() = {
-      DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.Spacing()), None, Seq.empty)
+      create(0)
     }
-  }
-
-  object Blank {
-    def apply(_config: DoxTableKeyConfig.NO_NAME.type => DoxTableKeyConfig) = {
-      new DoxTableKeyNode(None, None, None, Seq.empty) with Writeable {
-        def finalize(callback: Query[T] => Query[_]) = {
-          val query = callback(new Query[T])
-          DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.ByQuery(SUPPORT, query)), None, Seq.empty)
-        }
-      }
+    def apply(width: Double) = {
+      create(width)
+    }
+    protected def create(width: Double) = {
+      DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.Spacing(width)), None, Seq.empty)
     }
   }
 
@@ -120,7 +71,6 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Fixed {
     def apply(_config: DoxTableKeyConfigFixed.type => DoxTableKeyConfigFixed) = new {
-
       val config = _config(DoxTableKeyConfigFixed)
 
       def finalize(callback: Query[T] => Query[_]) = {
@@ -130,9 +80,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       def finalizeIndex(index: Int) = {
         DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignmentOption, Seq.empty)
       }
-
     }
-
   }
-
+  
 }

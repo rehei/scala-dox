@@ -8,8 +8,8 @@ import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.table.content.DoxContent
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFormat
+import java.text.DecimalFormat
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
@@ -21,7 +21,14 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
     def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
     def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
-    private def sizeString(size: Double) = "{" + size + "cm}"
+    protected def sizeString(size: Double) = {
+      val df = new DecimalFormat("#")
+      df.setMinimumIntegerDigits(1)
+      df.setMaximumFractionDigits(8)
+      val stringValue = df.format(size)
+      
+      "{" + stringValue + "cm}"
+    }
   }
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
@@ -83,7 +90,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def columnConfigEachColumnSize() = {
-    model.dimension().map(config => getTexAlignment(config)).mkString
+    model.dimension().map(node => getTexAlignment(node.format())).mkString
   }
 
   protected def appendTableHead() {

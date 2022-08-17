@@ -13,8 +13,17 @@ case class DoxTableKeyNode(
   val alignment:              Option[DoxTableAlignment],
   val children:               Seq[DoxTableKeyNode]) {
 
-  def format() = {
-    DoxTableKeyNodeFormat(textBodyStrategyOption.map(_.width()).get, DoxTableAlignment.CENTER)
+  def format(): DoxTableKeyNodeFormat = {
+
+    val width = {
+      textBodyStrategyOption.map {
+        m => m.width()
+      } getOrElse {
+        this.children.map(_.format().width).sum
+      }
+    }
+
+    DoxTableKeyNodeFormat(width, alignment.getOrElse(DoxTableAlignment.CENTER))
   }
 
   def valueOf(index: Int, element: AnyRef) = {

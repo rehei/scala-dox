@@ -1,27 +1,21 @@
 package com.github.rehei.scala.dox.control.tex
 
 import com.github.rehei.scala.dox.control.DoxHandleEquation
-import com.github.rehei.scala.dox.control.DoxHandleSvg
+import com.github.rehei.scala.dox.control.DoxHandleSvgTex
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.model.DoxFileEquation
+import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.model.DoxFileTable
-import com.github.rehei.scala.dox.model.table.DoxTableKeyConfig
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.control.DoxHandleSvgTex
-import com.github.rehei.scala.dox.model.DoxFileTex
-import org.apache.commons.io.FilenameUtils
-import java.nio.file.Path
 
 class TexRendering(
   baseAST:        TexAST,
