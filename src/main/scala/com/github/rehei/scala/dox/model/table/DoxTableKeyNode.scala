@@ -14,7 +14,7 @@ case class DoxTableKeyNode(val strategy: DoxTableKeyNodeValueStrategy, config: D
   }
 
   def hasNonEmptyChildren() = {
-    children.filter(_.strategy.isNotBlank()).size > 0
+    children.filter(_.config.isTextDefined).size > 0
   }
 
   def depth(): Int = {
@@ -42,6 +42,6 @@ case class DoxTableKeyNode(val strategy: DoxTableKeyNodeValueStrategy, config: D
   protected def leaves() = {
     children.filter(_.isLeaf())
   }
-
+  
 }
 

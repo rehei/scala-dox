@@ -74,19 +74,15 @@ abstract class DoxTableKeyNodeValueStrategy {
     throw new UnsupportedOperationException()
   }
 
-  def isNotBlank() = {
-    !isBlank()
-  }
-
   def isNotIntermediate() = {
     !isIntermediate()
   }
 
-  def isBlank() = {
+  protected def isBlank() = {
     this == DoxTableKeyNodeValueStrategy.BLANK
   }
 
-  def isIntermediate() = {
+  protected def isIntermediate() = {
     this == DoxTableKeyNodeValueStrategy.INTERMEDIATE
   }
 

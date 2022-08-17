@@ -5,15 +5,15 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 object DoxTableKeyConfig {
 
-  val NO_NAME = nameInternal(TextFactory.NONE)
+  val NO_NAME = nameInternal(None)
 
   def name(in: String) = {
-    nameInternal(TextFactory.text(in))
+    nameInternal(Some(TextFactory.text(in)))
   }
   def name(in: TextAST) = {
-    nameInternal(in)
+    nameInternal(Some(in))
   }
-  protected def nameInternal(in: TextAST) = new {
+  protected def nameInternal(in: Option[TextAST]) = new {
     def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
       new DoxTableKeyConfig(in, _alignment(DoxTableAlignment), None) {
         def width(in: Double) = {
@@ -24,6 +24,18 @@ object DoxTableKeyConfig {
   }
 }
 
-case class DoxTableKeyConfig(text: TextAST, alignment: DoxTableAlignment, widthOption: Option[Double])
+case class DoxTableKeyConfig(protected val textOption: Option[TextAST], alignment: DoxTableAlignment, widthOption: Option[Double]) {
+  
+  val text = textOption.getOrElse(TextFactory.NONE)
+  
+  protected [table] def isTextEmpty = {
+    textOption.isEmpty
+  }
+  
+  protected [table] def isTextDefined = {
+    textOption.isDefined
+  }
+  
+}
 
 

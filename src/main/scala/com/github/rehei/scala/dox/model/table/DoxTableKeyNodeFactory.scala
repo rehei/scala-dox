@@ -54,7 +54,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       node(DoxTableKeyNodeValueStrategy.blank()).config(_.name(TextFactory.NONE).alignment(_.CENTER).width(0.001))
     }
     def apply(widthOption: Option[Double]) = {
-      val config = DoxTableKeyConfig(TextFactory.NONE, DoxTableAlignment.CENTER, widthOption)
+      val config = DoxTableKeyConfig(None, DoxTableAlignment.CENTER, widthOption)
       node(DoxTableKeyNodeValueStrategy.blank()).config(config)
     }
     def apply(_config: DoxTableKeyConfig.NO_NAME.type => DoxTableKeyConfig) = {
