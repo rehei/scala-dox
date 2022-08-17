@@ -9,15 +9,57 @@ import com.github.rehei.scala.dox.text.TextFactory
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
+  object DoxTableKeyConfigFixed {
+    def name(in: String) = {
+      nameInternal(TextFactory.text(in))
+    }
+    def name(in: TextAST) = {
+      nameInternal(in)
+    }
+    protected def nameInternal(in: TextAST) = new {
+      def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = new {
+        def widthDefault() = {
+          width(2)
+        }
+        def width(width: Double) = {
+          DoxTableKeyConfigFixed(in, _alignment(DoxTableAlignment), width)
+        }
+      }
+    }
+  }
+
+  object DoxTableKeyConfigTransient {
+    def name(in: String) = {
+      nameInternal(TextFactory.text(in))
+    }
+    def name(in: TextAST) = {
+      nameInternal(in)
+    }
+    protected def nameInternal(in: TextAST) = new {
+      def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
+        DoxTableKeyConfigTransient(in, _alignment(DoxTableAlignment))
+      }
+    }
+  }
+
+  case class DoxTableKeyConfigFixed(name: TextAST, alignment: DoxTableAlignment, width: Double) {
+    val nameAST = Some(name)
+    val alignmentOption = Some(alignment)
+  }
+  case class DoxTableKeyConfigTransient(name: TextAST, alignment: DoxTableAlignment) {
+    val nameAST = Some(name)
+    val alignmentOption = Some(alignment)
+  }
+
   val SUPPORT = 100
-  
+
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.strategyOption, this.config, this.children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.alignment, this.children ++ additionalChildren) with Writeable
     }
 
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.strategyOption, this.config, this.children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.alignment, this.children ++ additionalChildren) with Writeable
     }
   }
 
@@ -29,13 +71,14 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = {
-      nodeWritable(None).config(_.name("Root").alignment(_.CENTER))
+      new DoxTableKeyNode(None, None, None, Seq.empty) with Writeable
     }
   }
 
   object Index {
-    def apply(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
-      node(Some(DoxTableKeyNodeValueStrategy.ByRowIndex(10))).config(_config)
+    def apply(_config: DoxTableKeyConfigFixed.type => DoxTableKeyConfigFixed) = {
+      val config = _config(DoxTableKeyConfigFixed)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(config.width)), config.alignmentOption, Seq.empty)
     }
   }
 
@@ -47,55 +90,52 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(0.7)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByRowIndex(width)), null, Seq.empty)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(width)), Some(DoxTableAlignment.CENTER), Seq.empty)
     }
   }
 
   object Blank {
     def apply() = {
-      node(None).config(m => DoxTableKeyConfig.NO_NAME.alignment(_.CENTER).width(0.001))
+      DoxTableKeyNode(None, None, None, Seq.empty)
     }
+
     def apply(widthOption: Option[Double]) = {
-      val config = DoxTableKeyConfig(None, DoxTableAlignment.CENTER, widthOption)
-      node(None).config(config)
+      // this should not be used!!!!
+      DoxTableKeyNode(None, None, None, Seq.empty)
     }
+
     def apply(_config: DoxTableKeyConfig.NO_NAME.type => DoxTableKeyConfig) = {
-      new DoxTableKeyNode(None, _config(DoxTableKeyConfig.NO_NAME), Seq.empty) with Writeable {
+      new DoxTableKeyNode(None, None, None, Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
           val query = callback(new Query[T])
-          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByQuery(SUPPORT, query)), _config(DoxTableKeyConfig.NO_NAME), Seq.empty)
+          DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.ByQuery(SUPPORT, query)), None, Seq.empty)
         }
       }
     }
   }
 
   object Node {
-    def apply(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
-      new DoxTableKeyNode(None, _config(DoxTableKeyConfig), Seq.empty) with Writeable {
-        def finalize(callback: Query[T] => Query[_]) = {
-          val query = callback(new Query[T])
-          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.ByQuery(SUPPORT, query)), _config(DoxTableKeyConfig), Seq.empty)
-        }
-        def finalizeIndex(index: Int) = {
-          DoxTableKeyNode(Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(SUPPORT, index)), _config(DoxTableKeyConfig), Seq.empty)
-        }
+    def apply(_config: DoxTableKeyConfigTransient.type => DoxTableKeyConfigTransient) = {
+      val config = _config(DoxTableKeyConfigTransient)
+      new DoxTableKeyNode(config.nameAST, None, config.alignmentOption, Seq.empty) with Writeable
+    }
+  }
+
+  object Fixed {
+    def apply(_config: DoxTableKeyConfigFixed.type => DoxTableKeyConfigFixed) = new {
+
+      val config = _config(DoxTableKeyConfigFixed)
+
+      def finalize(callback: Query[T] => Query[_]) = {
+        val query = callback(new Query[T])
+        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQuery(config.width, query)), config.alignmentOption, Seq.empty)
       }
-    }
-  }
+      def finalizeIndex(index: Int) = {
+        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignmentOption, Seq.empty)
+      }
 
-  protected def nodeWritable(_strategyOption: Option[DoxTableKeyNodeValueStrategy]) = new {
-    def config(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
-      new DoxTableKeyNode(_strategyOption, _config(DoxTableKeyConfig), Seq.empty) with Writeable
     }
-  }
 
-  protected def node(_strategyOption: Option[DoxTableKeyNodeValueStrategy]) = new {
-    def config(_config: DoxTableKeyConfig.type => DoxTableKeyConfig) = {
-      DoxTableKeyNode(_strategyOption, _config(DoxTableKeyConfig), Seq.empty)
-    }
-    def config(_config: DoxTableKeyConfig) = {
-      DoxTableKeyNode(_strategyOption, _config, Seq.empty)
-    }
   }
 
 }
