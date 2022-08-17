@@ -69,7 +69,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
-  object Fixed {
+  object Value {
     def apply(_config: DoxTableKeyConfigFixed.type => DoxTableKeyConfigFixed) = new {
       val config = _config(DoxTableKeyConfigFixed)
 
