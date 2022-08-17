@@ -24,17 +24,9 @@ object DoxTableKeyConfig {
   }
 }
 
-case class DoxTableKeyConfig(protected val textOption: Option[TextAST], alignment: DoxTableAlignment, widthOption: Option[Double]) {
+case class DoxTableKeyConfig(protected [table] val textOption: Option[TextAST], alignment: DoxTableAlignment, widthOption: Option[Double]) {
   
   val text = textOption.getOrElse(TextFactory.NONE)
-  
-  protected [table] def isTextEmpty = {
-    textOption.isEmpty
-  }
-  
-  protected [table] def isTextDefined = {
-    textOption.isDefined
-  }
   
 }
 

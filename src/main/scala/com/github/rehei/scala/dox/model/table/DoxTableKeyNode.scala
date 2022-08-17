@@ -7,14 +7,22 @@ import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.macros.Query
 import com.github.rehei.scala.macros.util.QReflection
 
-case class DoxTableKeyNode(val strategy: DoxTableKeyNodeValueStrategy, config: DoxTableKeyConfig, children: Seq[DoxTableKeyNode]) {
+case class DoxTableKeyNode(val strategyOption: Option[DoxTableKeyNodeValueStrategy], config: DoxTableKeyConfig, children: Seq[DoxTableKeyNode]) {
 
   def valueOf(index: Int, element: AnyRef) = {
-    strategy.valueOf(index, element)
+    strategyOption.map(_.valueOf(index, element)).get
   }
 
-  def hasNonEmptyChildren() = {
-    children.filter(_.config.isTextDefined).size > 0
+  def hasAnyHeadDefinedChildren() = {
+    children.filter(_.isHeadDefined).size > 0
+  }
+
+  def isBodyDefined() = {
+    strategyOption.isDefined
+  }
+
+  def isHeadDefined() = {
+    config.textOption.isDefined
   }
 
   def depth(): Int = {
@@ -42,6 +50,6 @@ case class DoxTableKeyNode(val strategy: DoxTableKeyNodeValueStrategy, config: D
   protected def leaves() = {
     children.filter(_.isLeaf())
   }
-  
+
 }
 

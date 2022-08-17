@@ -11,23 +11,13 @@ import com.github.rehei.scala.dox.util.NextID
 
 object DoxTableKeyNodeValueStrategy {
 
-  protected object INTERMEDIATE extends DoxTableKeyNodeValueStrategy
-
-  protected object ROOT extends DoxTableKeyNodeValueStrategy
-
-  protected object BLANK extends DoxTableKeyNodeValueStrategy {
-    override def valueOf(index: Int, element: AnyRef) = {
-      TextFactory.NONE
-    }
-  }
-
-  protected object INDEX extends DoxTableKeyNodeValueStrategy {
+  case class ByRowIndex() extends DoxTableKeyNodeValueStrategy {
     override def valueOf(index: Int, element: AnyRef) = {
       TextFactory.text(index.toString())
     }
   }
 
-  protected case class BySequenceIndex(sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy {
+  case class BySequenceIndex(sequenceIndex: Int) extends DoxTableKeyNodeValueStrategy {
     override def valueOf(index: Int, element: AnyRef) = {
       val sequence = element.asInstanceOf[Seq[_ <: AnyRef]]
       val value = sequence(sequenceIndex)
@@ -35,57 +25,19 @@ object DoxTableKeyNodeValueStrategy {
     }
   }
 
-  protected case class ByQuery(query: Query[_]) extends DoxTableKeyNodeValueStrategy {
+  case class ByQuery(query: Query[_]) extends DoxTableKeyNodeValueStrategy {
     override def valueOf(index: Int, element: AnyRef) = {
       val value = new QReflection(element).get(query)
       convertAnyRef(value)
     }
   }
 
-  def intermediate() = {
-    INTERMEDIATE
-  }
-
-  def root() = {
-    ROOT
-  }
-
-  def blank() = {
-    BLANK
-  }
-
-  def byRowIndex() = {
-    INDEX
-  }
-
-  def bySequenceIndex(index: Int) = {
-    BySequenceIndex(index)
-  }
-
-  def byValueQuery(query: Query[_]) = {
-    ByQuery(query)
-  }
-
 }
 
 abstract class DoxTableKeyNodeValueStrategy {
 
-  def valueOf(index: Int, element: AnyRef): TextAST = {
-    throw new UnsupportedOperationException()
-  }
-
-  def isNotIntermediate() = {
-    !isIntermediate()
-  }
-
-  protected def isBlank() = {
-    this == DoxTableKeyNodeValueStrategy.BLANK
-  }
-
-  protected def isIntermediate() = {
-    this == DoxTableKeyNodeValueStrategy.INTERMEDIATE
-  }
-
+  def valueOf(index: Int, element: AnyRef): TextAST
+  
   protected def convertAnyRef(value: AnyRef) = {
     value match {
       case m: TextAST => m
