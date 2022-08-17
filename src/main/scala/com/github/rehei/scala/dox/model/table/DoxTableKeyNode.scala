@@ -43,13 +43,5 @@ case class DoxTableKeyNode(val strategy: DoxTableKeyNodeValueStrategy, config: D
     children.filter(_.isLeaf())
   }
 
-  protected def queryReflection(element: AnyRef, query: Query[_]) = {
-    val value = new QReflection(element).get(query)
-    value match {
-      case m: TextAST => m
-      case m          => TextFactory.text(m.toString())
-    }
-  }
-
 }
 
