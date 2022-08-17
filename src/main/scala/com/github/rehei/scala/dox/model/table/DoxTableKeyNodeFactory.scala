@@ -27,14 +27,14 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = {
-      new DoxTableKeyNode(None, None, None, Seq.empty) with Writeable
+      new DoxTableKeyNode(None, None, DoxTableAlignment.CENTER, Seq.empty) with Writeable
     }
   }
 
   object Index {
     def apply(_config: DoxTableKeyConfigFixed.type => DoxTableKeyConfigFixed) = {
       val config = _config(DoxTableKeyConfigFixed)
-      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(config.width)), config.alignmentOption, Seq.empty)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(config.width)), config.alignment, Seq.empty)
     }
   }
 
@@ -46,7 +46,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(0.7)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(width)), Some(DoxTableAlignment.CENTER), Seq.empty)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(DoxTableKeyNodeValueStrategy.ByRowIndex(width)), DoxTableAlignment.CENTER, Seq.empty)
     }
   }
 
@@ -58,14 +58,14 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(width)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.Spacing(width)), None, Seq.empty)
+      DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.Spacing(width)), DoxTableAlignment.CENTER, Seq.empty)
     }
   }
 
   object Node {
     def apply(_config: DoxTableKeyConfigTransient.type => DoxTableKeyConfigTransient) = {
       val config = _config(DoxTableKeyConfigTransient)
-      new DoxTableKeyNode(config.nameAST, None, config.alignmentOption, Seq.empty) with Writeable
+      new DoxTableKeyNode(config.nameAST, None, config.alignment, Seq.empty) with Writeable
     }
   }
 
@@ -75,10 +75,10 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
       def finalize(callback: Query[T] => Query[_]) = {
         val query = callback(new Query[T])
-        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQuery(config.width, query)), config.alignmentOption, Seq.empty)
+        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.ByQuery(config.width, query)), config.alignment, Seq.empty)
       }
       def finalizeIndex(index: Int) = {
-        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignmentOption, Seq.empty)
+        DoxTableKeyNode(config.nameAST, Some(DoxTableKeyNodeValueStrategy.BySequenceIndex(config.width, index)), config.alignment, Seq.empty)
       }
     }
   }

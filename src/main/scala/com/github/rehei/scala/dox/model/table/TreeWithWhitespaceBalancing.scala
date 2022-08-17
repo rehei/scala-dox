@@ -5,7 +5,7 @@ case class TreeWithWhitespaceBalancing() {
   protected val factory = DoxTableKeyNodeFactory()
 
   def fill(node: DoxTableKeyNode) = {
-    fillTreeWithWhitespaceNodesByLevel(node, node.depth())
+    fillTreeWithWhitespaceNodesByLevel(node, node.treeDepth())
   }
 
   protected def fillTreeWithWhitespaceNodesByLevel(node: DoxTableKeyNode, max: Int): DoxTableKeyNode = {

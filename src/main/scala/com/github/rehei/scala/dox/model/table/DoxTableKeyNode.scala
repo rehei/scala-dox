@@ -10,7 +10,7 @@ import com.github.rehei.scala.macros.util.QReflection
 case class DoxTableKeyNode(
   val textHeadOption:         Option[TextAST],
   val textBodyStrategyOption: Option[DoxTableKeyNodeValueStrategy],
-  val alignment:              Option[DoxTableAlignment],
+  val alignment:              DoxTableAlignment,
   val children:               Seq[DoxTableKeyNode]) {
 
   def format(): DoxTableKeyNodeFormat = {
@@ -23,7 +23,7 @@ case class DoxTableKeyNode(
       }
     }
 
-    DoxTableKeyNodeFormat(width, alignment.getOrElse(DoxTableAlignment.CENTER))
+    DoxTableKeyNodeFormat(width)
   }
 
   def valueOf(index: Int, element: AnyRef) = {
@@ -46,11 +46,11 @@ case class DoxTableKeyNode(
     textHeadOption.isDefined
   }
 
-  def depth(): Int = {
-    if (isLeaf()) { 0 } else { children.map(_.depth()).max + 1 }
+  def treeDepth(): Int = {
+    if (isLeaf()) { 0 } else { children.map(_.treeDepth()).max + 1 }
   }
 
-  def width(): Int = {
+  def treeBreadth(): Int = {
     if (isLeaf()) { 1 } else { leavesRecursive().size }
   }
 

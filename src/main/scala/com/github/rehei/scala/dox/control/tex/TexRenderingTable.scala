@@ -10,6 +10,7 @@ import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.table.content.DoxContent
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFormat
 import java.text.DecimalFormat
+import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
@@ -26,7 +27,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       df.setMinimumIntegerDigits(1)
       df.setMaximumFractionDigits(8)
       val stringValue = df.format(size)
-      
+
       "{" + stringValue + "cm}"
     }
   }
@@ -90,7 +91,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def columnConfigEachColumnSize() = {
-    model.dimension().map(node => getTexAlignment(node.format())).mkString
+    model.dimension().map(node => getTexAlignment(node)).mkString
   }
 
   protected def appendTableHead() {
@@ -177,19 +178,19 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
 
-  protected def getHeadAlignment(alignment: Option[DoxTableAlignment]) = {
+  protected def getHeadAlignment(alignment: DoxTableAlignment) = {
     alignment match {
-      case Some(DoxTableAlignment.LEFT)    => "l"
-      case Some(DoxTableAlignment.RIGHT)   => "r"
-      case Some(DoxTableAlignment.CENTER)  => "c"
-      case Some(DoxTableAlignment.NUMERIC) => "c"
-      case Some(DoxTableAlignment.ROTATED) => "l"
-      case _                               => "l"
+      case DoxTableAlignment.LEFT    => "l"
+      case DoxTableAlignment.RIGHT   => "r"
+      case DoxTableAlignment.CENTER  => "c"
+      case DoxTableAlignment.NUMERIC => "c"
+      case DoxTableAlignment.ROTATED => "l"
+      case _                         => "l"
     }
   }
-  protected def getTexAlignment(config: DoxTableKeyNodeFormat) = {
-    val size = config.width
-    config.alignment match {
+  protected def getTexAlignment(node: DoxTableKeyNode) = {
+    val size = node.format().width
+    node.alignment match {
       case DoxTableAlignment.LEFT    => ColumnType.l(size)
       case DoxTableAlignment.RIGHT   => ColumnType.r(size)
       case DoxTableAlignment.CENTER  => ColumnType.c(size)
