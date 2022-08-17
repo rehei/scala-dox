@@ -14,7 +14,7 @@ case class DoxTableKeyNode(
   val children:               Seq[DoxTableKeyNode]) {
 
   def format() = {
-    DoxTableKeyNodeFormat(10, DoxTableAlignment.CENTER)
+    DoxTableKeyNodeFormat(textBodyStrategyOption.map(_.width()).get, DoxTableAlignment.CENTER)
   }
 
   def valueOf(index: Int, element: AnyRef) = {

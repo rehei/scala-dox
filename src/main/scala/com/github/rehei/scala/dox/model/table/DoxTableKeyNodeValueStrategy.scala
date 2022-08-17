@@ -41,6 +41,14 @@ object DoxTableKeyNodeValueStrategy {
     }
   }
 
+  case class Spacing() extends DoxTableKeyNodeValueStrategy {
+
+    override def width() = 0.001
+
+    override def valueOf(row: Int, element: AnyRef) = {
+      TextFactory.NONE
+    }
+  }
 }
 
 abstract class DoxTableKeyNodeValueStrategy {

@@ -16,8 +16,8 @@ case class TreeWithSpacingBetween() {
       {
         for (wrapper <- all) yield {
           wrapper match {
-            case SiblingLookahead(Some(node), Some(next)) if node.isLeaf() => Seq(node, factory.Blank())
-            case SiblingLookahead(Some(node), Some(next))                  => Seq(addSpaces(node), factory.Blank())
+            case SiblingLookahead(Some(node), Some(next)) if node.isLeaf() => Seq(node, factory.Space())
+            case SiblingLookahead(Some(node), Some(next))                  => Seq(addSpaces(node), factory.Space())
             case SiblingLookahead(Some(node), None) if (node.isLeaf())     => Seq(node)
             case SiblingLookahead(Some(node), None)                        => Seq(addSpaces(node))
           }

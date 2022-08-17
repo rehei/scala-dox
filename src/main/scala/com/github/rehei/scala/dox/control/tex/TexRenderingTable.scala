@@ -115,10 +115,10 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
         None
       }
     }
-    if (value.key.node.format().alignment == DoxTableAlignment.ROTATED) {
+    if (value.key.node.alignment == DoxTableAlignment.ROTATED) {
       MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.node.textHead()) }, ruleOption)
     } else {
-      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node.format()) } { Text2TEX(false).generate(value.key.node.textHead()) }, ruleOption)
+      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node.alignment) } { Text2TEX(false).generate(value.key.node.textHead()) }, ruleOption)
     }
   }
 
@@ -170,14 +170,14 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
 
-  protected def getHeadAlignment(config: DoxTableKeyNodeFormat) = {
-    config.alignment match {
-      case DoxTableAlignment.LEFT    => "l"
-      case DoxTableAlignment.RIGHT   => "r"
-      case DoxTableAlignment.CENTER  => "c"
-      case DoxTableAlignment.NUMERIC => "c"
-      case DoxTableAlignment.ROTATED => "l"
-      case _                         => "l"
+  protected def getHeadAlignment(alignment: Option[DoxTableAlignment]) = {
+    alignment match {
+      case Some(DoxTableAlignment.LEFT)    => "l"
+      case Some(DoxTableAlignment.RIGHT)   => "r"
+      case Some(DoxTableAlignment.CENTER)  => "c"
+      case Some(DoxTableAlignment.NUMERIC) => "c"
+      case Some(DoxTableAlignment.ROTATED) => "l"
+      case _                               => "l"
     }
   }
   protected def getTexAlignment(config: DoxTableKeyNodeFormat) = {

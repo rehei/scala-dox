@@ -94,11 +94,13 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
     }
   }
 
-  object Blank {
+  object Space {
     def apply() = {
-      DoxTableKeyNode(None, None, None, Seq.empty)
+      DoxTableKeyNode(None, Some(DoxTableKeyNodeValueStrategy.Spacing()), None, Seq.empty)
     }
+  }
 
+  object Blank {
     def apply(_config: DoxTableKeyConfig.NO_NAME.type => DoxTableKeyConfig) = {
       new DoxTableKeyNode(None, None, None, Seq.empty) with Writeable {
         def finalize(callback: Query[T] => Query[_]) = {
