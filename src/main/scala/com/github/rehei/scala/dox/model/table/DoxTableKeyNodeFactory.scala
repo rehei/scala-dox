@@ -11,11 +11,11 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
     def append(additionalChildren: DoxTableKeyNode*) = {
-      new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.alignment, this.children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.format, this.children ++ additionalChildren) with Writeable
     }
 
     def appendAll(additionalChildren: Seq[DoxTableKeyNode]) = {
-      new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.alignment, this.children ++ additionalChildren) with Writeable
+      new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.format, this.children ++ additionalChildren) with Writeable
     }
   }
 
@@ -27,7 +27,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   object Root {
     def apply() = {
-      new DoxTableKeyNode(None, None, DoxTableAlignment.CENTER, Seq.empty) with Writeable
+      new DoxTableKeyNode(None, None, DoxTableKeyNodeFormat.CENTER, Seq.empty) with Writeable
     }
   }
 
@@ -46,7 +46,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(0.7)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(Some(TextFactory.text("#")), Some(new DoxTableKeyNodeValueStrategy.ByRowIndex(width)), DoxTableAlignment.CENTER, Seq.empty)
+      DoxTableKeyNode(Some(TextFactory.text("#")), Some(new DoxTableKeyNodeValueStrategy.ByRowIndex(width)), DoxTableKeyNodeFormat.CENTER, Seq.empty)
     }
   }
 
@@ -58,7 +58,7 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       create(width)
     }
     protected def create(width: Double) = {
-      DoxTableKeyNode(None, Some(new DoxTableKeyNodeValueStrategy.Spacing(width)), DoxTableAlignment.CENTER, Seq.empty)
+      DoxTableKeyNode(None, Some(new DoxTableKeyNodeValueStrategy.Spacing(width)), DoxTableKeyNodeFormat.CENTER, Seq.empty)
     }
   }
 

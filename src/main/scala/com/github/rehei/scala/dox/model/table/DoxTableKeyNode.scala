@@ -10,15 +10,15 @@ import com.github.rehei.scala.macros.util.QReflection
 case class DoxTableKeyNode(
   val textHeadOption:         Option[TextAST],
   val textBodyStrategyOption: Option[DoxTableKeyNodeValueStrategy],
-  val alignment:              DoxTableAlignment,
+  val format:                 DoxTableKeyNodeFormat,
   val children:               Seq[DoxTableKeyNode]) {
 
-  def format(): DoxTableKeyNodeFormat = {
+  def dimension(): DoxTableKeyNodeDimension = {
     val width = {
-      textBodyStrategyOption.map { _.givenWidth } getOrElse { this.children.map(_.format().width).sum }
+      textBodyStrategyOption.map { _.givenWidth } getOrElse { this.children.map(_.dimension().width).sum }
     }
 
-    DoxTableKeyNodeFormat(width)
+    DoxTableKeyNodeDimension(width)
   }
 
   def valueOf(index: Int, element: AnyRef) = {

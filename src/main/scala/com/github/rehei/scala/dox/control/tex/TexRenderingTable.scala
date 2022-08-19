@@ -1,6 +1,5 @@
 package com.github.rehei.scala.dox.control.tex
 
-import com.github.rehei.scala.dox.model.table.DoxTableAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRow
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
@@ -11,6 +10,7 @@ import com.github.rehei.scala.dox.model.table.content.DoxContent
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFormat
 import java.text.DecimalFormat
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
+import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
@@ -25,7 +25,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     protected def sizeString(size: Double) = {
       val df = new DecimalFormat("#")
       df.setMinimumIntegerDigits(1)
-      df.setMaximumFractionDigits(8)
+      df.setMaximumFractionDigits(3)
       val stringValue = df.format(size)
 
       "{" + stringValue + "cm}"
@@ -123,10 +123,30 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
         None
       }
     }
-    if (value.key.node.alignment == DoxTableAlignment.ROTATED) {
+
+    if (value.key.node.format.isRotated) {
+      
       MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.node.textHead()) }, ruleOption)
+      
     } else {
-      MappedTableHeadKey(\\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node.alignment) } { Text2TEX(false).generate(value.key.node.textHead()) }, ruleOption)
+
+      val expression = {
+        \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } {
+          //FIX rotate(value.key.node.format.isRotated, Text2TEX(false).generate(value.key.node.textHead()))
+          Text2TEX(false).generate(value.key.node.textHead())
+        }
+      }
+
+      MappedTableHeadKey(expression, ruleOption)
+    }
+
+  }
+
+  protected def rotate(enable: Boolean, expression: String) = {
+    if (enable) {
+      "\\rotatebox{45}{" + expression + "}"
+    } else {
+      expression
     }
   }
 
@@ -178,25 +198,23 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
 
-  protected def getHeadAlignment(alignment: DoxTableAlignment) = {
-    alignment match {
-      case DoxTableAlignment.LEFT    => "l"
-      case DoxTableAlignment.RIGHT   => "r"
-      case DoxTableAlignment.CENTER  => "c"
-      case DoxTableAlignment.NUMERIC => "c"
-      case DoxTableAlignment.ROTATED => "l"
-      case _                         => "l"
+  protected def getHeadAlignment(node: DoxTableKeyNode) = {
+    node.format.alignment match {
+      case DoxTableKeyNodeAlignment.LEFT    => "l"
+      case DoxTableKeyNodeAlignment.RIGHT   => "r"
+      case DoxTableKeyNodeAlignment.CENTER  => "c"
+      case DoxTableKeyNodeAlignment.NUMERIC => "c"
+      case _                                => throw new RuntimeException("This should not happen")
     }
   }
   protected def getTexAlignment(node: DoxTableKeyNode) = {
-    val size = node.format().width
-    node.alignment match {
-      case DoxTableAlignment.LEFT    => ColumnType.l(size)
-      case DoxTableAlignment.RIGHT   => ColumnType.r(size)
-      case DoxTableAlignment.CENTER  => ColumnType.c(size)
-      case DoxTableAlignment.NUMERIC => ColumnType.numeric(size)
-      case DoxTableAlignment.ROTATED => ColumnType.l(size)
-      case _                         => ColumnType.l(size)
+    val size = node.dimension().width
+    node.format.alignment match {
+      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(size)
+      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(size)
+      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(size)
+      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.numeric(size)
+      case _                                => throw new RuntimeException("This should not happen")
     }
   }
 

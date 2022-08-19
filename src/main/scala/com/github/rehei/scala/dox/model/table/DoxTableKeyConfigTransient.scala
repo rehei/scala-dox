@@ -11,13 +11,13 @@ object DoxTableKeyConfigTransient {
     nameInternal(in)
   }
   protected def nameInternal(in: TextAST) = new {
-    def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = {
-      DoxTableKeyConfigTransient(in, _alignment(DoxTableAlignment))
+    def alignment(_alignment: DoxTableKeyNodeFormat.type => DoxTableKeyNodeFormat) = {
+      DoxTableKeyConfigTransient(in, _alignment(DoxTableKeyNodeFormat))
     }
   }
 }
 
-case class DoxTableKeyConfigTransient(name: TextAST, alignment: DoxTableAlignment) {
+case class DoxTableKeyConfigTransient(name: TextAST, alignment: DoxTableKeyNodeFormat) {
   val nameAST = Some(name)
   val alignmentOption = Some(alignment)
 }

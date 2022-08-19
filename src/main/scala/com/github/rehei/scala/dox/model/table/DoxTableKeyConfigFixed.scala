@@ -14,17 +14,17 @@ object DoxTableKeyConfigFixed {
     nameInternal(Some(in))
   }
   protected def nameInternal(in: Option[TextAST]) = new {
-    def alignment(_alignment: DoxTableAlignment.type => DoxTableAlignment) = new {
+    def alignment(_alignment: DoxTableKeyNodeFormat.type => DoxTableKeyNodeFormat) = new {
       def widthDefault() = {
         width(2)
       }
       def width(width: Double) = {
-        DoxTableKeyConfigFixed(in, _alignment(DoxTableAlignment), width)
+        DoxTableKeyConfigFixed(in, _alignment(DoxTableKeyNodeFormat), width)
       }
     }
   }
 }
 
-case class DoxTableKeyConfigFixed(nameAST: Option[TextAST], alignment: DoxTableAlignment, width: Double) {
+case class DoxTableKeyConfigFixed(nameAST: Option[TextAST], alignment: DoxTableKeyNodeFormat, width: Double) {
   val alignmentOption = Some(alignment)
 }
