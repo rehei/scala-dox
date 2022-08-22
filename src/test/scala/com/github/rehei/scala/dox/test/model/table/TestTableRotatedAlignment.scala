@@ -49,9 +49,7 @@ object TestTableRotatedAlignment extends ViewSupport {
         .create(
           Root()
             .append(
-              Node(_.name("Station(en)").alignment(_.RIGHT.ROTATE)).append(
-                IndexDefault.big(),
-                Value(_.name("Name").alignment(_.RIGHT.ROTATE).width(1.5)).finalize(_.apply(_.station)))))
+              Value(_.name("FOOBAR FOOBAR FOOBAR FOOBAR ").alignment(_.RIGHT.ROTATE).width(0.5)).finalize(_.apply(_.station))))
     }
 
     val testSeq = Seq(
