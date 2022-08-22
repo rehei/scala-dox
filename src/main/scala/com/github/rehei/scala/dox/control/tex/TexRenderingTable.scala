@@ -123,22 +123,21 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
         None
       }
     }
+    val text = Text2TEX(false).generate(value.key.node.textHead())
 
-    if (value.key.node.format.isRotated) {
-      
-      MappedTableHeadKey(\\ rotatebox & { 45 } { Text2TEX(false).generate(value.key.node.textHead()) }, ruleOption)
-      
-    } else {
-
-      val expression = {
-        \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } {
-          //FIX rotate(value.key.node.format.isRotated, Text2TEX(false).generate(value.key.node.textHead()))
-          Text2TEX(false).generate(value.key.node.textHead())
-        }
+    val content = {
+      if (value.key.node.format.isRotated) {
+        (\\ rotatebox & { 45 } { text }).generate()
+      } else {
+        text
       }
-
-      MappedTableHeadKey(expression, ruleOption)
     }
+
+    val expression = {
+      \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { content }
+    }
+
+    MappedTableHeadKey(expression, ruleOption)
 
   }
 

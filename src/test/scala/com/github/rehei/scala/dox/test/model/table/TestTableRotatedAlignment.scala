@@ -22,7 +22,7 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.test.util.TestTexHandle
 
-object TestTable extends ViewSupport {
+object TestTableRotatedAlignment extends ViewSupport {
 
   case class StationSetup(station: String, capacityMin: Double, capacityMax: Double, time: String)
   protected val handle = new TestTexHandle()
@@ -43,17 +43,13 @@ object TestTable extends ViewSupport {
 
     val factory = new DoxTableKeyNodeFactory[StationSetup]()
     import factory._
-    //    val asd = Seq(
-    //      Node(_.name(TotalSymbol.STATION_CAPACITY_MAX).alignment(_.NUMERIC).width(1.5)).finalize(_.apply(_.capacityMax)),
-    //      Node(_.name(TotalSymbol.STATION_CAPACITY_MIN).alignment(_.NUMERIC).width(1.5)).finalize(_.apply(_.capacityMin)))
-    //
     val table = {
 
       Table
         .create(
           Root()
             .append(
-              Node(_.name("Station(en)").alignment(_.CENTER.ROTATE)).append(
+              Node(_.name("Station(en)").alignment(_.RIGHT.ROTATE)).append(
                 IndexDefault.big(),
                 Value(_.name("Name").alignment(_.RIGHT.ROTATE).width(1.5)).finalize(_.apply(_.station)))))
     }
