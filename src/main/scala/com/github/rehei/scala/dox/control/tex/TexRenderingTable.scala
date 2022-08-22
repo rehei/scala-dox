@@ -141,14 +141,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   }
 
-  protected def rotate(enable: Boolean, expression: String) = {
-    if (enable) {
-      "\\rotatebox{45}{" + expression + "}"
-    } else {
-      expression
-    }
-  }
-
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
     for ((row, index) <- input.zipWithIndex) yield {
       val offset = 1 + input.take(index).map(_.size).sum
