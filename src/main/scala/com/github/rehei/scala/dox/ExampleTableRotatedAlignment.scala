@@ -1,28 +1,51 @@
-package com.github.rehei.scala.dox.test.model.table
+package com.github.rehei.scala.dox
 
-import com.github.rehei.scala.dox.util.ViewSupport
-import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFactory
-import com.github.rehei.scala.dox.text.TextFactory
-import com.github.rehei.scala.dox.model.table.DoxTable
-import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.util.TexUtils
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
-import java.io.Writer
+import java.nio.file.StandardOpenOption
+
+import scala.collection.Seq
+import scala.reflect.api.materializeWeakTypeTag
+
 import org.apache.commons.io.FileUtils
-import com.github.rehei.scala.dox.control.tex.TexRendering
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
-import com.github.rehei.scala.dox.control.DoxHandleSvgTex
+
 import com.github.rehei.scala.dox.control.DoxHandleTable
-import com.github.rehei.scala.dox.control.tex.TexRenderingTable
-import com.github.rehei.scala.dox.control.DoxHandleEquation
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
-import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
-import com.github.rehei.scala.dox.model.DoxTableViewModel
-import com.github.rehei.scala.dox.test.util.TestTexHandle
+import com.github.rehei.scala.dox.control.tex.TexAST
+import com.github.rehei.scala.dox.control.tex.TexRendering
+import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFactory
+import com.github.rehei.scala.dox.util.TexUtils
+import com.github.rehei.scala.dox.util.ViewSupport
 
 object TestTableRotatedAlignment extends ViewSupport {
+
+  case class TestTexHandle() {
+
+    protected val BASE = Files.createTempDirectory("dox")
+
+    protected val SOURCE = Paths.get("./src/main/resources/latex")
+    protected val TARGET = BASE.resolve("./dashboard-rendering-latex")
+    protected val TARGET_INCLUDE_MAIN = TARGET.resolve("./generated_main.tex")
+
+    protected val tex = new TexUtils(TARGET, "document", false)
+    protected val tableHandle = DoxHandleTable(TARGET, TARGET.resolve("tex-table"))
+    protected val texMainAST = TexAST()
+
+    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null)
+
+    def generate() = {
+      write()
+      tex.generatePDF()
+    }
+
+    protected def write() {
+      FileUtils.copyDirectory(SOURCE.toFile(), TARGET.toFile())
+      val writer = Files.newBufferedWriter(TARGET_INCLUDE_MAIN, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
+      texMainAST.write(writer)
+      writer.close()
+    }
+
+  }
 
   case class StationSetup(station: String, capacityMin: Double, capacityMax: Double, time: String)
   protected val handle = new TestTexHandle()
