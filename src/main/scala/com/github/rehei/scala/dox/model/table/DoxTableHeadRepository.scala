@@ -4,6 +4,8 @@ import com.github.rehei.scala.dox.text.TextAST
 
 class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
+  protected val dirtySpacingEnabled = false
+
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
     def byLevel(level: Int): Seq[DoxTableKeyNode] = {
@@ -20,8 +22,12 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
     }
 
     def withColumnSpace() = {
-      val transformer = TreeWithSpacingBetween()
-      transformer.addSpaces(base)
+      if (dirtySpacingEnabled) {
+        val transformer = TreeWithSpacingBetween()
+        transformer.addSpaces(base)
+      } else {
+        base
+      }
     }
 
   }
