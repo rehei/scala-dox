@@ -175,23 +175,35 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def appendTableLegend() {
-    var first = true
+    var isFirst = true
     for (row <- model.legend()) {
       for (item <- row.content) {
-        if (first) {
-          verticalSpacing()
-          \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + Text2TEX(false).generate(TextFactory.text("Legende: ").append(item)) + "}" }).generate() + "\\\\" + "\n" }
+        if (isFirst) {
+          legendContent(Text2TEX(false).generate(TextFactory.text("Legende: ").append(item)), isFirst)
         } else {
-          \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit  {" + legendTextSpace() + Text2TEX(false).generate((item)) + "}" }).generate() + "\\\\" + "\n" }
+          legendContent(legendPlaceholderSpace() + Text2TEX(false).generate((item)), isFirst)
         }
-        first = false
+        isFirst = false
       }
     }
   }
 
-  protected def legendTextSpace() = {
+  protected def legendContent(content: String, isFirst: Boolean) {
+    if (isFirst) {
+      \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\rule{0pt}{.7cm}\\scriptsize \\textit {" + content + "}" }).generate() + "\\\\" + "\n" }
+    } else {
+      \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + content + "}" }).generate() + "\\\\" + "\n" }
+    }
+  }
+
+  protected def legendPlaceholderSpace() = {
     "\\hspace{3.6em} "
   }
+
+  protected def legendVerticalOffset() = {
+    \ plain { "\n\\vspace*{0.2cm}" + "\\\\ \n" }
+  }
+
   protected def renderValue(values: Seq[TextAST]) = {
     \ plain { values.map(Text2TEX(false).generate(_)).mkString(" & ") + "\\\\" + "\n" }
   }
@@ -206,10 +218,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   protected def cmidrule() = {
     \ plain { (\\ cmidrule { s"1-${model.dimension().size}" }).generate() + "\n" }
-  }
-
-  protected def verticalSpacing() = {
-    \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
   }
 
   protected def getHeadAlignment(node: DoxTableKeyNode) = {
