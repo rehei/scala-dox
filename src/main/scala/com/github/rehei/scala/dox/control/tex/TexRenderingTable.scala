@@ -182,15 +182,15 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
           verticalSpacing()
           \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + Text2TEX(false).generate(TextFactory.text("Legende: ").append(item)) + "}" }).generate() + "\\\\" + "\n" }
         } else {
-          \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit  {" + spaces(9) + Text2TEX(false).generate((item)) + "}" }).generate() + "\\\\" + "\n" }
+          \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit  {" + legendTextSpace() + Text2TEX(false).generate((item)) + "}" }).generate() + "\\\\" + "\n" }
         }
         first = false
       }
     }
   }
 
-  protected def spaces(amount: Int) = {
-    Seq.fill(amount)("\\hspace{.4em}").mkString + " "
+  protected def legendTextSpace() = {
+    "\\hspace{3.6em} "
   }
   protected def renderValue(values: Seq[TextAST]) = {
     \ plain { values.map(Text2TEX(false).generate(_)).mkString(" & ") + "\\\\" + "\n" }
