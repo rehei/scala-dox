@@ -7,6 +7,8 @@ class DoxTableMatrix(protected val model: DoxTable[_ <: AnyRef]) {
 
   import DoxContent._
 
+  val hasLegend = legend().length > 0
+  
   def head() = {
     model.head().filter(m => isNonBlank(m.values))
   }

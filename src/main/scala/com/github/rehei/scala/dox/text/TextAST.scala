@@ -4,7 +4,7 @@ import scala.xml.NodeSeq
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 
-case class TextAST(val sequence: Seq[TextObject]) {
+case class TextAST(sequence: Seq[TextObject]) {
 
   def append(in: TextAST) = {
     this.copy(sequence = sequence ++ in.sequence)
@@ -13,7 +13,7 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def space() = {
     text(" ")
   }
-  
+
   def spaceSmall() = {
     this.copy(sequence = sequence :+ TextObjectSpaceSmall())
   }
@@ -53,9 +53,9 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def rule() = {
     this.copy(sequence = sequence :+ TextObjectRule())
   }
-  
+
   def cite(value: String) = {
-    this.copy(sequence = sequence :+ TextObjectCite(value)) 
+    this.copy(sequence = sequence :+ TextObjectCite(value))
   }
 
   def doubleStruck(in: Char) = {
@@ -65,8 +65,8 @@ case class TextAST(val sequence: Seq[TextObject]) {
   def greek(letterCallback: TextObjectGreekLetter.type => TextObjectGreekLetter, caseCallback: TextObjectCase.type => TextObjectCase) = {
     val effectiveLetter = letterCallback(TextObjectGreekLetter)
     val effectiveCase = caseCallback(TextObjectCase)
-    
+
     this.copy(sequence = sequence :+ TextObjectGreekLetterWithCase(effectiveLetter, effectiveCase))
   }
-  
+
 }

@@ -11,6 +11,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFormat
 import java.text.DecimalFormat
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
+import com.github.rehei.scala.dox.text.TextFactory
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
 
@@ -37,6 +38,11 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     def toprule() {
       // nothing
     }
+    def midrule() {
+      if (model.hasLegend) {
+        cmidrule()
+      }
+    }
     def bottomrule() {
       cmidrule()
     }
@@ -46,6 +52,11 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     def toprule() {
       \ toprule
     }
+    def midrule() {
+      if (model.hasLegend) {
+        cmidrule()
+      }
+    }
     def bottomrule() {
       \ bottomrule
     }
@@ -53,6 +64,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   abstract class TableMode {
     def toprule(): Unit
+    def midrule(): Unit
     def bottomrule(): Unit
   }
 
@@ -79,8 +91,10 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       appendTableHead()
       \ midrule;
       appendTableBody()
-      tableMode.bottomrule()
+      tableMode.midrule()
       appendTableLegend()
+      tableMode.bottomrule()
+
     }
   }
 
@@ -161,14 +175,23 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def appendTableLegend() {
-
+    var first = true
     for (row <- model.legend()) {
       for (item <- row.content) {
-        \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { Text2TEX(false).generate(item) }).generate() + "\\\\" + "\n" }
+        if (first) {
+          verticalSpacing()
+          \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + Text2TEX(false).generate(TextFactory.text("Legende: ").append(item)) + "}" }).generate() + "\\\\" + "\n" }
+        } else {
+          \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit  {" + spaces(9) + Text2TEX(false).generate((item)) + "}" }).generate() + "\\\\" + "\n" }
+        }
+        first = false
       }
     }
   }
 
+  protected def spaces(amount: Int) = {
+    Seq.fill(amount)("\\hspace{.4em}").mkString + " "
+  }
   protected def renderValue(values: Seq[TextAST]) = {
     \ plain { values.map(Text2TEX(false).generate(_)).mkString(" & ") + "\\\\" + "\n" }
   }
