@@ -37,7 +37,7 @@ class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
     for (level <- Range.inclusive(1, transformedRoot.treeDepth())) yield {
       val filteredChildren = transformedRoot.byLevel(level)
-      DoxTableHeadRow(filteredChildren.map(m => DoxTableHeadRowKey(m, m.treeBreadth(), m.hasAnyHeadDefinedChildren())))
+      DoxTableHeadRow(filteredChildren.map(m => DoxTableHeadRowKey(m, m.treeBreadth(), m.treeWidth(), m.hasAnyHeadDefinedChildren())))
     }
   }
 

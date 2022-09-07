@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.model.table
 
-case class DoxTableHeadRowKey(node: DoxTableKeyNode, size: Int, hasNonEmptyChildren: Boolean) {
+case class DoxTableHeadRowKey(node: DoxTableKeyNode, size: Int, width: Double, hasNonEmptyChildren: Boolean) {
 
   assume(size > 0)
 

@@ -49,6 +49,10 @@ case class DoxTableKeyNode(
     if (isLeaf()) { 1 } else { leavesRecursive().size }
   }
 
+  def treeWidth(): Double = {
+    if (isLeaf()) { dimension().width } else { leavesRecursive().map(_.dimension().width).sum }
+  }
+  
   def isLeaf() = {
     children.isEmpty
   }
