@@ -12,10 +12,11 @@ import org.apache.commons.io.FileUtils
 
 import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.control.tex.TexRendering
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFactory
 import com.github.rehei.scala.dox.util.TexUtils
 import com.github.rehei.scala.dox.util.ViewSupport
+import com.github.rehei.scala.dox.control.tex.TexRendering
+import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 
 object TestTableRotatedAlignment extends ViewSupport {
 
@@ -31,7 +32,7 @@ object TestTableRotatedAlignment extends ViewSupport {
     protected val tableHandle = DoxHandleTable(TARGET, TARGET.resolve("tex-table"))
     protected val texMainAST = TexAST()
 
-    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null)
+    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null, TexRenderingStyle.FRAMED)
 
     def generate() = {
       write()

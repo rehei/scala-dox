@@ -4,11 +4,12 @@ import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCache
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyCountMap
 import com.github.rehei.scala.dox.control.tex.TexAST
-import com.github.rehei.scala.dox.control.tex.TexRendering
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyScanner
 import org.junit.Test
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyEnum
+import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
+import com.github.rehei.scala.dox.control.tex.TexRendering
 
 class TestCountMap {
 
@@ -82,7 +83,7 @@ class TestCountMap {
     val bibCache = DoxBibKeyCache(path)
     val bibHandle = DoxBibKeyRendering(bibCache, map)
 
-    new TexRendering(TexAST(), true, null, bibHandle, null, null, null)
+    new TexRendering(TexAST(), true, null, bibHandle, null, null, null, TexRenderingStyle.FRAMED)
   }
 
   protected def testing(map: DoxBibKeyCountMap) = new {

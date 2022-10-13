@@ -13,7 +13,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.text.TextFactory
 
-class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean) {
+class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean, style: TexRenderingStyle) {
 
   import DoxContent._
 
@@ -178,7 +178,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     val multicolumnWidth = "\\dimexpr(\\tabcolsep*" + size + ")+" + value.key.width + "cm"
 
     val expression = {
-      \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { ColumnBox.FRAMED.get(multicolumnWidth, textFormatted) }
+      \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { ColumnBox.NONE.get(multicolumnWidth, textFormatted) }
     }
 
     MappedTableHeadKey(expression, ruleOption)

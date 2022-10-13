@@ -24,7 +24,8 @@ class TexRendering(
   bibHandle:      DoxBibKeyRendering,
   tableHandle:    DoxHandleTable,
   equationHandle: DoxHandleEquation,
-  svgTexHandle:   DoxHandleSvgTex) extends DoxRenderingBase(i18n, bibHandle) {
+  svgTexHandle:   DoxHandleSvgTex,
+  style:          TexRenderingStyle) extends DoxRenderingBase(i18n, bibHandle) {
 
   protected val POSITIONING_FIGURE = "H"
   protected val markup = new TexMarkupFactory(baseAST)
@@ -124,7 +125,7 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxTableViewModelSequence) {
-    val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title).createTableString()
+    val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title, style).createTableString()
     val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;
@@ -143,7 +144,7 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxTableViewModel[_]) {
-    val texTable = new TexRenderingTable(baseAST, table.model.transform(), false).createTableString()
+    val texTable = new TexRenderingTable(baseAST, table.model.transform(), false, style).createTableString()
     val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
     if (!floating) {
       \ FloatBarrier;
