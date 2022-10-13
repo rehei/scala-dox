@@ -32,7 +32,7 @@ object TestTableRotatedAlignment extends ViewSupport {
     protected val tableHandle = DoxHandleTable(TARGET, TARGET.resolve("tex-table"))
     protected val texMainAST = TexAST()
 
-    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null, TexRenderingStyle.FRAMED)
+    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null, TexRenderingStyle.MINIPAGE_FRAMED)
 
     def generate() = {
       write()

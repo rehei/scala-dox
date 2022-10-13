@@ -232,8 +232,8 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     val size = node.dimension().width
     node.format.alignment match {
       case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(size) //"l"
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.l(size) //"r"
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.l(size) //"c"
+      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(size) //"r"
+      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(size) //"c"
       case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.l(size) //"c"
       case _                                => throw new RuntimeException("This should not happen")
     }
