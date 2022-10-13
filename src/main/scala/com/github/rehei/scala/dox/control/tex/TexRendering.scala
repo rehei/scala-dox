@@ -133,8 +133,8 @@ class TexRendering(
 
     $ { _ table$ & { ###("H") } } {
       \ centering;
-      \ input { filename }
       \ caption & { escape(fileCaption(table.label)) }
+      \ input { filename }
     }
 
     if (!floating) {
@@ -168,8 +168,8 @@ class TexRendering(
     val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
 
     \ centering;
-    \ input { filename }
     \ caption & { escape(fileCaption(table.label)) }
+    \ input { filename }
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {
