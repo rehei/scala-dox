@@ -12,26 +12,12 @@ import java.text.DecimalFormat
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.text.TextFactory
+import com.github.rehei.scala.dox.model.DoxTableConfig
 
 class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean, style: TexRenderingStyle) {
 
   import DoxContent._
 
-  protected object ColumnType {
-    private val baseString = """\arraybackslash}p"""
-    def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
-    def c(size: Double) = """>{\centering""" + baseString + sizeString(size)
-    def r(size: Double) = """>{\raggedleft""" + baseString + sizeString(size)
-    def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
-    protected def sizeString(size: Double) = {
-      val df = new DecimalFormat("#")
-      df.setMinimumIntegerDigits(1)
-      df.setMaximumFractionDigits(3)
-      val stringValue = df.format(size)
-
-      "{" + stringValue + "cm}"
-    }
-  }
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   protected case class InnerTableOn() extends TableMode {
@@ -86,7 +72,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
   }
 
   protected def create() {
-    $ { _ tabular$ & { (columnConfigTotalSize()) } { columnConfigEachColumnSize() } } {
+    $ { _ tabular$ & { model.config.computeWidth(model) } { model.config.computeFormatString(model) } } {
       tableMode.toprule()
       appendTableHead()
       \ midrule;
@@ -94,18 +80,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       tableMode.midrule()
       appendTableLegend()
       tableMode.bottomrule()
-
     }
-  }
-
-  protected def columnConfigTotalSize() = {
-    val totalWidth = model.totalWidth()
-    val totalSeparatorCount = model.totalSeparatorCount()
-    "\\dimexpr(\\tabcolsep*" + totalSeparatorCount + ")+" + totalWidth + "cm"
-  }
-
-  protected def columnConfigEachColumnSize() = {
-    model.dimension().map(node => getTexAlignment(node)).mkString
   }
 
   protected def appendTableHead() {
@@ -238,15 +213,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       case _                                => throw new RuntimeException("This should not happen")
     }
   }
-  protected def getTexAlignment(node: DoxTableKeyNode) = {
-    val size = node.dimension().width
-    node.format.alignment match {
-      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(size)
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(size)
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(size)
-      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.numeric(size)
-      case _                                => throw new RuntimeException("This should not happen")
-    }
-  }
+
 
 }

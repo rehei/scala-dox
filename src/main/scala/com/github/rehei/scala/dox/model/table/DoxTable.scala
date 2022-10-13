@@ -2,8 +2,9 @@ package com.github.rehei.scala.dox.model.table
 
 import scala.collection.mutable.ArrayBuffer
 import com.github.rehei.scala.dox.text.TextAST
+import com.github.rehei.scala.dox.model.DoxTableConfig
 
-case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode) {
+case class DoxTable[T <: AnyRef](val root: DoxTableKeyNode, config: DoxTableConfig) {
 
   import com.github.rehei.scala.dox.model.table.content.DoxContent._
 

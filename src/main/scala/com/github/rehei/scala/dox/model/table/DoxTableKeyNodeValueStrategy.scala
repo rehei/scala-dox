@@ -45,6 +45,13 @@ object DoxTableKeyNodeValueStrategy {
       TextFactory.NONE
     }
   }
+  
+  class Placeholder(givenWidth: Double, given: String) extends DoxTableKeyNodeValueStrategy(givenWidth) {
+    override def valueOf(row: Int, element: AnyRef) = {
+      TextFactory.text(given)
+    }
+  }
+  
 }
 
 abstract class DoxTableKeyNodeValueStrategy(val givenWidth: Double) {

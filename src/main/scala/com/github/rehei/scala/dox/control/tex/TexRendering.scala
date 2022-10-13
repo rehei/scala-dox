@@ -131,8 +131,7 @@ class TexRendering(
       \ FloatBarrier;
     }
 
-    $ { _ table & { ###("H") } } {
-
+    $ { _ table$ & { ###("H") } } {
       \ centering;
       \ input { filename }
       \ caption & { escape(fileCaption(table.label)) }
@@ -144,19 +143,33 @@ class TexRendering(
   }
 
   protected def internalTable(table: DoxTableViewModel[_]) {
+    if (!floating) {
+      \ FloatBarrier;
+    }
+
+    if (table.model.config.fullpage) {
+      $ { _ table$ & { ###(table.model.config.position) } } {
+        tableContent(table)
+      }
+    } else {
+      $ { _ table & { ###(table.model.config.position) } } {
+        tableContent(table)
+      }
+    }
+
+    if (!floating) {
+      \ FloatBarrier;
+    }
+  }
+
+  protected def tableContent(table: DoxTableViewModel[_]) = {
+
     val texTable = new TexRenderingTable(baseAST, table.model.transform(), false, style).createTableString()
     val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
-    if (!floating) {
-      \ FloatBarrier;
-    }
-    $ { _ table & { ###("H") } } {
-      \ centering;
-      \ input { filename }
-      \ caption & { escape(fileCaption(table.label)) }
-    }
-    if (!floating) {
-      \ FloatBarrier;
-    }
+
+    \ centering;
+    \ input { filename }
+    \ caption & { escape(fileCaption(table.label)) }
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {

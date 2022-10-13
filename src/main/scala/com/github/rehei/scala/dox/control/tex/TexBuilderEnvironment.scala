@@ -14,6 +14,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
 
     object itemize extends SomeTexEnvironment
     object table extends SomeTexEnvironment
+    object table$ extends SomeTexEnvironment
     object figure extends SomeTexEnvironment
     object mdframed extends SomeTexEnvironment
     object center extends SomeTexEnvironment

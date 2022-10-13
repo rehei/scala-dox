@@ -6,6 +6,7 @@ import scala.reflect.ClassTag
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
+import com.github.rehei.scala.dox.model.DoxTableConfig
 
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
@@ -20,8 +21,13 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
   }
 
   object Table extends {
+    def config(_config: DoxTableConfig) = new {
+      def head(_node: DoxTableKeyNode) = {
+        DoxTable[T](_node, _config)
+      }
+    }
     def create(node: DoxTableKeyNode) = {
-      DoxTable[T](node)
+      DoxTable[T](node, DoxTableConfig.DUMMY)
     }
   }
 
@@ -83,6 +89,9 @@ case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
       def finalizeQueryMap(callback: Query[T] => Query[_], key: String) = {
         val query = callback(new Query[T])
         DoxTableKeyNode(config.nameAST, Some(new DoxTableKeyNodeValueStrategy.ByQueryAndMapKey(config.width, query, key)), config.alignment, Seq.empty)
+      }
+      def finalizePlaceholder(placeholder: String) = {
+        DoxTableKeyNode(config.nameAST, Some(new DoxTableKeyNodeValueStrategy.Placeholder(config.width, placeholder)), config.alignment, Seq.empty)
       }
     }
   }
