@@ -17,28 +17,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   import DoxContent._
 
-  protected object ColumnBox {
-    object NONE extends ColumnBox {
-      def get(width: String, text: String) = {
-        text
-      }
-    }
-    object DEFAULT extends ColumnBox {
-      def get(width: String, text: String) = {
-        "\\columnBox{" + width + "}{" + text + "}"
-      }
-    }
-    object FRAMED extends ColumnBox {
-      def get(width: String, text: String) = {
-        "\\columnBoxFramed{" + width + "}{" + text + "}"
-      }
-    }
-
-    abstract class ColumnBox {
-      def get(width: String, text: String): String
-    }
-  }
-
   protected object ColumnType {
     private val baseString = """\arraybackslash}p"""
     def l(size: Double) = """>{\raggedright""" + baseString + sizeString(size)
@@ -178,7 +156,7 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     val multicolumnWidth = "\\dimexpr(\\tabcolsep*" + size + ")+" + value.key.width + "cm"
 
     val expression = {
-      \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { ColumnBox.NONE.get(multicolumnWidth, textFormatted) }
+      \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
     }
 
     MappedTableHeadKey(expression, ruleOption)
