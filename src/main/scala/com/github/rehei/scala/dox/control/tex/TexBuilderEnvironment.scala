@@ -12,6 +12,22 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
       }
     }
 
+    protected class NamedEnvironment(name: String, starred: Boolean) extends TexEnvironment(TexSeq(Seq.empty)) {
+      override def name() = {
+        val suffix = {
+          if (starred) { "*" } else { "" }
+        }
+
+        name + suffix
+      }
+    }
+
+    object env {
+      def table(starred: Boolean) = {
+        new NamedEnvironment("table", starred)
+      }
+    }
+
     object itemize extends SomeTexEnvironment
     object table extends SomeTexEnvironment
     object table$ extends SomeTexEnvironment

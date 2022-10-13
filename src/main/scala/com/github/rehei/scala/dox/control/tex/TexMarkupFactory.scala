@@ -7,7 +7,7 @@ class TexMarkupFactory(protected val ast: TexAST) {
   def &(in: TexOption) = in
   def &(in: TexArgument) = in
   def &(in: TexCommandInline) = in
-
+  
   def ###(in: String) = TexOption(in)
   def ___(in: String) = TexArgument(in)
   def ___(in: TexCommandInline) = TexArgument("\\" + in.name)

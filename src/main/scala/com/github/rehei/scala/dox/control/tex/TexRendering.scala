@@ -147,14 +147,8 @@ class TexRendering(
       \ FloatBarrier;
     }
 
-    if (table.model.config.fullpage) {
-      $ { _ table$ & { ###(table.model.config.position) } } {
-        tableContent(table)
-      }
-    } else {
-      $ { _ table & { ###(table.model.config.position) } } {
-        tableContent(table)
-      }
+    $ { _.env.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
+      tableContent(table)
     }
 
     if (!floating) {
