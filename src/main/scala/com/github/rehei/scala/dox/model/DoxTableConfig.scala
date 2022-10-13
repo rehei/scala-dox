@@ -8,7 +8,7 @@ import com.github.rehei.scala.dox.control.tex.ColumnType
 
 object DoxTableConfig {
 
-  val DUMMY = new DoxTableConfigWide("H")
+  val DUMMY = new DoxTableConfigCompute(false)
 
   def wideTop() = {
     new DoxTableConfigWide("t")
@@ -18,13 +18,13 @@ object DoxTableConfig {
     new DoxTableConfigWide("b")
   }
 
-  def compute() = {
-    new DoxTableConfigCompute()
+  def computeAndFill() = {
+    new DoxTableConfigCompute(true)
   }
 
   protected class DoxTableConfigWide(position: String) extends DoxTableConfig(position, true, true)
 
-  protected class DoxTableConfigCompute extends DoxTableConfig("h", true, false)
+  protected class DoxTableConfigCompute(fill: Boolean) extends DoxTableConfig("h", fill, false)
 
 }
 
