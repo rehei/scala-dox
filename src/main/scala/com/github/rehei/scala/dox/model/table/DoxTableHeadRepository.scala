@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.text.TextAST
 
 class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
-  protected val dirtySpacingEnabled = false
+  protected val dirtySpacingEnabled = true
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 
