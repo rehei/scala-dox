@@ -18,7 +18,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
   import DoxContent._
 
-
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   protected case class InnerTableOn() extends TableMode {
     def toprule() {
@@ -131,7 +130,11 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     val multicolumnWidth = "\\dimexpr(\\tabcolsep*" + size + ")+" + value.key.width + "cm"
 
     val expression = {
-      \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
+      if (value.key.hasNonEmptyChildren) {
+        \\ multicolumn & { value.key.size } { "c" } { style.get(multicolumnWidth, textFormatted) }
+      } else {
+        \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
+      }
     }
 
     MappedTableHeadKey(expression, ruleOption)
@@ -213,6 +216,5 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       case _                                => throw new RuntimeException("This should not happen")
     }
   }
-
 
 }
