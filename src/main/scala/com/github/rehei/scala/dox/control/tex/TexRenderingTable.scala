@@ -131,9 +131,9 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
 
     val expression = {
       if (value.key.hasNonEmptyChildren) {
-        \\ multicolumn & { value.key.size } { "c" } { style.get(multicolumnWidth, textFormatted) }
+        \\ multicolumn & { value.key.size } { "c" } { style.get(multicolumnWidth, textFormatted, getHeadAlignmentMinipage(value.key.node)) }
       } else {
-        \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
+        \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted, getHeadAlignmentMinipage(value.key.node)) }
       }
     }
 
@@ -206,6 +206,16 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     \ plain { (\\ cmidrule { s"1-${model.dimension().size}" }).generate() + "\n" }
   }
 
+  protected def getHeadAlignmentMinipage(node: DoxTableKeyNode) = {
+    val size = node.dimension().width
+    node.format.alignment match {
+      case DoxTableKeyNodeAlignment.LEFT   => ColumnType.lMinipage //"l"
+      case DoxTableKeyNodeAlignment.RIGHT  => ColumnType.rMinipage //"r"
+      case DoxTableKeyNodeAlignment.CENTER => ColumnType.cMinipage //"c"
+      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.cMinipage //"c"
+      case _                               => throw new RuntimeException("This should not happen")
+    }
+  }
   protected def getHeadAlignment(node: DoxTableKeyNode) = {
     val size = node.dimension().width
     node.format.alignment match {
