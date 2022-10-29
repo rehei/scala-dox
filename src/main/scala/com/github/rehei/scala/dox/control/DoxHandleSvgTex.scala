@@ -2,16 +2,11 @@ package com.github.rehei.scala.dox.control
 
 import java.nio.file.Path
 
-import org.apache.commons.io.FilenameUtils
-
-import com.github.rehei.scala.dox.model.DoxSvgFigure
-import com.github.rehei.scala.dox.util.InkscapeUtils
-import com.github.rehei.scala.dox.util.SerializeSvg
-import com.github.rehei.scala.dox.util.SvgMode
-import com.github.rehei.scala.dox.model.DoxFileTex
-import com.github.rehei.scala.dox.util.SerializeTex
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.tex.TexMarkupFactory
+import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.util.SerializeTex
+import com.github.rehei.scala.dox.util.SvgMode
 
 case class DoxHandleSvgTex(_targetTex: Path, _targetTexSVG: Path) {
 
