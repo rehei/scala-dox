@@ -1,9 +1,9 @@
 package com.github.rehei.scala.dox.model
 
-import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentEquation
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
-case class DoxFileEquation(content: String, label: Option[DoxReferencePersistentEquation]) {
+case class DoxInputFile(val content: String, label: Option[DoxReferenceBase]) {
+
   def fileCaption = {
     label.map(m => m.name + " | " + m.hashID).getOrElse("dummylabel")
   }
@@ -11,4 +11,5 @@ case class DoxFileEquation(content: String, label: Option[DoxReferencePersistent
   def fileLabel = {
     label.map(_.hashID).getOrElse("dummylabel")
   }
+
 }

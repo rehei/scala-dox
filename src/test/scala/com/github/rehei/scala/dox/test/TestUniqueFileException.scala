@@ -3,7 +3,6 @@ package com.github.rehei.scala.dox.test
 import java.nio.file.Paths
 import org.junit.Test
 import scala.collection.mutable.HashMap
-import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.util.SerializeTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import scala.xml.NodeSeq
@@ -18,6 +17,7 @@ import com.github.rehei.scala.dox.model.reference.DoxIndexedEnum
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.util.SerializeEquation
 import com.github.rehei.scala.dox.model.DoxFileEquation
+import com.github.rehei.scala.dox.model.DoxInputFile
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class TestUniqueFileException extends DoxIndexedEnum(None) {
@@ -36,7 +36,7 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def firstTest() {
-    val tableFile = DoxFileTable("somestringtable", fileEnum.doxTable.get())
+    val tableFile = DoxInputFile("somestringtable", fileEnum.doxTable.get())
     val testTableName = new SerializeTable(tmp)
     testTableName.generate(tableFile)
     testTableName.generate(tableFile)

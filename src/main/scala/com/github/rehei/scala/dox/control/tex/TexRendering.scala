@@ -7,12 +7,12 @@ import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.model.DoxFileEquation
-import com.github.rehei.scala.dox.model.DoxFileTable
 import com.github.rehei.scala.dox.model.DoxSvgFigure
 import com.github.rehei.scala.dox.model.DoxTableViewModel
 import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentImage
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
@@ -115,26 +115,28 @@ class TexRendering(
 
   protected def internalEquation(equation: DoxEquation) = {
     val texEquations = new TexRenderingEquation(baseAST, equation).createEquationString()
-    val filename = equationHandle.serialize(DoxFileEquation(texEquations, equation.label))
+    val file = DoxFileEquation(texEquations, equation.label)
+    val filename = equationHandle.serialize(file)
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
         \ input { filename }
-        \ caption & { escape(fileCaption(equation.label)) }
+        \ caption & { escape(file.fileCaption) }
       }
     }
   }
 
   protected def internalTable(table: DoxTableViewModelSequence) {
-    val texTable = new TexRenderingTableSequence(baseAST, table.models, table.title, style).createTableString()
-    val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
+
+    val data = table.serialize(tableHandle, baseAST, style)
+
     if (!floating) {
       \ FloatBarrier;
     }
 
     $ { _ table$ & { ###("H") } } {
       \ centering;
-      \ caption & { escape(fileCaption(table.label)) }
-      \ input { filename }
+      \ caption & { escape(data.caption) }
+      \ input { data.filename }
     }
 
     if (!floating) {
@@ -147,7 +149,7 @@ class TexRendering(
       \ FloatBarrier;
     }
 
-    $ { _.env.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
+    $ { _.using.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
       tableContent(table)
     }
 
@@ -158,15 +160,23 @@ class TexRendering(
 
   protected def tableContent(table: DoxTableViewModel[_]) = {
 
-    val texTable = new TexRenderingTable(baseAST, table.model.transform(), false, style).createTableString()
-    val filename = tableHandle.serialize(DoxFileTable(texTable, table.label))
+    val data = table.serialize(tableHandle, baseAST, style)
 
     \ centering;
-    \ caption & { escape(fileCaption(table.label)) }
-    \ input { filename }
+    \ caption & { escape(data.caption) }
+    \ input { data.filename }
   }
 
   protected def internalSvg(svg: DoxSvgFigure) {
+
+    def fileCaption(label: Option[DoxReferencePersistentImage]) = {
+      label.map(m => m.name + " | " + m.hashID).getOrElse("dummylabel")
+    }
+
+    def fileLabel(label: Option[DoxReferencePersistentImage]) = {
+      label.map(_.hashID).getOrElse("dummylabel")
+    }
+
     if (!floating) {
       \ FloatBarrier;
     }
@@ -207,11 +217,4 @@ class TexRendering(
     \ plain (input)
   }
 
-  protected def fileCaption(label: Option[DoxReferenceBase]) = {
-    label.map(m => m.name + " | " + m.hashID).getOrElse("dummylabel")
-  }
-
-  protected def fileLabel(label: Option[DoxReferenceBase]) = {
-    label.map(_.hashID).getOrElse("dummylabel")
-  }
 }

@@ -22,11 +22,13 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
       }
     }
 
-    object env {
+    object using {
       def table(starred: Boolean) = {
         new NamedEnvironment("table", starred)
       }
     }
+
+
 
     object itemize extends SomeTexEnvironment
     object table extends SomeTexEnvironment
