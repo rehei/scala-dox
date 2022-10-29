@@ -17,6 +17,7 @@ import com.github.rehei.scala.dox.util.TexUtils
 import com.github.rehei.scala.dox.util.ViewSupport
 import com.github.rehei.scala.dox.control.tex.TexRendering
 import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
+import com.github.rehei.scala.dox.control.DoxTarget
 
 object TestTableRotatedAlignment extends ViewSupport {
 
@@ -29,7 +30,7 @@ object TestTableRotatedAlignment extends ViewSupport {
     protected val TARGET_INCLUDE_MAIN = TARGET.resolve("./generated_main.tex")
 
     protected val tex = new TexUtils(TARGET, "document", false)
-    protected val tableHandle = DoxHandleTable(TARGET, TARGET.resolve("tex-table"), TexRenderingStyle.MINIPAGE_FRAMED)
+    protected val tableHandle = DoxHandleTable(DoxTarget(TARGET, "tex-table"), TexRenderingStyle.MINIPAGE_FRAMED)
     protected val texMainAST = TexAST()
 
     val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null)

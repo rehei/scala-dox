@@ -114,11 +114,11 @@ class TexRendering(
   }
 
   protected def internalEquation(equation: DoxViewModelEquation) = {
-    val input = equationHandle.serialize(equation)
+    val input = equationHandle.handle(equation)
 
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
-        \ input { input.filename }
+        \ input { input.target.path.toString() }
         \ caption & { escape(input.caption) }
       }
     }
@@ -127,14 +127,14 @@ class TexRendering(
 
   protected def internalTable(table: DoxViewModelTableSequence) {
 
-    val input = tableHandle.serialize(table)
+    val input = tableHandle.handle(table)
 
     usingFloatBarrier {
       $ { _ table$ & { ###("H") } } {
         tableContent(input)
         \ centering;
         \ caption & { escape(input.caption) }
-        \ input { input.filename }
+        \ input { input.target.path.toString() }
       }
     }
 
@@ -142,7 +142,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxViewModelTable[_]) {
 
-    val input = tableHandle.serialize(table)
+    val input = tableHandle.handle(table)
 
     usingFloatBarrier {
       $ { _.using.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
@@ -156,16 +156,16 @@ class TexRendering(
 
     \ centering;
     \ caption & { escape(table.caption) }
-    \ input { table.filename }
+    \ input { table.target.path.toString() }
   }
 
   protected def internalSvg(svg: DoxViewModelSvg) {
 
-    val input = svgTexHandle.serialize(svg)
+    val input = svgTexHandle.handle(svg)
 
     usingFloatBarrier {
       $ { _ figure & { ###("H") } } {
-        \ input { input.filename }
+        \ input { input.target.path.toString() }
         \ caption & { escape(input.caption) }
       }
     }

@@ -7,6 +7,7 @@ import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.model.reference.DoxIndexedEnum
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.FileAlreadyExistsException
+import com.github.rehei.scala.dox.control.DoxTarget
 
 class TestUniqueFileException extends DoxIndexedEnum(None) {
 
@@ -18,14 +19,13 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
   protected val fileSystem = MemoryFileSystemBuilder.newEmpty().build()
   protected val inmemory = fileSystem.getPath("/mnt/inmemory/")
   protected val tmp = inmemory.resolve("./datax/datax-" + "abc")
-  protected val TARGET = tmp.normalize()
-  protected val TARGET_DUMMY = TARGET.resolve("dmy")
+  protected val target = DoxTarget(tmp, "dmy")
   protected val fileEnum = new TestNamingRepository(None)
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def test() {
     val input = DoxInputFile("somestringtable", fileEnum.doxTable.get())
-    val serialize = SerializeUtils(tmp, "anything", ".anything")
+    val serialize = SerializeUtils(target, ".anything")
     serialize.write(input)
     serialize.write(input)
   }

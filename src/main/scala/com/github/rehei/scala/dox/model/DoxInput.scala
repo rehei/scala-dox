@@ -1,5 +1,6 @@
 package com.github.rehei.scala.dox.model
 
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.util.SerializeTarget
 
-case class DoxInput(filename: String, caption: String)
+case class DoxInput(target: SerializeTarget, caption: String)

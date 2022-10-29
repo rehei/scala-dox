@@ -12,22 +12,18 @@ import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.SvgMode
 
-case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
+case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
 
-  protected val targetTex = _targetTex.normalize()
-  protected val targetTexSVG = _targetTexSVG.normalize()
+  protected val inkscape = new InkscapeUtils(mode, target.directory)
 
-  protected val inkscape = new InkscapeUtils(mode, targetTexSVG)
+  protected val serialize = SerializeUtils(target, ".svg")
 
-  assume(targetTexSVG.toString().startsWith(targetTex.toString()))
-
-  protected val svgFileGen = SerializeUtils(targetTexSVG, "image", ".svg")
-
-  def serialize(view: DoxViewModelSvg) = {
-    val foo = DoxInputFile(content(view), view.label)
-    val nameSVG = svgFileGen.write(foo).getFileName.toString()
-    val filename = FilenameUtils.removeExtension(nameSVG)
-    targetTex.relativize(targetTexSVG.resolve(mode.file(filename)))
+  def handle(view: DoxViewModelSvg) = {
+    val input = DoxInputFile(content(view), view.label)
+    val target = serialize.write(input)
+    val filename = FilenameUtils.removeExtension(target.path.getFileName.toString())
+    
+    target.path.getParent.resolve(mode.file(filename))
   }
 
   def transform() = {
