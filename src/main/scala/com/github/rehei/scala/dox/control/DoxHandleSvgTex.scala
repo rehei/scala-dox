@@ -18,7 +18,7 @@ case class DoxHandleSvgTex(target: DoxTarget) {
 
     val include = svgHandle.handle(view)
 
-    val content = new TexRenderingSVG(view, include).generate()
+    val content = new TexRenderingSVG(view, include.path).generate()
     val file = DoxInputFile(content, view.label)
     val target = serialize.write(file)
 
