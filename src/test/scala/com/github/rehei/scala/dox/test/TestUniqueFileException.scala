@@ -20,15 +20,13 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
   protected val inmemory = fileSystem.getPath("/mnt/inmemory/")
   protected val tmp = inmemory.resolve("./datax/datax-" + "abc")
   protected val target = DoxTarget(tmp, "dmy")
-  protected val fileEnum = new TestNamingRepository(None)
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def test() {
-    val input = DoxInputFile("somestringtable", fileEnum.doxTable.get())
+    val input = DoxInputFile("somestringtable", "anything")
     val serialize = SerializeUtils(target, ".anything")
     serialize.write(input)
     serialize.write(input)
   }
-
 
 }

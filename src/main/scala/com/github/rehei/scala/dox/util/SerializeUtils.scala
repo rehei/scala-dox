@@ -6,9 +6,9 @@ import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.control.DoxTarget
 
 case class SerializeUtils(target: DoxTarget, extension: String) {
-  
+
   def write(input: DoxInputFile) = {
-    val file = target.resolve(input, extension)
+    val file = target.resolve(input.filename + extension)
     IOUtils.writeStringUnique(file, input.content)
     SerializeTarget(target.relative(file.getFileName.toString()))
   }

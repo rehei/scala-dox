@@ -9,8 +9,4 @@ abstract class DoxReferenceBase {
 
   val name: String
 
-  def hashID = {
-    HashUtils.hash(name)
-  }
-
 }

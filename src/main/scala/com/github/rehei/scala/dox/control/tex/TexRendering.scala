@@ -118,7 +118,7 @@ class TexRendering(
 
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
-        \ input { input.target.path.toString() }
+        \ input { input.target }
         \ caption & { escape(input.caption) }
       }
     }
@@ -134,7 +134,7 @@ class TexRendering(
         tableContent(input)
         \ centering;
         \ caption & { escape(input.caption) }
-        \ input { input.target.path.toString() }
+        \ input { input.target }
       }
     }
 
@@ -156,7 +156,7 @@ class TexRendering(
 
     \ centering;
     \ caption & { escape(table.caption) }
-    \ input { table.target.path.toString() }
+    \ input { table.target }
   }
 
   protected def internalSvg(svg: DoxViewModelSvg) {
@@ -165,7 +165,7 @@ class TexRendering(
 
     usingFloatBarrier {
       $ { _ figure & { ###("H") } } {
-        \ input { input.target.path.toString() }
+        \ input { input.target }
         \ caption & { escape(input.caption) }
       }
     }

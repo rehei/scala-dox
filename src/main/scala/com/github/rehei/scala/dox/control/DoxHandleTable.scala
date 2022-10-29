@@ -16,27 +16,29 @@ import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 import com.github.rehei.scala.dox.model.DoxViewModelTableSequence
 import com.github.rehei.scala.dox.control.tex.TexRenderingTableSequence
 import com.github.rehei.scala.dox.util.SerializeUtils
+import com.github.rehei.scala.dox.model.reference.DoxReferenceUtils
 
 case class DoxHandleTable(target: DoxTarget, style: TexRenderingStyle) {
 
   protected val serialize = SerializeUtils(target, ".tex")
+  protected val resolve = DoxReferenceUtils("generated-table")
 
   def handle(view: DoxViewModelTable[_]) = {
 
     val content = new TexRenderingTable(view.model.transform(), false, style).createTableString()
-    val file = DoxInputFile(content, view.label)
+    val file = DoxInputFile(content, resolve.transform(view.label))
     val target = serialize.write(file)
 
-    DoxInput(target, file.fileCaption)
+    DoxInput(target.asString(), file.name)
   }
 
   def handle(view: DoxViewModelTableSequence) = {
 
     val content = new TexRenderingTableSequence(view.models, view.title, style).createTableString()
-    val file = DoxInputFile(content, view.label)
+    val file = DoxInputFile(content, resolve.transform(view.label))
     val target = serialize.write(file)
 
-    DoxInput(target, file.fileCaption)
+    DoxInput(target.asString(), file.name)
   }
   
 }

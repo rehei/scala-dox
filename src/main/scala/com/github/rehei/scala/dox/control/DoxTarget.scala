@@ -10,15 +10,16 @@ case class DoxTarget(protected val _baseDirectory: Path, protected val subDirect
   
   assume(targetSecondary.toString().startsWith(BASE.toString()))
 
-  def resolve(input: DoxInputFile, extension: String) = {
-    targetSecondary.resolve(input.fileLabel + extension)
+  def resolve(filename: String) = {
+    targetSecondary.resolve(filename)
   }
 
-  def relative(given: String) = {
-    BASE.relativize(targetSecondary.resolve(given))
+  def relative(filename: String) = {
+    BASE.relativize(targetSecondary.resolve(filename))
   }
 
   def directory = {
     targetSecondary.normalize()
   }
+  
 }

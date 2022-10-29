@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.control.DoxHandleSvg
 import java.nio.file.Path
 
-class TexRenderingSVG(svg: DoxViewModelSvg, include: Path) {
+class TexRenderingSVG(include: String, titleOption: Option[String]) {
 
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
@@ -26,14 +26,14 @@ class TexRenderingSVG(svg: DoxViewModelSvg, include: Path) {
       \ vspace { "4pt" };
       \ centering;
       appendTitle()
-      \ includegraphics { include.toString() }
+      \ includegraphics { include }
       appendBottom()
     }
 
     protected def appendTitle() {
       $ { _ tabular$ & { (tableTotalSize) } { columnAlignment } } {
         \ toprule;
-        \ plain { svg.titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
+        \ plain { titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
         \ midrule;
       }
     }
@@ -50,7 +50,7 @@ class TexRenderingSVG(svg: DoxViewModelSvg, include: Path) {
     override def generate() = {
       \ vspace { "4pt" };
       \ centering;
-      \ includegraphics { include.toString() }
+      \ includegraphics { include }
     }
 
   }
@@ -58,7 +58,7 @@ class TexRenderingSVG(svg: DoxViewModelSvg, include: Path) {
   def generate() = {
 
     val texWrapping = {
-      if (svg.titleOption.isDefined) {
+      if (titleOption.isDefined) {
         TitleWrapping()
       } else {
         NoTitleWrapping()

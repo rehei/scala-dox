@@ -11,17 +11,18 @@ import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.SvgMode
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.reference.DoxReferenceUtils
 
 case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
 
   protected val inkscape = new InkscapeUtils(mode, target.directory)
   protected val serialize = SerializeUtils(target, ".svg")
 
-  def handle(view: DoxViewModelSvg) = {
-    val input = DoxInputFile(content(view), view.label)
+  def handle(input: DoxInputFile) = {
     val target = serialize.write(input)
 
-    val filename = FilenameUtils.removeExtension(target.path.getFileName.toString())
+    val filename = FilenameUtils.removeExtension(target.filename())
     val filenameUpdate = mode.file(filename)
     
     target.update(filenameUpdate)
@@ -29,10 +30,6 @@ case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
 
   def transform() = {
     inkscape.transform()
-  }
-
-  protected def content(figure: DoxViewModelSvg) = {
-    Xhtml.toXhtml(figure.image)
   }
 
 }
