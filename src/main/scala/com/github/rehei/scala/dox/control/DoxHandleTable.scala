@@ -4,18 +4,18 @@ import java.nio.file.Path
 
 import org.apache.commons.io.FilenameUtils
 
-import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.SerializeSvg
 import com.github.rehei.scala.dox.util.SvgMode
 import com.github.rehei.scala.dox.util.SerializeTable
 import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.model.DoxInput
-import com.github.rehei.scala.dox.model.DoxTableViewModel
+import com.github.rehei.scala.dox.model.DoxViewModelTable
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.tex.TexRenderingTable
 import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
-import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
+import com.github.rehei.scala.dox.model.DoxViewModelTableSequence
 import com.github.rehei.scala.dox.control.tex.TexRenderingTableSequence
 
 case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path, style: TexRenderingStyle) {
@@ -27,19 +27,19 @@ case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path, style: TexRen
 
   protected val tableFileGen = new SerializeTable(targetTexTable)
 
-  def serialize(view: DoxTableViewModel[_]) = {
+  def serialize(view: DoxViewModelTable[_]) = {
 
-    val texTable = new TexRenderingTable(view.model.transform(), false, style).createTableString()
-    val file = DoxInputFile(texTable, view.label)
+    val content = new TexRenderingTable(view.model.transform(), false, style).createTableString()
+    val file = DoxInputFile(content, view.label)
     val filename = serializeInput(file)
 
     DoxInput(filename, file.fileCaption)
   }
 
-  def serialize(view: DoxTableViewModelSequence) = {
+  def serialize(view: DoxViewModelTableSequence) = {
 
-    val texTable = new TexRenderingTableSequence(view.models, view.title, style).createTableString()
-    val file = DoxInputFile(texTable, view.label)
+    val content = new TexRenderingTableSequence(view.models, view.title, style).createTableString()
+    val file = DoxInputFile(content, view.label)
     val filename = serializeInput(file)
 
     DoxInput(filename, file.fileCaption)

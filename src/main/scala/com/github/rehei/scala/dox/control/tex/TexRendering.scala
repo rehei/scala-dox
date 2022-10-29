@@ -6,16 +6,17 @@ import com.github.rehei.scala.dox.control.DoxHandleTable
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.i18n.DoxI18N
 import com.github.rehei.scala.dox.model.DoxEquation
-import com.github.rehei.scala.dox.model.DoxFileEquation
-import com.github.rehei.scala.dox.model.DoxSvgFigure
-import com.github.rehei.scala.dox.model.DoxTableViewModel
-import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
+import com.github.rehei.scala.dox.model.DoxViewModelEquation
+import com.github.rehei.scala.dox.model.DoxViewModelSvg
+import com.github.rehei.scala.dox.model.DoxViewModelTable
+import com.github.rehei.scala.dox.model.DoxViewModelTableSequence
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentImage
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.model.DoxInput
 
 class TexRendering(
   baseAST:        TexAST,
@@ -112,84 +113,74 @@ class TexRendering(
     this
   }
 
-  protected def internalEquation(equation: DoxEquation) = {
-    val texEquations = new TexRenderingEquation(baseAST, equation).createEquationString()
-    val file = DoxFileEquation(texEquations, equation.label)
-    val filename = equationHandle.serialize(file)
+  protected def internalEquation(equation: DoxViewModelEquation) = {
+    val input = equationHandle.serialize(equation)
+
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
-        \ input { filename }
-        \ caption & { escape(file.fileCaption) }
+        \ input { input.filename }
+        \ caption & { escape(input.caption) }
       }
     }
+
   }
 
-  protected def internalTable(table: DoxTableViewModelSequence) {
+  protected def internalTable(table: DoxViewModelTableSequence) {
 
-    val data = tableHandle.serialize(table)
+    val input = tableHandle.serialize(table)
 
-    if (!floating) {
-      \ FloatBarrier;
+    usingFloatBarrier {
+      $ { _ table$ & { ###("H") } } {
+        tableContent(input)
+        \ centering;
+        \ caption & { escape(input.caption) }
+        \ input { input.filename }
+      }
     }
 
-    $ { _ table$ & { ###("H") } } {
-      \ centering;
-      \ caption & { escape(data.caption) }
-      \ input { data.filename }
-    }
-
-    if (!floating) {
-      \ FloatBarrier;
-    }
   }
 
-  protected def internalTable(table: DoxTableViewModel[_]) {
-    if (!floating) {
-      \ FloatBarrier;
+  protected def internalTable(table: DoxViewModelTable[_]) {
+
+    val input = tableHandle.serialize(table)
+
+    usingFloatBarrier {
+      $ { _.using.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
+        tableContent(input)
+      }
     }
 
-    $ { _.using.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
-      tableContent(table)
-    }
-
-    if (!floating) {
-      \ FloatBarrier;
-    }
   }
 
-  protected def tableContent(table: DoxTableViewModel[_]) = {
+  protected def tableContent(table: DoxInput) = {
 
-    val data = tableHandle.serialize(table)
-
-    \ centering;
-    \ caption & { escape(data.caption) }
-    \ input { data.filename }
+    \ caption & { escape(table.caption) }
+    \ input { table.filename }
   }
 
-  protected def internalSvg(svg: DoxSvgFigure) {
+  protected def internalSvg(svg: DoxViewModelSvg) {
 
-    def fileCaption(label: Option[DoxReferencePersistentImage]) = {
-      label.map(m => m.name + " | " + m.hashID).getOrElse("dummylabel")
+    val input = svgTexHandle.serialize(svg)
+
+    usingFloatBarrier {
+      $ { _ figure & { ###("H") } } {
+        \ input { input.filename }
+        \ caption & { escape(input.caption) }
+      }
     }
 
-    def fileLabel(label: Option[DoxReferencePersistentImage]) = {
-      label.map(_.hashID).getOrElse("dummylabel")
-    }
+  }
 
+  protected def usingFloatBarrier(callback: => Unit) = {
     if (!floating) {
       \ FloatBarrier;
     }
 
-    $ { _ figure & { ###("H") } } {
-      \ input { svgTexHandle.serialize(svg) }
-      \ caption & { escape(fileCaption(svg.label)) }
-      \ label { fileLabel(svg.label) }
-    }
+    callback
 
     if (!floating) {
       \ FloatBarrier;
     }
-
   }
 
   protected def internalCiteT(key: String) {

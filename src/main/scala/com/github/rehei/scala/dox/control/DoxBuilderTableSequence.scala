@@ -1,6 +1,6 @@
 package com.github.rehei.scala.dox.control
 
-import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
+import com.github.rehei.scala.dox.model.DoxViewModelTableSequence
 import com.github.rehei.scala.dox.model.table.DoxTable
 
 import com.github.rehei.scala.dox.model.table.DoxTableSequence
@@ -13,7 +13,7 @@ object DoxBuilderTableSequence {
   def label(_labelOption: Option[DoxReferencePersistentTable]) = new {
     def data(_tables: Seq[DoxTable[_]]) = new {
       def title(_title: String) = {
-        DoxTableViewModelSequence(_labelOption, DoxTableSequence(_tables.map(_.transform())), TextFactory.text(_title))
+        DoxViewModelTableSequence(_labelOption, DoxTableSequence(_tables.map(_.transform())), TextFactory.text(_title))
       }
     }
   }

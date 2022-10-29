@@ -7,19 +7,14 @@ abstract class SerializeBase(baseDirectory: Path, naming: String) {
 
   protected val nextID = NextID(naming)
 
-  protected def write(content: String, naming: Option[_ <: DoxReferenceBase], extension: String) = {
+  protected def write(content: String, naming: String, extension: String) = {
     val file = target(naming, extension: String)
     IOUtils.writeStringUnique(file, content)
     file
   }
 
-  protected def target(reference: Option[_ <: DoxReferenceBase], extension: String) = {
-    val filename = reference.map(_.hashID).getOrElse(generateName)
-    baseDirectory.resolve(filename + extension)
-  }
-
-  protected def generateName() = {
-    s"generated_${nextID.nextID()}"
+  protected def target(naming: String, extension: String) = {
+    baseDirectory.resolve(naming + extension)
   }
 
 }

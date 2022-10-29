@@ -9,7 +9,7 @@ import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.DoxHandleTable
 
-case class DoxTableViewModelSequence(
+case class DoxViewModelTableSequence(
   label:  Option[DoxReferencePersistentTable],
   models: DoxTableSequence,
   title:  TextAST)

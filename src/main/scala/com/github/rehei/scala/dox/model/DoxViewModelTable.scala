@@ -7,4 +7,4 @@ import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.tex.TexRenderingTable
 import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 
-case class DoxTableViewModel[T <: AnyRef](model: DoxTable[T], label: Option[DoxReferencePersistentTable])
+case class DoxViewModelTable[T <: AnyRef](model: DoxTable[T], label: Option[DoxReferencePersistentTable])

@@ -3,9 +3,9 @@ package com.github.rehei.scala.dox.control
 import scala.collection.Seq
 
 import com.github.rehei.scala.dox.i18n.DoxI18N
-import com.github.rehei.scala.dox.model.DoxTableViewModel
-import com.github.rehei.scala.dox.model.DoxTableViewModelSequence
-import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.DoxViewModelTable
+import com.github.rehei.scala.dox.model.DoxViewModelTableSequence
+import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKeyRendering
 import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentTable
@@ -16,6 +16,7 @@ import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
+import com.github.rehei.scala.dox.model.DoxViewModelEquation
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -136,19 +137,19 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def ref(reference: DoxReferenceBase): this.type
 
-  def table(callback: DoxBuilderTable.type => DoxTableViewModel[_]): this.type = {
+  def table(callback: DoxBuilderTable.type => DoxViewModelTable[_]): this.type = {
     val data = callback(DoxBuilderTable)
     internalTable(data)
     this
   }
 
-  def tableSequence(callback: DoxBuilderTableSequence.type => DoxTableViewModelSequence): this.type = {
+  def tableSequence(callback: DoxBuilderTableSequence.type => DoxViewModelTableSequence): this.type = {
     val data = callback(DoxBuilderTableSequence)
     internalTable(data)
     this
   }
 
-  def equation(callback: DoxBuilderEquation.type => DoxEquation) = {
+  def equation(callback: DoxBuilderEquation.type => DoxViewModelEquation) = {
     val data = callback(DoxBuilderEquation)
     internalEquation(data)
     this
@@ -156,7 +157,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def clearpage(): this.type
 
-  def svg(callback: DoxBuilderSvg.type => DoxSvgFigure): this.type = {
+  def svg(callback: DoxBuilderSvg.type => DoxViewModelSvg): this.type = {
     val data = callback(DoxBuilderSvg)
     internalSvg(data)
     this
@@ -166,10 +167,10 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteT(key: String): Unit
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
-  protected def internalSvg(imageSet: DoxSvgFigure): Unit
-  protected def internalTable(table: DoxTableViewModelSequence): Unit
-  protected def internalTable(table: DoxTableViewModel[_]): Unit
-  protected def internalEquation(table: DoxEquation): Unit
+  protected def internalSvg(imageSet: DoxViewModelSvg): Unit
+  protected def internalTable(table: DoxViewModelTableSequence): Unit
+  protected def internalTable(table: DoxViewModelTable[_]): Unit
+  protected def internalEquation(table: DoxViewModelEquation): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }

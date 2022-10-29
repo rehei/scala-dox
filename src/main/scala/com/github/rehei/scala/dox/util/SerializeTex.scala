@@ -3,13 +3,12 @@ package com.github.rehei.scala.dox.util
 import java.nio.file.Path
 
 import org.apache.commons.io.FilenameUtils
+import com.github.rehei.scala.dox.model.DoxInputFile
 
-class SerializeTex(baseDirectory: Path) {
+class SerializeTex(baseDirectory: Path) extends SerializeBase(baseDirectory, "tex") {
 
-  def generate(content: String, svgPath: Path) = {
-    val filename = FilenameUtils.removeExtension(svgPath.getFileName.toString()) + ".tex"
-    val file = baseDirectory.resolve(filename)
-    IOUtils.writeStringUnique(file, content)
-    file
+  def generate(table: DoxInputFile) = {
+    super.write(table.content, table.fileLabel, ".tex")
   }
+
 }

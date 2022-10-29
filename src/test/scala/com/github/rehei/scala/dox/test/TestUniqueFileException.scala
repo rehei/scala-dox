@@ -4,7 +4,7 @@ import java.nio.file.Paths
 import org.junit.Test
 import scala.collection.mutable.HashMap
 import com.github.rehei.scala.dox.util.SerializeTable
-import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import scala.xml.NodeSeq
 import com.github.rehei.scala.dox.util.SerializeSvg
 import org.junit.FixMethodOrder
@@ -16,7 +16,7 @@ import com.github.rehei.scala.dox.util.FileAlreadyExistsException
 import com.github.rehei.scala.dox.model.reference.DoxIndexedEnum
 import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.util.SerializeEquation
-import com.github.rehei.scala.dox.model.DoxFileEquation
+import com.github.rehei.scala.dox.model.DoxViewModelEquation
 import com.github.rehei.scala.dox.model.DoxInputFile
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -44,7 +44,7 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def secondTest() {
-    val svgFile = DoxSvgFigure(NodeSeq.Empty, fileEnum.doxImage.get(), None)
+    val svgFile = DoxInputFile("", fileEnum.doxImage.get())
     val testSvgName = new SerializeSvg(tmp)
     testSvgName.generate(svgFile)
     testSvgName.generate(svgFile)
@@ -52,7 +52,7 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def thirdTest() {
-    val equationFile = DoxFileEquation("someequation", fileEnum.doxEquation.get())
+    val equationFile = DoxInputFile("someequation", fileEnum.doxEquation.get())
     val testEquationName = new SerializeEquation(tmp)
     testEquationName.generate(equationFile)
     testEquationName.generate(equationFile)

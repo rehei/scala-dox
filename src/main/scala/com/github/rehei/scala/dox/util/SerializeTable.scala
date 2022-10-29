@@ -7,7 +7,7 @@ import com.github.rehei.scala.dox.model.DoxInputFile
 class SerializeTable(baseDirectory: Path) extends SerializeBase(baseDirectory, "table") {
 
   def generate(table: DoxInputFile) = {
-    super.write(table.content, table.label, ".tex")
+    super.write(table.content, table.fileLabel, ".tex")
   }
 
 }

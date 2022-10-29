@@ -4,16 +4,15 @@ import java.nio.file.Path
 
 import scala.xml.Xhtml
 
-import com.github.rehei.scala.dox.model.DoxSvgFigure
+import com.github.rehei.scala.dox.model.DoxViewModelSvg
+import com.github.rehei.scala.dox.model.DoxInputFile
 
 class SerializeSvg(baseDirectory: Path) extends SerializeBase(baseDirectory, "image") {
 
-  def generate(figure: DoxSvgFigure) = {
-    super.write(content(figure), figure.label, ".svg")
+  def generate(equation: DoxInputFile) = {
+    super.write(equation.content, equation.fileLabel, ".svg")
   }
   
-  protected def content(figure: DoxSvgFigure) = {
-    Xhtml.toXhtml(figure.image)
-  }
+
 
 }

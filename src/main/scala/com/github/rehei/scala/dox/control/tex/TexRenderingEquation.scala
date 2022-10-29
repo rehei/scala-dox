@@ -2,7 +2,7 @@ package com.github.rehei.scala.dox.control.tex
 
 import com.github.rehei.scala.dox.model.DoxEquation
 
-class TexRenderingEquation(baseAST: TexAST, equation: DoxEquation) {
+class TexRenderingEquation(equation: DoxEquation) {
   protected val tmpAST = new TexAST
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
 
@@ -16,9 +16,6 @@ class TexRenderingEquation(baseAST: TexAST, equation: DoxEquation) {
   protected def create() {
     $ { _ eqnarray } {
       \ plain { equation.equation }
-      equation
-        .label
-        .map(reference => { \ label { reference.name } })
     }
   }
 }

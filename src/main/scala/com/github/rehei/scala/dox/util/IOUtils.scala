@@ -16,6 +16,7 @@ object IOUtils {
       writeString(path, content)
     }
   }
+  
   def writeString(path: Path, content: String) = {
     Files.createDirectories(path.getParent())
 
