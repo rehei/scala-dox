@@ -14,9 +14,13 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.model.DoxTableConfig
 
-class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, isInnerTable: Boolean, style: TexRenderingStyle) {
+class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boolean, style: TexRenderingStyle) {
 
   import DoxContent._
+
+  protected val tmpAST = new TexAST
+  protected val tmpMarkup = new TexMarkupFactory(tmpAST)
+  import tmpMarkup._
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
   protected case class InnerTableOn() extends TableMode {
@@ -53,8 +57,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
     def bottomrule(): Unit
   }
 
-  protected val tmpAST = new TexAST
-  protected val tmpMarkup = new TexMarkupFactory(tmpAST)
   protected val tableMode = {
     if (isInnerTable) {
       InnerTableOn()
@@ -62,8 +64,6 @@ class TexRenderingTable(baseAST: TexAST, protected val model: DoxTableMatrix, is
       InnerTableOff()
     }
   }
-
-  import tmpMarkup._
 
   def createTableString() = {
     create()

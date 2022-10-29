@@ -24,8 +24,7 @@ class TexRendering(
   bibHandle:      DoxBibKeyRendering,
   tableHandle:    DoxHandleTable,
   equationHandle: DoxHandleEquation,
-  svgTexHandle:   DoxHandleSvgTex,
-  style:          TexRenderingStyle) extends DoxRenderingBase(i18n, bibHandle) {
+  svgTexHandle:   DoxHandleSvgTex) extends DoxRenderingBase(i18n, bibHandle) {
 
   protected val POSITIONING_FIGURE = "H"
   protected val markup = new TexMarkupFactory(baseAST)
@@ -127,7 +126,7 @@ class TexRendering(
 
   protected def internalTable(table: DoxTableViewModelSequence) {
 
-    val data = table.serialize(tableHandle, baseAST, style)
+    val data = tableHandle.serialize(table)
 
     if (!floating) {
       \ FloatBarrier;
@@ -160,7 +159,7 @@ class TexRendering(
 
   protected def tableContent(table: DoxTableViewModel[_]) = {
 
-    val data = table.serialize(tableHandle, baseAST, style)
+    val data = tableHandle.serialize(table)
 
     \ centering;
     \ caption & { escape(data.caption) }

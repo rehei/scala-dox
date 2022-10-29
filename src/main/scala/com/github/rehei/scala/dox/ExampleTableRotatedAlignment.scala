@@ -29,10 +29,10 @@ object TestTableRotatedAlignment extends ViewSupport {
     protected val TARGET_INCLUDE_MAIN = TARGET.resolve("./generated_main.tex")
 
     protected val tex = new TexUtils(TARGET, "document", false)
-    protected val tableHandle = DoxHandleTable(TARGET, TARGET.resolve("tex-table"))
+    protected val tableHandle = DoxHandleTable(TARGET, TARGET.resolve("tex-table"), TexRenderingStyle.MINIPAGE_FRAMED)
     protected val texMainAST = TexAST()
 
-    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null, TexRenderingStyle.MINIPAGE_FRAMED)
+    val texMain = new TexRendering(texMainAST, false, null, null, tableHandle, null, null)
 
     def generate() = {
       write()

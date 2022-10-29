@@ -83,7 +83,7 @@ class TestCountMap {
     val bibCache = DoxBibKeyCache(path)
     val bibHandle = DoxBibKeyRendering(bibCache, map)
 
-    new TexRendering(TexAST(), true, null, bibHandle, null, null, null, TexRenderingStyle.MINIPAGE_FRAMED)
+    new TexRendering(TexAST(), true, null, bibHandle, null, null, null)
   }
 
   protected def testing(map: DoxBibKeyCountMap) = new {

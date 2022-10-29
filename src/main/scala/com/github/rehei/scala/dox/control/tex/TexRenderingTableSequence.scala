@@ -7,7 +7,7 @@ import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 
-class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence, title: TextAST, style: TexRenderingStyle) {
+class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST, style: TexRenderingStyle) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
 
   protected val tmpAST = new TexAST
@@ -55,7 +55,7 @@ class TexRenderingTableSequence(baseAST: TexAST, modelSequence: DoxTableSequence
   }
 
   protected def getTable(model: DoxTableMatrix) = {
-    new TexRenderingTable(baseAST, model, true, style).createTableString()
+    new TexRenderingTable(model, true, style).createTableString()
   }
 
   protected def verticalSpacing() = {

@@ -12,15 +12,4 @@ import com.github.rehei.scala.dox.control.DoxHandleTable
 case class DoxTableViewModelSequence(
   label:  Option[DoxReferencePersistentTable],
   models: DoxTableSequence,
-  title:  TextAST) {
-
-  def serialize(tableHandle: DoxHandleTable, baseAST: TexAST, style: TexRenderingStyle) = {
-
-    val texTable = new TexRenderingTableSequence(baseAST, models, title, style).createTableString()
-    val file = DoxInputFile(texTable, label)
-    val filename = tableHandle.serialize(file)
-
-    DoxInput(filename, file.fileCaption)
-  }
-
-}
+  title:  TextAST)
