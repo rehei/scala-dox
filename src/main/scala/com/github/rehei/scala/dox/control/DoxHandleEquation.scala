@@ -2,12 +2,11 @@ package com.github.rehei.scala.dox.control
 
 import java.nio.file.Path
 
-import com.github.rehei.scala.dox.model.DoxEquation
-import com.github.rehei.scala.dox.util.SerializeEquation
-import com.github.rehei.scala.dox.model.DoxViewModelEquation
-import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.control.tex.TexRenderingEquation
 import com.github.rehei.scala.dox.model.DoxInput
+import com.github.rehei.scala.dox.model.DoxInputFile
+import com.github.rehei.scala.dox.model.DoxViewModelEquation
+import com.github.rehei.scala.dox.util.SerializeUtils
 
 case class DoxHandleEquation(_targetTex: Path, _targetTexEquation: Path) {
 
@@ -16,12 +15,12 @@ case class DoxHandleEquation(_targetTex: Path, _targetTexEquation: Path) {
 
   assume(targetTexTable.toString().startsWith(targetTex.toString()))
 
-  protected val tableFileGen = new SerializeEquation(targetTexTable)
+  protected val tableFileGen = SerializeUtils(targetTexTable, "equation", ".tex")
 
   def serialize(view: DoxViewModelEquation) = {
     val content = new TexRenderingEquation(view.equation).createEquationString()
     val input = DoxInputFile(content, view.label)
-    val nameTable = tableFileGen.generate(input).getFileName.toString()
+    val nameTable = tableFileGen.write(input).getFileName.toString()
 
     val filename = targetTex.relativize(targetTexTable.resolve(nameTable)).toString()
 

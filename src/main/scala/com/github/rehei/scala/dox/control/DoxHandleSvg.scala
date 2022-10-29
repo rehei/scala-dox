@@ -2,14 +2,15 @@ package com.github.rehei.scala.dox.control
 
 import java.nio.file.Path
 
+import scala.xml.Xhtml
+
 import org.apache.commons.io.FilenameUtils
 
+import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.InkscapeUtils
-import com.github.rehei.scala.dox.util.SerializeSvg
+import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.SvgMode
-import com.github.rehei.scala.dox.model.DoxInputFile
-import scala.xml.Xhtml
 
 case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
@@ -20,11 +21,11 @@ case class DoxHandleSvg(mode: SvgMode, _targetTex: Path, _targetTexSVG: Path) {
 
   assume(targetTexSVG.toString().startsWith(targetTex.toString()))
 
-  protected val svgFileGen = new SerializeSvg(targetTexSVG)
+  protected val svgFileGen = SerializeUtils(targetTexSVG, "image", ".svg")
 
   def serialize(view: DoxViewModelSvg) = {
     val foo = DoxInputFile(content(view), view.label)
-    val nameSVG = svgFileGen.generate(foo).getFileName.toString()
+    val nameSVG = svgFileGen.write(foo).getFileName.toString()
     val filename = FilenameUtils.removeExtension(nameSVG)
     targetTex.relativize(targetTexSVG.resolve(mode.file(filename)))
   }

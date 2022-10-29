@@ -154,6 +154,7 @@ class TexRendering(
 
   protected def tableContent(table: DoxInput) = {
 
+    \ centering;
     \ caption & { escape(table.caption) }
     \ input { table.filename }
   }

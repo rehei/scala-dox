@@ -6,9 +6,7 @@ import org.apache.commons.io.FilenameUtils
 
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.InkscapeUtils
-import com.github.rehei.scala.dox.util.SerializeSvg
 import com.github.rehei.scala.dox.util.SvgMode
-import com.github.rehei.scala.dox.util.SerializeTable
 import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.model.DoxInput
 import com.github.rehei.scala.dox.model.DoxViewModelTable
@@ -17,6 +15,7 @@ import com.github.rehei.scala.dox.control.tex.TexRenderingTable
 import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 import com.github.rehei.scala.dox.model.DoxViewModelTableSequence
 import com.github.rehei.scala.dox.control.tex.TexRenderingTableSequence
+import com.github.rehei.scala.dox.util.SerializeUtils
 
 case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path, style: TexRenderingStyle) {
 
@@ -25,7 +24,7 @@ case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path, style: TexRen
 
   assume(targetTexTable.toString().startsWith(targetTex.toString()))
 
-  protected val tableFileGen = new SerializeTable(targetTexTable)
+  protected val tableFileGen = SerializeUtils(targetTexTable, "table", ".tex")
 
   def serialize(view: DoxViewModelTable[_]) = {
 
@@ -47,7 +46,7 @@ case class DoxHandleTable(_targetTex: Path, _targetTexTable: Path, style: TexRen
   
   
   def serializeInput(input: DoxInputFile): String = {
-    val nameTable = tableFileGen.generate(input).getFileName.toString()
+    val nameTable = tableFileGen.write(input).getFileName.toString()
     targetTex.relativize(targetTexTable.resolve(nameTable)).toString()
   }
 
