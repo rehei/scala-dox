@@ -1,22 +1,12 @@
 package com.github.rehei.scala.dox.model
 
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
-import com.github.rehei.scala.dox.util.NextID
-import com.github.rehei.scala.dox.util.NextID
-import com.github.rehei.scala.dox.util.HashUtils
+import java.nio.file.Path
 
-case class DoxInputFile(val content: String, name: String) {
+case class DoxInputFile(reference: DoxInputReference, target: DoxInputTarget) {
 
-  def caption = {
-    name + " | " + hashID
-  }
-
-  def filename = {
-    hashID
-  }
-
-  protected def hashID = {
-    HashUtils.hash(name)
+  def update(filename: String) = {
+    this.copy(target = target.update(filename))
   }
 
 }

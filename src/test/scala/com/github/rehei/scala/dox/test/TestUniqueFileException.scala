@@ -3,11 +3,12 @@ package com.github.rehei.scala.dox.test
 import org.junit.Test
 
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder
-import com.github.rehei.scala.dox.model.DoxInputFile
+import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.reference.DoxIndexedEnum
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.FileAlreadyExistsException
 import com.github.rehei.scala.dox.control.DoxTarget
+import com.github.rehei.scala.dox.model.DoxInputReference
 
 class TestUniqueFileException extends DoxIndexedEnum(None) {
 
@@ -23,7 +24,7 @@ class TestUniqueFileException extends DoxIndexedEnum(None) {
 
   @Test(expected = classOf[FileAlreadyExistsException])
   def test() {
-    val input = DoxInputFile("somestringtable", "anything")
+    val input = DoxInputData(DoxInputReference("anything"), "somestringtable")
     val serialize = SerializeUtils(target, ".anything")
     serialize.write(input)
     serialize.write(input)

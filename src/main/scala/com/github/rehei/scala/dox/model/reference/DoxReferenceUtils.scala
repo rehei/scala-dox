@@ -1,15 +1,18 @@
 package com.github.rehei.scala.dox.model.reference
 
 import com.github.rehei.scala.dox.util.NextID
+import com.github.rehei.scala.dox.model.DoxInputReference
+import com.github.rehei.scala.dox.util.HashUtils
 
-case class DoxReferenceUtils(prefix: String) {
-  
-  case class DoxReferenceWrappy(name: String, caption: String)
-  
-  protected val nextID = NextID("__" + prefix)
-  
+case class DoxReferenceUtils(generatedPrefix: String) {
+
+  protected val nextID = NextID("__" + generatedPrefix)
+
   def transform(input: Option[DoxReferenceBase]) = {
-    input.map(_.name).getOrElse(nextID.nextID())
+
+    val name = input.map(_.name).getOrElse(nextID.nextID())
+
+    DoxInputReference(name)
   }
-  
+
 }

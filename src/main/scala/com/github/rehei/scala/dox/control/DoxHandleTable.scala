@@ -7,8 +7,8 @@ import org.apache.commons.io.FilenameUtils
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.SvgMode
+import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.DoxInputFile
-import com.github.rehei.scala.dox.model.DoxInput
 import com.github.rehei.scala.dox.model.DoxViewModelTable
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.tex.TexRenderingTable
@@ -35,10 +35,8 @@ case class DoxHandleTable(target: DoxTarget, style: TexRenderingStyle) {
   }
 
   protected def handleContent(label: Option[DoxReferenceBase], content: String) = {
-    val file = DoxInputFile(content, resolve.transform(label))
-    val target = serialize.write(file)
-
-    DoxInput(target.asString(), file.name)
+    val file = DoxInputData(resolve.transform(label), content)
+    serialize.write(file)
   }
 
 }

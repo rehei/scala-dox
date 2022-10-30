@@ -3,14 +3,15 @@ package com.github.rehei.scala.dox.control
 import java.nio.file.Path
 
 import com.github.rehei.scala.dox.control.tex.TexRenderingSVG
-import com.github.rehei.scala.dox.model.DoxInput
 import com.github.rehei.scala.dox.model.DoxInputFile
+import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.SvgMode
 import com.github.rehei.scala.dox.model.reference.DoxReferenceUtils
 import scala.xml.Xhtml
 import scala.xml.NodeSeq
+import com.github.rehei.scala.dox.model.DoxInputReference
 
 case class DoxHandleSvgTex(target: DoxTarget) {
 
@@ -20,26 +21,26 @@ case class DoxHandleSvgTex(target: DoxTarget) {
 
   def handle(view: DoxViewModelSvg) = {
 
-    val name = resolve.transform(view.label)
+    val reference = resolve.transform(view.label)
 
-    val svg = handleSvg(name, view.image)
-    val tex = handleTex(name, svg.asString(), view.titleOption)
+    val fileSvg = handleSvg(reference, view.image)
+    val fileTex = handleTex(reference, fileSvg.target.asString(), view.titleOption)
 
-    DoxInput(tex.asString(), name)
+    fileTex
   }
 
   def transform() = {
     svgHandle.transform()
   }
 
-  protected def handleSvg(name: String, data: NodeSeq) = {
-    val input = DoxInputFile(content(data), name)
+  protected def handleSvg(reference: DoxInputReference, data: NodeSeq) = {
+    val input = DoxInputData(reference, content(data))
     svgHandle.handle(input)
   }
 
-  protected def handleTex(name: String, path: String, titleOption: Option[String]) = {
+  protected def handleTex(reference: DoxInputReference, path: String, titleOption: Option[String]) = {
     val content = new TexRenderingSVG(path, titleOption).generate()
-    val file = DoxInputFile(content, name)
+    val file = DoxInputData(reference, content)
     serialize.write(file)
   }
 

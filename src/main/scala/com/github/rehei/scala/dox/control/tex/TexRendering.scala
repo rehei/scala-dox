@@ -16,7 +16,7 @@ import com.github.rehei.scala.dox.model.reference.DoxReferencePersistentImage
 import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.DoxInput
+import com.github.rehei.scala.dox.model.DoxInputFile
 
 class TexRendering(
   baseAST:        TexAST,
@@ -118,8 +118,8 @@ class TexRendering(
 
     $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
-        \ input { input.target }
-        \ caption & { escape(input.caption) }
+        \ input { input.target.asString() }
+        \ caption & { escape(input.reference.caption) }
       }
     }
 
@@ -133,8 +133,8 @@ class TexRendering(
       $ { _ table$ & { ###("H") } } {
         tableContent(input)
         \ centering;
-        \ caption & { escape(input.caption) }
-        \ input { input.target }
+        \ caption & { escape(input.reference.caption) }
+        \ input { input.target.asString() }
       }
     }
 
@@ -152,11 +152,11 @@ class TexRendering(
 
   }
 
-  protected def tableContent(table: DoxInput) = {
+  protected def tableContent(table: DoxInputFile) = {
 
     \ centering;
-    \ caption & { escape(table.caption) }
-    \ input { table.target }
+    \ caption & { escape(table.reference.caption) }
+    \ input { table.target.asString() }
   }
 
   protected def internalSvg(svg: DoxViewModelSvg) {
@@ -165,8 +165,8 @@ class TexRendering(
 
     usingFloatBarrier {
       $ { _ figure & { ###("H") } } {
-        \ input { input.target }
-        \ caption & { escape(input.caption) }
+        \ input { input.target.asString() }
+        \ caption & { escape(input.reference.caption) }
       }
     }
 

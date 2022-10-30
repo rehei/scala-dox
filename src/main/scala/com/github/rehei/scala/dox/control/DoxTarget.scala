@@ -1,7 +1,7 @@
 package com.github.rehei.scala.dox.control
 
 import java.nio.file.Path
-import com.github.rehei.scala.dox.model.DoxInputFile
+import com.github.rehei.scala.dox.model.DoxInputData
 
 case class DoxTarget(protected val _baseDirectory: Path, protected val subDirectoryExtension: String) {
 

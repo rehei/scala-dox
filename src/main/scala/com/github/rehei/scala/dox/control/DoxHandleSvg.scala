@@ -6,7 +6,7 @@ import scala.xml.Xhtml
 
 import org.apache.commons.io.FilenameUtils
 
-import com.github.rehei.scala.dox.model.DoxInputFile
+import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.util.InkscapeUtils
 import com.github.rehei.scala.dox.util.SerializeUtils
@@ -19,13 +19,13 @@ case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
   protected val inkscape = new InkscapeUtils(mode, target.directory)
   protected val serialize = SerializeUtils(target, ".svg")
 
-  def handle(input: DoxInputFile) = {
-    val target = serialize.write(input)
+  def handle(input: DoxInputData) = {
+    val file = serialize.write(input)
 
-    val filename = FilenameUtils.removeExtension(target.filename())
+    val filename = FilenameUtils.removeExtension(file.target.filename())
     val filenameUpdate = mode.file(filename)
     
-    target.update(filenameUpdate)
+    file.update(filenameUpdate)
   }
 
   def transform() = {
