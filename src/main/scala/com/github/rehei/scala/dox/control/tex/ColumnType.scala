@@ -12,9 +12,9 @@ object ColumnType {
   def c(size: Double) = slashed("""\centering""", size)
   def r(size: Double) = slashed("""\raggedleft""", size)
 
-  def lMinipage(text: String) = s"""\\begin{flushleft}${text}\\end{flushleft}"""
-  def cMinipage(text: String) = s"""\\begin{center}${text}\\end{center}"""
-  def rMinipage(text: String) = s"""\\begin{flushright}${text}\\end{flushright}"""
+  def lMinipage(text: String) = environment("flushleft", text)
+  def cMinipage(text: String) = environment("center", text)
+  def rMinipage(text: String) = environment("flushright", text)
 
   def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
 
@@ -29,5 +29,9 @@ object ColumnType {
     val stringValue = df.format(size)
 
     "p{" + stringValue + "cm}"
+  }
+  
+  protected def environment(name: String, content: String) = {
+    s"""\\begin{${name}}${content}\\end{${name}}"""
   }
 }
