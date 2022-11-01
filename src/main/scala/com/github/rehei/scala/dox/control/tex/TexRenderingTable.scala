@@ -131,7 +131,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
     val expression = {
       if (value.key.hasNonEmptyChildren) {
-        \\ multicolumn & { value.key.size } { "c" } { style.get(multicolumnWidth, textFormatted) }
+        \\ multicolumn & { value.key.size } { getHeadAlignmentNoSize(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
       } else {
         \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
       }
@@ -208,10 +208,20 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
   protected def getHeadAlignmentMinipage(node: DoxTableKeyNode, text: String) = {
     node.format.alignment match {
-      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.lMinipage(text) //"l"
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.rMinipage(text) //"r"
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.cMinipage(text) //"c"
-      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.cMinipage(text) //"c"
+      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.lMinipage(text)
+      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.rMinipage(text)
+      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.cMinipage(text)
+      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.cMinipage(text)
+      case _                                => throw new RuntimeException("This should not happen")
+    }
+  }
+  
+  protected def getHeadAlignmentNoSize(node: DoxTableKeyNode) = {
+    node.format.alignment match {
+      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(None)
+      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(None)
+      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(None)
+      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.c(None)
       case _                                => throw new RuntimeException("This should not happen")
     }
   }
@@ -219,10 +229,10 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   protected def getHeadAlignment(node: DoxTableKeyNode) = {
     val size = node.dimension().width
     node.format.alignment match {
-      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(size) //"l"
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(size) //"r"
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(size) //"c"
-      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.c(size) //"c"
+      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(Some(size))
+      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(Some(size))
+      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(Some(size))
+      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.c(Some(size))
       case _                                => throw new RuntimeException("This should not happen")
     }
   }

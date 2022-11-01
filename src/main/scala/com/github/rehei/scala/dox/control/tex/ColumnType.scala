@@ -4,9 +4,9 @@ import java.text.DecimalFormat
 
 object ColumnType {
   
-  def l(size: Double) = slashed("""\raggedright""", size)
-  def c(size: Double) = slashed("""\centering""", size)
-  def r(size: Double) = slashed("""\raggedleft""", size)
+  def l(size: Option[Double]) = slashed("""\raggedright""", size)
+  def c(size: Option[Double]) = slashed("""\centering""", size)
+  def r(size: Option[Double]) = slashed("""\raggedleft""", size)
   
   def lMinipage(text:String) = s"""\\begin{flushleft}${text}\\end{flushleft}"""
   def cMinipage(text:String) = s"""\\begin{center}${text}\\end{center}"""
@@ -14,8 +14,8 @@ object ColumnType {
   
   def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
   
-  protected def slashed(command: String, size: Double) = {
-    ">{" + command + """\arraybackslash""" + "}p" + sizeString(size)
+  protected def slashed(command: String, size: Option[Double]) = {
+    ">{" + command + """\arraybackslash""" + "}p" + size.map(sizeString(_)).getOrElse("")
   }
   
   protected def sizeString(size: Double) = {
