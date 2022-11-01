@@ -207,7 +207,6 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def getHeadAlignmentMinipage(node: DoxTableKeyNode, text: String) = {
-    val size = node.dimension().width
     node.format.alignment match {
       case DoxTableKeyNodeAlignment.LEFT    => ColumnType.lMinipage(text) //"l"
       case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.rMinipage(text) //"r"
@@ -216,6 +215,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
       case _                                => throw new RuntimeException("This should not happen")
     }
   }
+  
   protected def getHeadAlignment(node: DoxTableKeyNode) = {
     val size = node.dimension().width
     node.format.alignment match {
