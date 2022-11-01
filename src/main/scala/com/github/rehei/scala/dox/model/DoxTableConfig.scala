@@ -60,9 +60,9 @@ abstract class DoxTableConfig(val position: String, val fill: Boolean, val fullp
   protected def getTexAlignment(node: DoxTableKeyNode) = {
     val size = node.dimension().width
     node.format.alignment match {
-      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(size)
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(size)
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(size)
+      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(Some(size))
+      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(Some(size))
+      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(Some(size))
       case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.numeric(size)
       case _                                => throw new RuntimeException("This should not happen")
     }
