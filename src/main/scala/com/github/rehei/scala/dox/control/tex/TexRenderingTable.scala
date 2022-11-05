@@ -183,11 +183,11 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def legendPlaceholderSpace() = {
-    "\\hspace{3.6em} "
+    \ hspace { "3.6em" }
   }
 
   protected def legendVerticalOffset() = {
-    \ plain { "\n\\vspace*{0.2cm}" + "\\\\ \n" }
+    \ vspace { "0.2cm" }
   }
 
   protected def renderValue(values: Seq[TextAST]) = {
@@ -195,7 +195,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def renderSpace() = {
-    \ plain { "\\rule{0pt}{3ex}" }
+    \ rule & { "0pt" } { "3ex" } 
   }
 
   protected def renderRule() = {

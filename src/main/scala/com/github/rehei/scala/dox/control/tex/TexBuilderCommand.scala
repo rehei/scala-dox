@@ -25,6 +25,7 @@ class TexBuilderCommand(ast: TexAST) {
   object subsubsection$ extends TexMarkupObject(false)
   object hline extends TexMarkupObject(false)
   object vspace extends TexMarkupObject(false)
+  object hspace extends TexMarkupObject(false)
 
   object clearpage extends TexMarkupObject(false)
   object newpage extends TexMarkupObject(false)
@@ -41,6 +42,9 @@ class TexBuilderCommand(ast: TexAST) {
   object item extends TexMarkupObject(true)
   object ref extends TexMarkupObject(true)
 
+  object rule extends TexMarkupObject(true)
+
+  
   object cite extends TexMarkupObject(true)
   object citep extends TexMarkupObject(true)
   object citet extends TexMarkupObject(true)
