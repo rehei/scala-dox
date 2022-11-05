@@ -101,39 +101,25 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
   protected def asMappedTableHeadKey(value: DoxTableHeadRowKeyWithOffset) = {
 
-    val offset = value.offset
-    val target = value.offset + value.key.size - 1
-
     val ruleOption = {
       if (value.key.hasNonEmptyChildren) {
-        Some(\\ cmidrule & { s"${value.offset}-${target}" })
+
+        val offset = value.offset
+        val target = value.offset + value.key.size - 1
+
+        Some(\\ cmidrule & { s"${offset}-${target}" })
       } else {
         None
       }
     }
-    val text = Text2TEX(false).generate(value.key.node.textHead())
 
-    val textFormatted = {
-      if (value.key.node.format.isRotated) {
-        (\\ rotatebox & { 45 } { text }).generate()
-      } else {
-        getHeadAlignmentMinipage(value.key.node, text)
-      }
-    }
-    val size = {
-      if (value.key.size > 1) {
-        value.key.size
-      } else {
-        0
-      }
-    }
-    val multicolumnWidth = "\\dimexpr(\\tabcolsep*" + size + ")+" + value.key.width + "cm"
+    val wrappedKey = TexHead(value, style)
 
     val expression = {
       if (value.key.hasNonEmptyChildren) {
-        \\ multicolumn & { value.key.size } { "c" } { style.get(multicolumnWidth, textFormatted) }
+        \\ multicolumn & { wrappedKey.columnCount } { "c" } { wrappedKey.content2 }
       } else {
-        \\ multicolumn & { value.key.size } { getHeadAlignment(value.key.node) } { style.get(multicolumnWidth, textFormatted) }
+        \\ multicolumn & { wrappedKey.columnCount } { getHeadAlignment(value.key.node) } { wrappedKey.content }
       }
     }
 
@@ -195,7 +181,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def renderSpace() = {
-    \ rule & { "0pt" } { "3ex" } 
+    \ rule & { "0pt" } { "3ex" }
   }
 
   protected def renderRule() = {
@@ -215,7 +201,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
       case _                                => throw new RuntimeException("This should not happen")
     }
   }
-  
+
   protected def getHeadAlignmentNoSize(node: DoxTableKeyNode) = {
     node.format.alignment match {
       case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l()
@@ -225,7 +211,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
       case _                                => throw new RuntimeException("This should not happen")
     }
   }
-  
+
   protected def getHeadAlignment(node: DoxTableKeyNode) = {
     val size = node.dimension().width
     node.format.alignment match {
