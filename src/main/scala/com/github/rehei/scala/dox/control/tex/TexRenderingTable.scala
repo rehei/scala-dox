@@ -29,11 +29,11 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     }
     def midrule() {
       if (model.hasLegend) {
-        cmidrule()
+        renderMidRule()
       }
     }
     def bottomrule() {
-      cmidrule()
+      renderMidRule()
     }
   }
   protected case class InnerTableOff() extends TableMode {
@@ -43,7 +43,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     }
     def midrule() {
       if (model.hasLegend) {
-        cmidrule()
+        renderMidRule()
       }
     }
     def bottomrule() {
@@ -139,7 +139,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     for (row <- model.body()) {
       row match {
         case DoxValue(value) => renderValue(value)
-        case DoxRule         => renderRule()
+        case DoxRule         => renderMidRule()
         case DoxSpace        => renderSpace()
         case DoxLegend(_)    =>
       }
@@ -184,12 +184,8 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     \ rule & { "0pt" } { "3ex" }
   }
 
-  protected def renderRule() = {
-    cmidrule()
-  }
-
-  protected def cmidrule() = {
-    \ plain { (\\ cmidrule { s"1-${model.dimension().size}" }).generate() + "\n" }
+  protected def renderMidRule() = {
+    \ cmidrule { s"1-${model.dimension().size}" }
   }
 
   protected def getHeadAlignmentMinipage(node: DoxTableKeyNode, text: String) = {

@@ -13,6 +13,8 @@ class TexBuilderCommand(ast: TexAST) {
   object toprule extends TexMarkupObject(false)
   object midrule extends TexMarkupObject(false)
   object bottomrule extends TexMarkupObject(false)
+  object cmidrule extends TexMarkupObject(false)
+
   object includegraphics extends TexMarkupObject(false)
   object caption extends TexMarkupObject(false)
   object chapter extends TexMarkupObject(false)
