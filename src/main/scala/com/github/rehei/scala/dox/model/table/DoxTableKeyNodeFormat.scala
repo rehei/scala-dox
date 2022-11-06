@@ -10,10 +10,10 @@ object DoxTableKeyNodeFormat {
 
   }
 
-  val LEFT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.LEFT, false) with Writeable
-  val RIGHT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.RIGHT, false) with Writeable
-  val CENTER = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.CENTER, false) with Writeable
-  val NUMERIC = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.NUMERIC, false) with Writeable
+  val LEFT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignLeft, false) with Writeable
+  val RIGHT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignRight, false) with Writeable
+  val CENTER = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignCenter, false) with Writeable
+  val NUMERIC = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignNumeric, false) with Writeable
   
 }
 

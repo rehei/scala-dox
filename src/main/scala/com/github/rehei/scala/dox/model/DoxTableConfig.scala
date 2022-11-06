@@ -4,7 +4,6 @@ import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
-import com.github.rehei.scala.dox.control.tex.ColumnType
 
 object DoxTableConfig {
 
@@ -59,13 +58,7 @@ abstract class DoxTableConfig(val position: String, val fill: Boolean, val fullp
 
   protected def getTexAlignment(node: DoxTableKeyNode) = {
     val size = node.dimension().width
-    node.format.alignment match {
-      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.l(size)
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.r(size)
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.c(size)
-      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.numeric(size)
-      case _                                => throw new RuntimeException("This should not happen")
-    }
+    node.format.alignment.texAlignment(size)
   }
 
 }

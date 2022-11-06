@@ -12,16 +12,14 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
   }
 
   protected val expressionText = {
-
     if (value.key.node.format.isRotated) {
       "\\rotatebox{45}{" + text + " }"
     } else {
-      getHeadAlignmentMinipage(value.key.node, text)
+      value.key.node.format.alignment.texAlignmentMinipage(text)
     }
   }
 
   protected val expressionDimension = {
-
     val tabcolsepCount = {
       (value.key.size - 1) * 2
     }
@@ -39,16 +37,6 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
 
   val content = {
     style.get(expressionDimension, expressionText)
-  }
-
-  protected def getHeadAlignmentMinipage(node: DoxTableKeyNode, text: String) = {
-    node.format.alignment match {
-      case DoxTableKeyNodeAlignment.LEFT    => ColumnType.lMinipage(text)
-      case DoxTableKeyNodeAlignment.RIGHT   => ColumnType.rMinipage(text)
-      case DoxTableKeyNodeAlignment.CENTER  => ColumnType.cMinipage(text)
-      case DoxTableKeyNodeAlignment.NUMERIC => ColumnType.cMinipage(text)
-      case _                                => throw new RuntimeException("This should not happen")
-    }
   }
 
 }
