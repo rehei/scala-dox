@@ -41,10 +41,6 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
     style.get(expressionDimension, expressionText)
   }
 
-  val content2 = {
-    style.get(expressionDimension, text)
-  }
-
   protected def getHeadAlignmentMinipage(node: DoxTableKeyNode, text: String) = {
     node.format.alignment match {
       case DoxTableKeyNodeAlignment.LEFT    => ColumnType.lMinipage(text)

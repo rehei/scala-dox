@@ -4,17 +4,13 @@ import java.text.DecimalFormat
 
 object ColumnType {
 
-  def l() = "l"
-  def c() = "c"
-  def r() = "r"
+  def lMinipage(text: String) = environment("flushleft", text)
+  def cMinipage(text: String) = environment("center", text)
+  def rMinipage(text: String) = environment("flushright", text)
 
   def l(size: Double) = slashed("""\raggedright""", size)
   def c(size: Double) = slashed("""\centering""", size)
   def r(size: Double) = slashed("""\raggedleft""", size)
-
-  def lMinipage(text: String) = environment("flushleft", text)
-  def cMinipage(text: String) = environment("center", text)
-  def rMinipage(text: String) = environment("flushright", text)
 
   def numeric(size: Double) = "S[table-number-alignment=center, table-column-width=" + size + "cm]"
 
@@ -30,7 +26,7 @@ object ColumnType {
 
     "p{" + stringValue + "cm}"
   }
-  
+
   protected def environment(name: String, content: String) = {
     s"""\\begin{${name}}${content}\\end{${name}}"""
   }
