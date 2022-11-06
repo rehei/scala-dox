@@ -21,6 +21,7 @@ class TexRenderingTableMarkup(protected val model: DoxTableMatrix, markup: TexMa
       renderMidRule()
     }
   }
+  
   protected case class InnerTableOff() extends TableMode {
     def toprule() {
       \ toprule

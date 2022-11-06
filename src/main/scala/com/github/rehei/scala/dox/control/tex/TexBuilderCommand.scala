@@ -14,6 +14,7 @@ class TexBuilderCommand(ast: TexAST) {
   object midrule extends TexMarkupObject(false)
   object bottomrule extends TexMarkupObject(false)
   object cmidrule extends TexMarkupObject(false)
+  object multicolumn extends TexMarkupObject(false)
 
   object includegraphics extends TexMarkupObject(false)
   object caption extends TexMarkupObject(false)

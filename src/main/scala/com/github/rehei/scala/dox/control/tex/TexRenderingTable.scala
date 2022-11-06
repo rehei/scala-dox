@@ -25,7 +25,6 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   import tmpMarkup._
 
   protected val tableMarkup = new TexRenderingTableMarkup(model, tmpMarkup)
-
   protected val tableMode = tableMarkup.getTableMode(isInnerTable)
 
   def createTableString() = {
@@ -136,10 +135,12 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
   protected def legendContent(content: String, isFirst: Boolean) {
     if (isFirst) {
-      \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\rule{0pt}{.7cm}\\scriptsize \\textit {" + content + "}" }).generate() + "\\\\" + "\n" }
+      \ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\rule{0pt}{.7cm}\\scriptsize \\textit {" + content + "}" }
     } else {
-      \ plain { (\\ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + content + "}" }).generate() + "\\\\" + "\n" }
+      \ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + content + "}" }
     }
+    
+    \ plain {"\\\\" + "\n"}
   }
 
 }
