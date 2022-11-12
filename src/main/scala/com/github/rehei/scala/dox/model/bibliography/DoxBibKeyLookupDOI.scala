@@ -10,24 +10,15 @@ import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
 import com.github.rehei.scala.dox.model.DoxValueDOI
 import com.github.rehei.scala.dox.util.NormalizeUtils
 
-class DoxBibKeyLookupDOI(bibKeyName: String, doi: DoxValueDOI, 
+class DoxBibKeyLookupDOI(bibKeyName: String, doi: DoxValueDOI,
                          yearOption:  Option[Long],
                          byOption:    Option[String],
                          titleOption: Option[String]) extends DoxBibKeyLookupBase {
 
   def resolveValidated() = {
-    val content = {
-      Http(doi.value)
-        .header("Accept", "application/x-bibtex")
-        .option(HttpOptions.followRedirects(true))
-        .timeout(50 * 1000, 100 * 1000)
-        .asString
-    }
 
-    if (!content.isSuccess) {
-      throw new RuntimeException("Could not resolve DOI" + content.body)
-    }
-    val database = DoxBibtexParse().parse(content.body)
+    val handle = DoxBibKeyLookupDOIHandle(doi)
+    val database = DoxBibtexParse().parse(handle.content())
 
     val result = DoxBibKeyLookupResult(bibKeyName, database)
 
@@ -51,5 +42,7 @@ class DoxBibKeyLookupDOI(bibKeyName: String, doi: DoxValueDOI,
       entry.expectNormalized(BibTeXEntry.KEY_TITLE, title)
     }
   }
+
+
 
 }
