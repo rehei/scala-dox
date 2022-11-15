@@ -120,27 +120,11 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def appendTableLegend() {
-    var isFirst = true
-    for (row <- model.legend()) {
-      for (item <- row.content) {
-        if (isFirst) {
-          legendContent(Text2TEX(false).generate(TextFactory.text("Legende: ").append(item)), isFirst)
-        } else {
-          legendContent(tableMarkup.legendPlaceholderSpace() + Text2TEX(false).generate((item)), isFirst)
-        }
-        isFirst = false
-      }
+    if (model.hasLegend) {
+      val legend = new TexRenderingTableLegend(model, "Legende").createTableString()
+      \ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\rule{0pt}{.7cm}" + legend }
+      \ plain { "\\\\" }
     }
-  }
-
-  protected def legendContent(content: String, isFirst: Boolean) {
-    if (isFirst) {
-      \ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\rule{0pt}{.7cm}\\scriptsize \\textit {" + content + "}" }
-    } else {
-      \ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\scriptsize \\textit {" + content + "}" }
-    }
-    
-    \ plain {"\\\\" + "\n"}
   }
 
 }

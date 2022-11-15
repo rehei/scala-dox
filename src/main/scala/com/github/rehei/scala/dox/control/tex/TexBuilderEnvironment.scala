@@ -37,6 +37,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
     object mdframed extends SomeTexEnvironment
     object center extends SomeTexEnvironment
     object tabularx extends SomeTexEnvironment
+    object tabular extends SomeTexEnvironment
     object tabular$ extends SomeTexEnvironment
     object eqnarray extends SomeTexEnvironment
     object align extends SomeTexEnvironment
