@@ -46,7 +46,10 @@ abstract class DoxTableKeyNodeAlignment {
 
   def texAlignmentMinipage(text: String): String
   def texAlignment(size: Double): String
-
+  def texAlignmentColumnhead() = {
+    "c"
+  }
+  
   protected def slashed(command: String, size: Double) = {
     ">{" + command + """\arraybackslash""" + "}" + sizeString(size)
   }

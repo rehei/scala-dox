@@ -15,10 +15,7 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
     if (value.key.node.format.isRotated) {
       "\\rotatebox{45}{" + text + " }"
     } else {
-      style match {
-        case TexRenderingStyle.NONE => text
-        case _                      => value.key.node.format.alignment.texAlignmentMinipage(text)
-      }
+      style.minipageAlignment(value.key.node.format.alignment, text)
     }
   }
 
@@ -28,6 +25,10 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
     }
 
     "\\dimexpr(\\tabcolsep*" + tabcolsepCount + ")+" + value.key.width + "cm"
+  }
+
+  val columnAlignment = {
+    style.multicolumnAlignment(value.key.node.format.alignment)
   }
 
   val columnCountOffset = {

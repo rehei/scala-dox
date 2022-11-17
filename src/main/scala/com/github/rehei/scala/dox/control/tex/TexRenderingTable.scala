@@ -82,7 +82,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     }
 
     val expression = {
-      \\ multicolumn & { wrappedKey.columnCount } { "c" } { wrappedKey.content }
+      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignment } { wrappedKey.content }
     }
 
     MappedTableHeadKey(expression, ruleOption)
@@ -94,7 +94,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     }
 
     val expression = {
-      \\ multicolumn & { wrappedKey.columnCount } { "c" } { wrappedKey.content }
+      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignment } { wrappedKey.content }
     }
 
     MappedTableHeadKey(expression, ruleOption)
