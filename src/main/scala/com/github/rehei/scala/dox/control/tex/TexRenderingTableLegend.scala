@@ -31,7 +31,7 @@ class TexRenderingTableLegend(protected val model: DoxTableMatrix, label: String
 
   protected def createLegendTable() {
     columnSeparation()
-    $ { _ tabular { "ll" } } {
+    $ { _ tabular { "@{}ll" } } {
       appendTableLegend()
     }
   }
