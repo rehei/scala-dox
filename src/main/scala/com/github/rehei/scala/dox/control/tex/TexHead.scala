@@ -15,7 +15,10 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
     if (value.key.node.format.isRotated) {
       "\\rotatebox{45}{" + text + " }"
     } else {
-      value.key.node.format.alignment.texAlignmentMinipage(text)
+      style match {
+        case TexRenderingStyle.NONE => text
+        case _                      => value.key.node.format.alignment.texAlignmentMinipage(text)
+      }
     }
   }
 

@@ -128,13 +128,9 @@ class TexRendering(
   protected def internalTable(table: DoxViewModelTableSequence) {
 
     val input = tableHandle.handle(table)
-
     usingFloatBarrier {
-      $ { _ table$ & { ###("H") } } {
+      $ { _ table & { ###("H") } } {
         tableContent(input)
-        \ centering;
-        \ caption & { escape(input.reference.caption) }
-        \ input { input.target.asString() }
       }
     }
 
@@ -143,7 +139,6 @@ class TexRendering(
   protected def internalTable(table: DoxViewModelTable[_]) {
 
     val input = tableHandle.handle(table)
-
     usingFloatBarrier {
       $ { _.using.table(table.model.config.fullpage).apply(###(table.model.config.position)) } {
         tableContent(input)
