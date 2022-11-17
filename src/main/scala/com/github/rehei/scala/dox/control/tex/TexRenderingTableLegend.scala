@@ -14,7 +14,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.model.DoxTableConfig
 
-class TexRenderingTableLegend(protected val model: DoxTableMatrix, label: String) {
+class TexRenderingTableLegend(protected val model: DoxTableMatrix) {
 
   import DoxContent._
 
@@ -38,8 +38,12 @@ class TexRenderingTableLegend(protected val model: DoxTableMatrix, label: String
 
   protected def appendTableLegend() {
     val tableLegend = {
-      (for (row <- model.legend()) yield {
-        legendHead(row.content.head) + row.content.tail.map(legendTail).mkString
+      (for (row <- model.legend(); (content, index) <- row.content.zipWithIndex) yield {
+
+        val isFirst = (index == 0)
+
+        texRow(isFirst, content)
+
       }).mkString
     }
     \ plain { tableLegend }
@@ -49,17 +53,17 @@ class TexRenderingTableLegend(protected val model: DoxTableMatrix, label: String
     \ plain { "\\setlength{\\tabcolsep}{0.1em}" }
   }
 
-  protected def legendHead(textItem: TextAST) = {
-    Seq(label + ": ", Text2TEX(false).generate(textItem)).map(markup).mkString(" & ") + lineEnd
-  }
+  protected def texRow(isFirst: Boolean, content: TextAST) = {
+    val texPrefix = if (isFirst) { "Legende" } else { "" }
+    val texContent = Text2TEX(false).generate(content)
 
-  protected def legendTail(textItem: TextAST) = {
-    " & " + markup(Text2TEX(false).generate((textItem))) + lineEnd
+    Seq(texPrefix, texContent).map(markup).mkString(" & ") + lineEnd
   }
 
   protected def markup(content: String) = {
     "\\scriptsize \\textit {" + content + "}"
   }
+
   protected def lineEnd() = {
     "\\\\" + "\n"
   }
