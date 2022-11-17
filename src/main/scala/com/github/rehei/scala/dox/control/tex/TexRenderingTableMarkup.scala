@@ -62,8 +62,4 @@ class TexRenderingTableMarkup(protected val model: DoxTableMatrix, markup: TexMa
     \ rule & { "0pt" } { "3ex" }
   }
 
-  def legendPlaceholderSpace() = {
-    \ hspace { "3.6em" }
-  }
-
 }
