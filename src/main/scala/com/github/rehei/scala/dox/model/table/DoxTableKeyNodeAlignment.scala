@@ -11,8 +11,11 @@ object DoxTableKeyNodeAlignment {
     override def texAlignment(size: Double) = {
       slashed("""\raggedright""", size)
     }
+    override def texAlignmentColumnhead() = {
+      "l"
+    }
   }
-  
+
   object AlignRight extends DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       environment("flushright", text)
@@ -20,8 +23,11 @@ object DoxTableKeyNodeAlignment {
     override def texAlignment(size: Double) = {
       slashed("""\raggedleft""", size)
     }
+    override def texAlignmentColumnhead() = {
+      "r"
+    }
   }
-  
+
   object AlignCenter extends DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       environment("center", text)
@@ -29,14 +35,20 @@ object DoxTableKeyNodeAlignment {
     override def texAlignment(size: Double) = {
       slashed("""\centering""", size)
     }
+    override def texAlignmentColumnhead() = {
+      "c"
+    }
   }
-  
+
   object AlignNumeric extends DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       AlignCenter.texAlignmentMinipage(text)
     }
     override def texAlignment(size: Double) = {
       "S[table-number-alignment=center, table-column-width=" + size + "cm]"
+    }
+    override def texAlignmentColumnhead() = {
+      AlignCenter.texAlignmentColumnhead()
     }
   }
 
@@ -46,10 +58,8 @@ abstract class DoxTableKeyNodeAlignment {
 
   def texAlignmentMinipage(text: String): String
   def texAlignment(size: Double): String
-  def texAlignmentColumnhead() = {
-    "c"
-  }
-  
+  def texAlignmentColumnhead(): String
+
   protected def slashed(command: String, size: Double) = {
     ">{" + command + """\arraybackslash""" + "}" + sizeString(size)
   }

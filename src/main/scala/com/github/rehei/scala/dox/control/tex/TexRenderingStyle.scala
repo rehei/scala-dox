@@ -21,7 +21,7 @@ object TexRenderingStyle {
       "\\columnBox{" + width + "}{" + text + "}"
     }
     def multicolumnAlignment(alignment: DoxTableKeyNodeAlignment) = {
-      "c"
+      alignment.texAlignmentColumnhead()
     }
     def minipageAlignment(alignment: DoxTableKeyNodeAlignment, text: String) = {
       alignment.texAlignmentMinipage(text)
@@ -33,7 +33,7 @@ object TexRenderingStyle {
       "\\columnBoxFramed{" + width + "}{" + text + "}"
     }
     def multicolumnAlignment(alignment: DoxTableKeyNodeAlignment) = {
-      "c"
+      alignment.texAlignmentColumnhead()
     }
     def minipageAlignment(alignment: DoxTableKeyNodeAlignment, text: String) = {
       alignment.texAlignmentMinipage(text)
