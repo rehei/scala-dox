@@ -4,6 +4,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 import com.github.rehei.scala.dox.model.table.DoxTable
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
+import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 
 object DoxTableConfig {
 
@@ -43,7 +44,7 @@ abstract class DoxTableConfig(val position: String, val fill: Boolean, val fullp
     }
   }
 
-  def computeFormatString(model: DoxTableMatrix): String = {
+  def computeFormatString(model: DoxTableMatrix, style: TexRenderingStyle) = {
 
     val prefix = {
       if (fill) {
@@ -52,13 +53,12 @@ abstract class DoxTableConfig(val position: String, val fill: Boolean, val fullp
         ""
       }
     }
+    
+    val settings = {
+      model.dimension().map(node => style.texAlignmentHeadWithSize(node)).mkString
+    }
 
-    prefix ++ model.dimension().map(node => getTexAlignment(node)).mkString
-  }
-
-  protected def getTexAlignment(node: DoxTableKeyNode) = {
-    val size = node.dimension().width
-    node.format.alignment.texAlignment(size)
+    prefix ++ settings
   }
 
 }

@@ -33,7 +33,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def create() {
-    $ { _ tabular$ & { model.config.computeWidth(model) } { model.config.computeFormatString(model) } } {
+    $ { _ tabular$ & { model.config.computeWidth(model) } { model.config.computeFormatString(model, style) } } {
       tableMode.toprule()
       appendTableHead()
       \ midrule;
@@ -82,7 +82,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     }
 
     val expression = {
-      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignment } { wrappedKey.content }
+      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignmentShort } { wrappedKey.content }
     }
 
     MappedTableHeadKey(expression, ruleOption)
@@ -94,7 +94,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     }
 
     val expression = {
-      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignment } { wrappedKey.content }
+      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignmentShort } { wrappedKey.content }
     }
 
     MappedTableHeadKey(expression, ruleOption)

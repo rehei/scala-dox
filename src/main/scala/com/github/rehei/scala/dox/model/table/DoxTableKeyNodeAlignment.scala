@@ -8,10 +8,10 @@ object DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       environment("flushleft", text)
     }
-    override def texAlignment(size: Double) = {
+    override def texAlignmentHeadWithSize(size: Double) = {
       slashed("""\raggedright""", size)
     }
-    override def texAlignmentColumnhead() = {
+    override def texAlignmentHeadShort() = {
       "l"
     }
   }
@@ -20,10 +20,10 @@ object DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       environment("flushright", text)
     }
-    override def texAlignment(size: Double) = {
+    override def texAlignmentHeadWithSize(size: Double) = {
       slashed("""\raggedleft""", size)
     }
-    override def texAlignmentColumnhead() = {
+    override def texAlignmentHeadShort() = {
       "r"
     }
   }
@@ -32,10 +32,10 @@ object DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       environment("center", text)
     }
-    override def texAlignment(size: Double) = {
+    override def texAlignmentHeadWithSize(size: Double) = {
       slashed("""\centering""", size)
     }
-    override def texAlignmentColumnhead() = {
+    override def texAlignmentHeadShort() = {
       "c"
     }
   }
@@ -44,11 +44,11 @@ object DoxTableKeyNodeAlignment {
     override def texAlignmentMinipage(text: String) = {
       AlignCenter.texAlignmentMinipage(text)
     }
-    override def texAlignment(size: Double) = {
+    override def texAlignmentHeadWithSize(size: Double) = {
       "S[table-number-alignment=center, table-column-width=" + size + "cm]"
     }
-    override def texAlignmentColumnhead() = {
-      AlignCenter.texAlignmentColumnhead()
+    override def texAlignmentHeadShort() = {
+      AlignCenter.texAlignmentHeadShort()
     }
   }
 
@@ -57,8 +57,8 @@ object DoxTableKeyNodeAlignment {
 abstract class DoxTableKeyNodeAlignment {
 
   def texAlignmentMinipage(text: String): String
-  def texAlignment(size: Double): String
-  def texAlignmentColumnhead(): String
+  def texAlignmentHeadWithSize(size: Double): String
+  def texAlignmentHeadShort(): String
 
   protected def slashed(command: String, size: Double) = {
     ">{" + command + """\arraybackslash""" + "}" + sizeString(size)

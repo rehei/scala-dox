@@ -5,7 +5,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
 import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 
-protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRenderingStyle) {
+case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRenderingStyle) {
 
   protected val text = {
     Text2TEX(false).generate(value.key.node.textHead())
@@ -15,7 +15,7 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
     if (value.key.node.format.isRotated) {
       "\\rotatebox{45}{" + text + " }"
     } else {
-      style.minipageAlignment(value.key.node.format.alignment, text)
+      style.texAlignmentMinipage(value.key.node, text)
     }
   }
 
@@ -27,8 +27,8 @@ protected case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRend
     "\\dimexpr(\\tabcolsep*" + tabcolsepCount + ")+" + value.key.width + "cm"
   }
 
-  val columnAlignment = {
-    style.multicolumnAlignment(value.key.node.format.alignment)
+  val columnAlignmentShort = {
+    style.texAlignmentHeadShort(value.key.node)
   }
 
   val columnCountOffset = {
