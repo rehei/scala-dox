@@ -22,6 +22,10 @@ case class TextAST(sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
+  def textAndArrowRight(in: String) = {
+    this.copy(sequence = sequence :+ TextObjectTextWithArrowRight(in))
+  }
+
   def subscript(in: String): TextAST = {
     this.subscript(TextFactory.text(in))
   }
