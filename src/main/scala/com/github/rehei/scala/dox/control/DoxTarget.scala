@@ -22,4 +22,8 @@ case class DoxTarget(protected val _baseDirectory: Path, protected val subDirect
     targetSecondary.normalize()
   }
   
+  def updateSubDirectory(update: String) = {
+    this.copy(subDirectoryExtension = update)
+  }
+  
 }

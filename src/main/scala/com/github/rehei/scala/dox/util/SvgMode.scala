@@ -5,8 +5,10 @@ object SvgMode {
   object PNG extends SvgMode {
 
     def command(variable: String) = {
-      "--export-png=${" + variable + "%.*}.png"
+      "--export-png=../" + directory + "/${" + variable + "%.*}.png"
     }
+
+    def directory = "tex-svg-png"
 
     def file(name: String) = {
       name + ".png"
@@ -17,20 +19,24 @@ object SvgMode {
   object PDF extends SvgMode {
 
     def command(variable: String) = {
-      "--export-pdf=${" + variable + "%.*}.pdf"
+      "--export-pdf=../" + directory + "/${" + variable + "%.*}.pdf"
     }
+
+    def directory = "tex-svg-pdf"
 
     def file(name: String) = {
       name + ".pdf"
     }
 
   }
-  
+
   object EPS extends SvgMode {
 
     def command(variable: String) = {
-      "--export-eps=${" + variable + "%.*}.eps"
+      "--export-eps=../" + directory + "/${" + variable + "%.*}.eps"
     }
+
+    def directory = "tex-svg-eps"
 
     def file(name: String) = {
       name + ".eps"
@@ -43,6 +49,8 @@ object SvgMode {
 trait SvgMode {
 
   def command(variable: String): String
+
+  def directory: String
 
   def file(name: String): String
 
