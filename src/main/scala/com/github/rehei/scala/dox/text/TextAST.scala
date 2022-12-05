@@ -38,10 +38,6 @@ case class TextAST(sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectItalic(in))
   }
 
-  def newline() = {
-    this.copy(sequence = sequence :+ TextObjectNewline())
-  }
-
   def tab() = {
     this.copy(sequence = sequence :+ TextObjectTab())
   }
