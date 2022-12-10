@@ -13,6 +13,7 @@ import com.github.rehei.scala.dox.text.TextObjectDoubleStruck
 import com.github.rehei.scala.dox.text.TextObjectGreekLetter
 import com.github.rehei.scala.dox.text.TextObjectGreekLetterWithCase
 import com.github.rehei.scala.dox.text.TextObjectItalic
+import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
 import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
@@ -23,6 +24,7 @@ object Text2TEX extends Text2TEX(false) {
   protected trait MathSensitiveParsing {
     def mathEnvironment(text: String): String
     def subscript(text: String): String
+    def newline: String
   }
 }
 
@@ -34,12 +36,14 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
     def mathEnvironment(text: String) = { text }
     def subscript(text: String) = "_{" + text + "}"
+    def newline = "\\\\"
 
   }
 
   case class InTextMode() extends Text2TEX.MathSensitiveParsing {
     def mathEnvironment(text: String) = "$" + text + "$"
     def subscript(text: String) = "\\textsubscript{" + text + "}"
+    def newline = "\\newline{}"
   }
 
   protected val mode = {
@@ -91,6 +95,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
   }
 
   SpecialSignParser[TextObjectSpaceSmall]("\\,")
+  SpecialSignParser[TextObjectNewline](mode.newline)
   SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
   SpecialSignParser[TextObjectArrowUp](mode.mathEnvironment("\\uparrow"))
 
