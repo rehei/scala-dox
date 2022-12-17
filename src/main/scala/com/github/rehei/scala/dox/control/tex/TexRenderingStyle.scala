@@ -29,17 +29,21 @@ object TexRenderingStyle {
 }
 
 abstract class TexRenderingStyle {
+  
   def get(width: String, text: String): String
 
   def texAlignmentHeadWithSize(node: DoxTableKeyNode) = {
     val size = node.dimension().width
     node.format.alignment.texAlignmentHeadWithSize(size)
   }
+  
   def texAlignmentHeadShort(node: DoxTableKeyNode) = {
     node.format.alignment.texAlignmentHeadShort()
   }
+  
   def texAlignmentMinipage(node: DoxTableKeyNode, text: String) = {
     node.format.alignment.texAlignmentMinipage(text)
   }
+  
 }
 
