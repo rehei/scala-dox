@@ -3,70 +3,19 @@ package com.github.rehei.scala.dox.control.tex
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
 import com.github.rehei.scala.dox.control.DoxHandleSvg
 import java.nio.file.Path
+import com.github.rehei.scala.dox.control.DoxHandleSvgConfig
 
-class TexRenderingSVG(include: String, titleOption: Option[String]) {
-
-  protected val tmpAST = new TexAST
-  protected val tmpMarkup = new TexMarkupFactory(tmpAST)
-  import tmpMarkup._
-
-  abstract class TexWrappingSvg() {
-
-    def generate(): Unit
-
-  }
-
-  case class TitleWrapping() extends TexWrappingSvg {
-
-    protected val factor = 0.9
-    protected val tableTotalSize = factor + "\\textwidth"
-    protected val columnAlignment = "l"
-
-    override def generate() = {
-      \ vspace { "4pt" };
-      \ centering;
-      appendTitle()
-      \ includegraphics { include }
-      appendBottom()
-    }
-
-    protected def appendTitle() {
-      $ { _ tabular$ & { (tableTotalSize) } { columnAlignment } } {
-        \ toprule;
-        \ plain { titleOption.getOrElse(throw new IllegalArgumentException("Title missing")) + "\\\\" }
-        \ midrule;
-      }
-    }
-
-    protected def appendBottom() {
-      $ { _ tabular$ & { (tableTotalSize) } { columnAlignment } } {
-        \ bottomrule;
-      }
-    }
-  }
-
-  case class NoTitleWrapping() extends TexWrappingSvg {
-
-    override def generate() = {
-      \ vspace { "4pt" };
-      \ centering;
-      \ includegraphics { include }
-    }
-
-  }
+class TexRenderingSVG(config: DoxHandleSvgConfig, include: String, titleOption: Option[String]) {
 
   def generate() = {
-
     val texWrapping = {
-      if (titleOption.isDefined) {
-        TitleWrapping()
-      } else {
-        NoTitleWrapping()
+      titleOption.map {
+        title => TexRenderingSvgWrappedTitle(include, config, title)
+      } getOrElse {
+        TexRenderingSvgWrappedStandalone(include)
       }
     }
 
-    texWrapping.generate()
-
-    tmpAST.build()
+    texWrapping.generate().build()
   }
 }

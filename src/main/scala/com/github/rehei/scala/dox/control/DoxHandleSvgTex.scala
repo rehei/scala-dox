@@ -13,7 +13,7 @@ import scala.xml.Xhtml
 import scala.xml.NodeSeq
 import com.github.rehei.scala.dox.model.DoxInputReference
 
-case class DoxHandleSvgTex(target: DoxTarget) {
+case class DoxHandleSvgTex(target: DoxTarget, config: DoxHandleSvgConfig) {
 
   protected val svgHandle = DoxHandleSvg(target, SvgMode.PDF)
   protected val serialize = SerializeUtils(target, ".tex")
@@ -39,7 +39,7 @@ case class DoxHandleSvgTex(target: DoxTarget) {
   }
 
   protected def handleTex(reference: DoxInputReference, path: String, titleOption: Option[String]) = {
-    val content = new TexRenderingSVG(path, titleOption).generate()
+    val content = new TexRenderingSVG(config, path, titleOption).generate()
     val file = DoxInputData(reference, content)
     serialize.write(file)
   }
