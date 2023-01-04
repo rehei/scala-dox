@@ -6,18 +6,17 @@ import scala.reflect.ClassTag
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.TextObject
 import com.github.rehei.scala.dox.text.TextObjectArrowRight
-import com.github.rehei.scala.dox.text.TextObjectArrowUp
 import com.github.rehei.scala.dox.text.TextObjectCase
+import com.github.rehei.scala.dox.text.TextObjectCite
 import com.github.rehei.scala.dox.text.TextObjectDefault
 import com.github.rehei.scala.dox.text.TextObjectDoubleStruck
 import com.github.rehei.scala.dox.text.TextObjectGreekLetter
 import com.github.rehei.scala.dox.text.TextObjectGreekLetterWithCase
 import com.github.rehei.scala.dox.text.TextObjectItalic
 import com.github.rehei.scala.dox.text.TextObjectNewline
+import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
-import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
-import com.github.rehei.scala.dox.text.TextObjectCite
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -97,7 +96,6 @@ case class Text2TEX protected (isMathMode: Boolean) {
   SpecialSignParser[TextObjectSpaceSmall]("\\,")
   SpecialSignParser[TextObjectNewline](mode.newline)
   SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
-  SpecialSignParser[TextObjectArrowUp](mode.mathEnvironment("\\uparrow"))
 
   protected val GREEK_LOOKUP = {
     Map(

@@ -46,10 +46,6 @@ case class TextAST(sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectArrowRight())
   }
 
-  def arrowUp() = {
-    this.copy(sequence = sequence :+ TextObjectArrowUp())
-  }
-
   def rule() = {
     this.copy(sequence = sequence :+ TextObjectRule())
   }
