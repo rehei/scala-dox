@@ -4,17 +4,22 @@ object DoxTableKeyNodeFormat {
 
   trait Writeable extends DoxTableKeyNodeFormat {
 
-    val ROTATE = {
-      DoxTableKeyNodeFormat(this.alignment, true)
+    val ROTATE_90 = {
+      DoxTableKeyNodeFormat(this.alignment, Some(90))
     }
 
+    val ROTATE_45 = {
+      DoxTableKeyNodeFormat(this.alignment, Some(45))
+    }
+
+    
   }
 
-  val LEFT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignLeft, false) with Writeable
-  val RIGHT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignRight, false) with Writeable
-  val CENTER = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignCenter, false) with Writeable
-  val NUMERIC = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignNumeric, false) with Writeable
+  val LEFT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignLeft, None) with Writeable
+  val RIGHT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignRight, None) with Writeable
+  val CENTER = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignCenter, None) with Writeable
+  val NUMERIC = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignNumeric, None) with Writeable
   
 }
 
-case class DoxTableKeyNodeFormat protected (alignment: DoxTableKeyNodeAlignment, isRotated: Boolean)
+case class DoxTableKeyNodeFormat protected (alignment: DoxTableKeyNodeAlignment, rotateOption: Option[Int])

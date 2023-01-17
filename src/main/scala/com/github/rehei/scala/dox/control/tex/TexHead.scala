@@ -12,11 +12,16 @@ case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRenderingStyle
   }
 
   protected val expressionText = {
-    if (value.key.node.format.isRotated) {
-      "\\rotatebox{45}{" + text + " }"
-    } else {
+
+    value.key.node.format.rotateOption.map {
+      degree =>
+        {
+          "\\rotatebox{" + degree + "}{" + text + " }"
+        }
+    } getOrElse {
       style.texAlignmentMinipage(value.key.node, text)
     }
+
   }
 
   protected val expressionDimension = {
