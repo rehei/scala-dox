@@ -13,13 +13,13 @@ object DoxTableKeyConfigFixed {
   def name(in: TextAST) = {
     nameInternal(Some(in))
   }
-  protected def nameInternal(in: Option[TextAST]) = new {
+  protected def nameInternal(name: Option[TextAST]) = new {
     def alignment(_alignment: DoxTableKeyNodeFormat.type => DoxTableKeyNodeFormat) = new {
       def widthDefault() = {
         width(2)
       }
       def width(width: Double) = {
-        DoxTableKeyConfigFixed(in, _alignment(DoxTableKeyNodeFormat), width)
+        DoxTableKeyConfigFixed(name, _alignment(DoxTableKeyNodeFormat), width)
       }
     }
   }

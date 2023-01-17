@@ -7,20 +7,25 @@ import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
 
 case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRenderingStyle) {
 
-  protected val text = {
-    Text2TEX(false).generate(value.key.node.textHead())
-  }
-
   protected val expressionText = {
 
-    value.key.node.format.rotateOption.map {
-      degree =>
-        {
-          "\\rotatebox{" + degree + "}{" + text + " }"
-        }
-    } getOrElse {
-      style.texAlignmentMinipage(value.key.node, text)
+    val text = {
+      Text2TEX(false).generate(value.key.node.textHead())
     }
+
+    val alignmentText = {
+      value.key.node.format.rotateOption.map {
+        degree =>
+          {
+            style.texAlignmentMinipage(value.key.node, ("\\rotatebox{" + degree + "}{" + text + " }"))
+          }
+      } getOrElse {
+        text
+      }
+
+    }
+
+    style.texAlignmentMinipage(value.key.node, alignmentText)
 
   }
 

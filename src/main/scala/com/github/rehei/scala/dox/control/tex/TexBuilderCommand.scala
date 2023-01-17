@@ -26,7 +26,6 @@ class TexBuilderCommand(ast: TexAST) {
   object subsection$ extends TexMarkupObject(false)
   object subsubsection extends TexMarkupObject(false)
   object subsubsection$ extends TexMarkupObject(false)
-  object hline extends TexMarkupObject(false)
   object vspace extends TexMarkupObject(false)
   object hspace extends TexMarkupObject(false)
 

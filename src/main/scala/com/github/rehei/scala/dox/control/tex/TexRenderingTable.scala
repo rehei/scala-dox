@@ -75,10 +75,12 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
   protected def asMappedTableHeadKeyNonEmptyChildren(wrappedKey: TexHead) = {
     val ruleOption = {
-      val offset = wrappedKey.columnCountOffset
-      val target = wrappedKey.columnCountOffset + wrappedKey.columnCount - 1
+      for (head <- wrappedKey.value.key.node.textHeadOption) yield {
+        val offset = wrappedKey.columnCountOffset
+        val target = wrappedKey.columnCountOffset + wrappedKey.columnCount - 1
 
-      Some(\\ cmidrule & { s"${offset}-${target}" })
+        \\ cmidrule & { s"${offset}-${target}" }
+      }
     }
 
     val expression = {
