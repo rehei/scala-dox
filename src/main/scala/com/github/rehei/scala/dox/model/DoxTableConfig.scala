@@ -53,12 +53,20 @@ abstract class DoxTableConfig(val position: String, val fill: Boolean, val fullp
         ""
       }
     }
-    
+
+    val suffix = {
+      if (fill) {
+        "@{}"
+      } else {
+        ""
+      }
+    }
+
     val settings = {
       model.dimension().map(node => style.texAlignmentHeadWithSize(node)).mkString
     }
 
-    prefix ++ settings
+    prefix ++ settings ++ suffix
   }
 
 }
