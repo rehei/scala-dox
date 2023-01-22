@@ -83,7 +83,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
       }
     }
 
-    val expression = singleOrMultiColumn(wrappedKey)
+    val expression = multicolumnWithNormalizedPadding(wrappedKey)
 
     MappedTableHeadKey(expression, ruleOption)
   }
@@ -93,23 +93,37 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
       None
     }
 
-    val expression = singleOrMultiColumn(wrappedKey)
+    val expression = multicolumnWithNormalizedPadding(wrappedKey)
 
     MappedTableHeadKey(expression, ruleOption)
   }
 
-  protected def singleOrMultiColumn(wrappedKey: TexHead) = {
-    if (wrappedKey.columnCount > 1) {
-      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignmentShort } { wrappedKey.content }
-    } else {
-      \\ plain & { wrappedKey.content }
+  protected def multicolumnWithNormalizedPadding(wrappedKey: TexHead) = {
+    val prefix = {
+      if (wrappedKey.value.first) {
+        "@{}"
+      } else {
+        ""
+      }
     }
+
+    val suffix = {
+      if (wrappedKey.value.last) {
+        "@{}"
+      } else {
+        ""
+      }
+    }
+
+    \\ multicolumn & { wrappedKey.columnCount } { prefix + wrappedKey.columnAlignmentShort + suffix } { wrappedKey.content }
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
     for ((row, index) <- input.zipWithIndex) yield {
       val offset = 1 + input.take(index).map(_.size).sum
-      DoxTableHeadRowKeyWithOffset(offset, row)
+      val first = (index == 0)
+      val last = (index == input.length - 1)
+      DoxTableHeadRowKeyWithOffset(offset, row, first, last)
     }
   }
 

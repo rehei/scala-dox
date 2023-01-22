@@ -1,3 +1,3 @@
 package com.github.rehei.scala.dox.model.table
 
-case class DoxTableHeadRowKeyWithOffset(offset: Int, key: DoxTableHeadRowKey)
+case class DoxTableHeadRowKeyWithOffset(offset: Int, key: DoxTableHeadRowKey, first: Boolean, last: Boolean)
