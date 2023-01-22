@@ -99,23 +99,18 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
   }
 
   protected def multicolumnWithNormalizedPadding(wrappedKey: TexHead) = {
-    val prefix = {
-      if (wrappedKey.value.first) {
-        "@{}"
-      } else {
-        ""
-      }
-    }
-
-    val suffix = {
-      if (wrappedKey.value.last) {
-        "@{}"
-      } else {
-        ""
-      }
-    }
+    val prefix = normalizePaddingString(wrappedKey.value.first)
+    val suffix = normalizePaddingString(wrappedKey.value.last)
 
     \\ multicolumn & { wrappedKey.columnCount } { prefix + wrappedKey.columnAlignmentShort + suffix } { wrappedKey.content }
+  }
+
+  protected def normalizePaddingString(isFirstOrLast: Boolean) = {
+    if (isFirstOrLast && model.config.fill) {
+      "@{}"
+    } else {
+      ""
+    }
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
