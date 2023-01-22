@@ -68,7 +68,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
     if (value.key.hasNonEmptyChildren) {
       asMappedTableHeadKeyNonEmptyChildren(wrappedKey)
     } else {
-      asMappedTableHEadKeyLeaf(wrappedKey)
+      asMappedTableHeadKeyLeaf(wrappedKey)
     }
 
   }
@@ -83,23 +83,27 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
       }
     }
 
-    val expression = {
-      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignmentShort } { wrappedKey.content }
-    }
+    val expression = singleOrMultiColumn(wrappedKey)
 
     MappedTableHeadKey(expression, ruleOption)
   }
 
-  protected def asMappedTableHEadKeyLeaf(wrappedKey: TexHead) = {
+  protected def asMappedTableHeadKeyLeaf(wrappedKey: TexHead) = {
     val ruleOption = {
       None
     }
 
-    val expression = {
-      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignmentShort } { wrappedKey.content }
-    }
+    val expression = singleOrMultiColumn(wrappedKey)
 
     MappedTableHeadKey(expression, ruleOption)
+  }
+
+  protected def singleOrMultiColumn(wrappedKey: TexHead) = {
+    if (wrappedKey.columnCount > 1) {
+      \\ multicolumn & { wrappedKey.columnCount } { wrappedKey.columnAlignmentShort } { wrappedKey.content }
+    } else {
+      \\ plain & { wrappedKey.content }
+    }
   }
 
   protected def withOffset(input: Seq[DoxTableHeadRowKey]) = {
