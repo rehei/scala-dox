@@ -19,6 +19,24 @@ class TexBuilderCommandInline(ast: TexAST) {
   object tabcolsep extends TexMarkupObject
   object p extends TexMarkupObject
 
-  object plain extends TexMarkupObject
+  object plain extends TexMarkupObject {
+
+    protected val self = this
+
+    override def name() = {
+      throw new UnsupportedOperationException()
+    }
+    override def generate() = {
+      extension() + args.generate() + extension()
+    }
+    override protected def create(in: TexSeq) = {
+      new TexCommandInline(inline, args.append(in)) {
+        override def name() = self.name()
+        override def generate() = {
+          extension() + args.generate() + extension()
+        }
+      }
+    }
+  }
 
 }
