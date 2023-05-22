@@ -30,7 +30,7 @@ case class TextAST(sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectSubscript(in))
   }
 
-  def italic(in: String) = {
+  def italic(in: TextAST) = {
     this.copy(sequence = sequence :+ TextObjectItalic(in))
   }
 
