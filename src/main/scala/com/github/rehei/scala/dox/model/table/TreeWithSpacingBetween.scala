@@ -10,22 +10,28 @@ case class TreeWithSpacingBetween() {
 
   def addSpaces(base: DoxTableKeyNode): DoxTableKeyNode = {
 
-    val all = base.children.indices.map(index => toLookahead(base, index))
+    if (base.treeDepth() > 1) {
 
-    val children = {
-      {
-        for (wrapper <- all) yield {
-          wrapper match {
-            case SiblingLookahead(Some(node), Some(next)) if node.isLeaf() => Seq(node, factory.Space())
-            case SiblingLookahead(Some(node), Some(next))                  => Seq(addSpaces(node), factory.Space())
-            case SiblingLookahead(Some(node), None) if (node.isLeaf())     => Seq(node)
-            case SiblingLookahead(Some(node), None)                        => Seq(addSpaces(node))
+      val all = base.children.indices.map(index => toLookahead(base, index))
+
+      val children = {
+        {
+          for (wrapper <- all) yield {
+            wrapper match {
+              case SiblingLookahead(Some(node), Some(next)) if node.isLeaf() => Seq(node, factory.Space())
+              case SiblingLookahead(Some(node), Some(next))                  => Seq(addSpaces(node), factory.Space())
+              case SiblingLookahead(Some(node), None) if (node.isLeaf())     => Seq(node)
+              case SiblingLookahead(Some(node), None)                        => Seq(addSpaces(node))
+            }
           }
         }
       }
-    }
 
-    base.copy(children = children.flatten)
+      base.copy(children = children.flatten)
+
+    } else {
+      base
+    }
   }
 
   protected def toLookahead(base: DoxTableKeyNode, index: Int) = {
