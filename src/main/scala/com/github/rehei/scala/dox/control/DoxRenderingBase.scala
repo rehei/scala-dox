@@ -127,6 +127,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
+  def pagename(name: String): this.type
   def label(reference: DoxReferenceText): this.type
   def chapter(name: String): this.type
   def section(name: String): this.type

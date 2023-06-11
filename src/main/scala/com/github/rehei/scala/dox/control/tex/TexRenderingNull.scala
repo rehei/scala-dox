@@ -22,7 +22,8 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def section(name: String) = this
   override def subsection(name: String) = this
   override def subsubsection(name: String) = this
-
+  override def pagename(name: String) = this
+  
   override def bigskip() = this
 
   override def tableSequence(callback: DoxBuilderTableSequence.type => DoxViewModelTableSequence) = this

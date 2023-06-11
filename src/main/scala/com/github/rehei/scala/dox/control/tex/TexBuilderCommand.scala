@@ -16,6 +16,7 @@ class TexBuilderCommand(ast: TexAST) {
   object cmidrule extends TexMarkupObject(false)
   object multicolumn extends TexMarkupObject(false)
 
+  object fill extends TexMarkupObject(false)
   object includegraphics extends TexMarkupObject(false)
   object caption extends TexMarkupObject(false)
   object chapter extends TexMarkupObject(false)
@@ -27,6 +28,7 @@ class TexBuilderCommand(ast: TexAST) {
   object subsubsection extends TexMarkupObject(false)
   object subsubsection$ extends TexMarkupObject(false)
   object vspace extends TexMarkupObject(false)
+  object vspace$ extends TexMarkupObject(false)
   object hspace extends TexMarkupObject(false)
 
   object clearpage extends TexMarkupObject(false)
@@ -40,13 +42,14 @@ class TexBuilderCommand(ast: TexAST) {
   object end extends TexMarkupObject(false)
 
   object textit extends TexMarkupObject(true)
+  object textbf extends TexMarkupObject(true)
+
   object textcolor extends TexMarkupObject(true)
   object item extends TexMarkupObject(true)
   object ref extends TexMarkupObject(true)
 
   object rule extends TexMarkupObject(true)
 
-  
   object cite extends TexMarkupObject(true)
   object citep extends TexMarkupObject(true)
   object citet extends TexMarkupObject(true)
@@ -56,7 +59,7 @@ class TexBuilderCommand(ast: TexAST) {
 
   object input extends TexMarkupObject(false)
   object includesvgImage extends TexMarkupObject(false)
-  
+
   object plain {
     def apply(_name: String) = {
       TexPlain(ast, _name)

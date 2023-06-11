@@ -4,21 +4,12 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRow
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
-import com.github.rehei.scala.dox.text.TextAST
-import com.github.rehei.scala.dox.text.util.Text2TEX
-import com.github.rehei.scala.dox.model.table.content.DoxContent
-import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeFormat
-import java.text.DecimalFormat
-import com.github.rehei.scala.dox.model.table.DoxTableKeyNode
-import com.github.rehei.scala.dox.model.table.DoxTableKeyNodeAlignment
-import com.github.rehei.scala.dox.text.TextFactory
-import com.github.rehei.scala.dox.model.DoxTableConfig
 
 class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boolean, style: TexRenderingStyle) {
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
-  import DoxContent._
+  import com.github.rehei.scala.dox.model.table.content.DoxContent._
 
   protected val tmpAST = TexAST()
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)

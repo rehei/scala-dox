@@ -11,6 +11,15 @@ import com.github.rehei.scala.dox.model.DoxTableConfig
 case class DoxTableKeyNodeFactory[T <: AnyRef](implicit classTag: ClassTag[T]) {
 
   trait Writeable extends DoxTableKeyNode {
+
+    def appendConditionally(enable: Boolean, additionalChildren: DoxTableKeyNode*) = {
+      if (enable) {
+        appendAll(additionalChildren)
+      } else {
+        this
+      }
+    }
+
     def append(additionalChildren: DoxTableKeyNode*) = {
       new DoxTableKeyNode(this.textHeadOption, this.textBodyStrategyOption, this.format, this.children ++ additionalChildren) with Writeable
     }

@@ -29,7 +29,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
     }
 
 
-
+    object Huge extends SomeTexEnvironment
     object itemize extends SomeTexEnvironment
     object table extends SomeTexEnvironment
     object table$ extends SomeTexEnvironment

@@ -4,7 +4,7 @@ import com.github.rehei.scala.dox.text.TextAST
 
 class DoxTableHeadRepository(root: DoxTableKeyNode) {
 
-  protected val dirtySpacingEnabled = false // should commonly be enabled in order to divide underlined head columns
+  protected val dirtySpacingEnabled = true // should commonly be enabled in order to divide underlined head columns
 
   implicit class AbstractDoxNodeExt(base: DoxTableKeyNode) {
 

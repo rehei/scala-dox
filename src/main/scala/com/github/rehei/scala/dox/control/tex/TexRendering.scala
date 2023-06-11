@@ -41,6 +41,20 @@ class TexRendering(
     this
   }
 
+  def pagename(name: String) = {
+    \ newpage;
+
+    $ { _ Huge } {
+      \ vspace$ { "\\fill" }
+      \ centering;
+      \ textbf { name }
+      \ vspace$ { "\\fill" }
+    }
+
+    \ newpage;
+    this
+  }
+
   def newpage() = {
     \ newpage;
     this
