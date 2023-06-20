@@ -9,7 +9,7 @@ class TexRenderingSVG(config: DoxHandleSvgConfig, include: String) {
 
   def generate() = {
     val texWrapping = {
-      TexRenderingSvgWrappedStandalone(include)
+      TexRenderingSvgStandalone(include)
     }
 
     texWrapping.generate().build()
