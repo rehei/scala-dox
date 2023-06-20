@@ -8,6 +8,9 @@ class DoxIndexedEnum(prefix: Option[String]) extends DoxIndexedRepository {
     def get() = {
       key(callback, name, None)
     }
+    def get(current: Int, max: Int) = {
+      key(callback, name, Some(current.toString() + "/" + max.toString()))
+    }
   }
 
   def uniqueTable = {

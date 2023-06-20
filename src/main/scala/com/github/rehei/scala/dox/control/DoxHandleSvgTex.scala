@@ -24,7 +24,7 @@ case class DoxHandleSvgTex(target: DoxTarget, config: DoxHandleSvgConfig) {
     val reference = resolve.transform(view.label)
 
     val fileSvg = handleSvg(reference, view.image)
-    val fileTex = handleTex(reference, fileSvg.target.asString(), view.titleOption)
+    val fileTex = handleTex(reference, fileSvg.target.asString())
 
     fileTex
   }
@@ -38,8 +38,8 @@ case class DoxHandleSvgTex(target: DoxTarget, config: DoxHandleSvgConfig) {
     svgHandle.handle(input)
   }
 
-  protected def handleTex(reference: DoxInputReference, path: String, titleOption: Option[String]) = {
-    val content = new TexRenderingSVG(config, path, titleOption).generate()
+  protected def handleTex(reference: DoxInputReference, path: String) = {
+    val content = new TexRenderingSVG(config, path).generate()
     val file = DoxInputData(reference, content)
     serialize.write(file)
   }
