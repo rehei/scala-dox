@@ -241,9 +241,9 @@ case class Text2TEX protected (isMathMode: Boolean) {
     ParseResult(resultString, collection.size)
   }
 
-  protected def textItalic(sequence: Seq[TextObject]) = {
+  protected def textItalic(sequence: Seq[TextObject]): ParseResult = {
     val collection = collect[TextObjectItalic](sequence)
-    val resultString = collection.map(text => "\\textit{" + text.in + "}").mkString
+    val resultString = collection.map(text => "\\textit{" + Text2TEX(false).generate(text.in) + "}").mkString
 
     ParseResult(resultString, collection.size)
   }
