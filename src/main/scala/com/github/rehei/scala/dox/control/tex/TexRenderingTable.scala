@@ -127,7 +127,7 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
   protected def appendTableLegend() {
     if (model.hasLegend) {
-      val legend = new TexRenderingTableLegend(model).createTableString()
+      val legend = new TexRenderingTableLegend("Legende", model.legend()).createTableString()
       \ multicolumn & { model.dimension().drop(1).length } { "l" } { "\\rule{0pt}{.7cm}" + legend }
       \ plain { "\\\\" }
     }

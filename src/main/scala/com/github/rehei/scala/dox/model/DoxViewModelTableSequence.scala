@@ -8,8 +8,10 @@ import com.github.rehei.scala.dox.control.tex.TexRenderingTableSequence
 import com.github.rehei.scala.dox.control.tex.TexRenderingStyle
 import com.github.rehei.scala.dox.control.tex.TexAST
 import com.github.rehei.scala.dox.control.DoxHandleTable
+import com.github.rehei.scala.dox.model.table.content.DoxContent.DoxLegend
 
 case class DoxViewModelTableSequence(
-  label:  Option[DoxReferencePersistentTable],
-  models: DoxTableSequence,
-  title:  TextAST)
+  label:         Option[DoxReferencePersistentTable],
+  tableSequence: DoxTableSequence,
+  hintOption:    Option[DoxLegend],
+  title:         TextAST)

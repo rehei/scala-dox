@@ -30,7 +30,7 @@ case class DoxHandleTable(target: DoxTarget, style: TexRenderingStyle) {
   }
 
   def handle(view: DoxViewModelTableSequence) = {
-    val content = new TexRenderingTableSequence(view.models, view.title, style).createTableString()
+    val content = new TexRenderingTableSequence(view.tableSequence, view.title, view.hintOption, style).createTableString()
     handleContent(view.label, content)
   }
 

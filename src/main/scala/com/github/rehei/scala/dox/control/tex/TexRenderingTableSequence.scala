@@ -6,8 +6,9 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
+import com.github.rehei.scala.dox.model.table.content.DoxContent.DoxLegend
 
-class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST, style: TexRenderingStyle) {
+class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST, hintOption: Option[DoxLegend], style: TexRenderingStyle) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
 
   protected val tmpAST = new TexAST
@@ -23,6 +24,7 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST,
     $ { _ tabular$ & { (totalSizeTex()) } { "l" } } {
       appendTitle()
       createTables()
+      appendTableLegend()
       appendBottom()
     }
   }
@@ -71,6 +73,15 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST,
     val tabColSeps = modelSequence.totalSeparatorCount()
 
     "\\dimexpr(\\tabcolsep*" + tabColSeps + ")+" + width + "cm"
+  }
+
+  protected def appendTableLegend() {
+    for (hint <- hintOption) {
+      val legend = new TexRenderingTableLegend("Hinweis", Seq(hint)).createTableString()
+      \ plain { legend }
+      \ plain { "\\\\" }
+    }
+
   }
 
 }
