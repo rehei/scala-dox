@@ -150,6 +150,12 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
+  def tableSequenceCondensed(callback: DoxBuilderTableSequenceCondensed.type => DoxViewModelTableSequence): this.type = {
+    val data = callback(DoxBuilderTableSequenceCondensed)
+    internalTable(data)
+    this
+  }
+
   def equation(callback: DoxBuilderEquation.type => DoxViewModelEquation) = {
     val data = callback(DoxBuilderEquation)
     internalEquation(data)

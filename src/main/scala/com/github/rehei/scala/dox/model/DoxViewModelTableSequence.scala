@@ -14,4 +14,4 @@ case class DoxViewModelTableSequence(
   label:         Option[DoxReferencePersistentTable],
   tableSequence: DoxTableSequence,
   hintOption:    Option[DoxLegend],
-  title:         TextAST)
+  titleOption:   Option[TextAST])

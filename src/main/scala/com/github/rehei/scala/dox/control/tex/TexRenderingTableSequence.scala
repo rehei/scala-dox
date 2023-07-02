@@ -8,7 +8,7 @@ import com.github.rehei.scala.dox.text.TextFactory
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 import com.github.rehei.scala.dox.model.table.content.DoxContent.DoxLegend
 
-class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST, hintOption: Option[DoxLegend], style: TexRenderingStyle) {
+class TexRenderingTableSequence(modelSequence: DoxTableSequence, titleOption: Option[TextAST], hintOption: Option[DoxLegend], style: TexRenderingStyle) {
   case class TableConfig(categoryWidth: Double, dataWidth: Double, hasMidrule: Boolean)
 
   protected val tmpAST = new TexAST
@@ -21,51 +21,44 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, title: TextAST,
   }
 
   protected def createTableSequence() {
-    $ { _ tabular$ & { (totalSizeTex()) } { "l" } } {
-      appendTitle()
-      createTables()
-      appendTableLegend()
-      appendBottom()
-    }
-  }
-
-  protected def createTables() = {
-    for (model <- modelSequence.sequence) {
-      \ plain { "{" + getTable(model) + "}" }
-      verticalSpacing()
-    }
-  }
-
-  protected def appendTitle() = {
-    \ plain { "{" }
-    ($ { _ tabular$ & { (totalSizeTex()) } { columnTex() } } {
+    $ { _ tabular$ & { (totalSizeTex()) } { "@{}l@{}" } } {
       \ toprule;
-      \ plain { Text2TEX(false).generate(title) + "\\\\" }
-      \ midrule;
-    })
-    \ plain { "}" }
-    verticalSpacing()
-  }
+      for (title <- titleOption) {
+        appendTitle(title)
+      }
+      for (model <- modelSequence.sequence.headOption) {
+        \ plain { getTable(model) }
+        verticalSpacing()
 
-  protected def appendBottom() = {
-    \ plain { "{" }
-    $ { _ tabular$ & { (totalSizeTex()) } { columnTex() } } {
+        for (model <- modelSequence.sequence.tail) {
+          \ toprule;
+          \ plain { getTable(model) }
+          verticalSpacing()
+        }
+      }
+      appendTableLegend()
       \ bottomrule;
     }
-    \ plain { "}" }
+  }
+
+  protected def appendTitle(title: TextAST) = {
+    $ { _ tabular$ & { (totalSizeTex()) } { ">{\\centering\\arraybackslash}m{" + totalSizeTex() + "}" } } {
+      \ plain { Text2TEX(false).generate(title) + "\\\\" }
+      \ midrule;
+    }
     verticalSpacing()
   }
 
   protected def getTable(model: DoxTableMatrix) = {
-    new TexRenderingTable(model, true, style).createTableString()
+    new TexRenderingTable(model, true, false, titleOption.isDefined, style).createTableString()
   }
 
   protected def verticalSpacing() = {
-    \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
-  }
-
-  protected def columnTex() = {
-    ">{\\centering\\arraybackslash}m{" + totalSizeTex() + "}"
+    if (titleOption.isDefined) {
+      \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
+    } else {
+      \ plain { "\\\\ \n" }
+    }
   }
 
   protected def totalSizeTex() = {

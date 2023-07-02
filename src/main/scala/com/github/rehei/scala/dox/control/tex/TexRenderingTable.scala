@@ -5,7 +5,7 @@ import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKey
 import com.github.rehei.scala.dox.model.table.DoxTableHeadRowKeyWithOffset
 import com.github.rehei.scala.dox.model.table.DoxTableMatrix
 
-class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boolean, style: TexRenderingStyle) {
+class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boolean, topRule: Boolean, bottomRule: Boolean, style: TexRenderingStyle) {
 
   protected case class MappedTableHeadKey(content: TexCommandInline, ruleOption: Option[TexCommandInline])
 
@@ -25,13 +25,21 @@ class TexRenderingTable(protected val model: DoxTableMatrix, isInnerTable: Boole
 
   protected def create() {
     $ { _ tabular$ & { model.config.computeWidth(model) } { model.config.computeFormatString(model, style) } } {
-      tableMode.toprule()
+      if (topRule) {
+        tableMode.toprule()
+      }
       appendTableHead()
-      \ midrule;
+      if (model.head().size > 0) {
+        \ midrule;
+      }
       appendTableBody()
-      tableMode.midrule()
+      if (model.hasLegend) {
+        \ midrule;
+      }
       appendTableLegend()
-      tableMode.bottomrule()
+      if (bottomRule) {
+        tableMode.bottomrule()
+      }
     }
   }
 

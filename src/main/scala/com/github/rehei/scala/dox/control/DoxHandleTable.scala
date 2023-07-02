@@ -25,12 +25,12 @@ case class DoxHandleTable(target: DoxTarget, style: TexRenderingStyle) {
   protected val resolve = DoxReferenceUtils("generated-table")
 
   def handle(view: DoxViewModelTable[_]) = {
-    val content = new TexRenderingTable(view.model.transform(), false, style).createTableString()
+    val content = new TexRenderingTable(view.model.transform(), false, true, true, style).createTableString()
     handleContent(view.label, content)
   }
 
   def handle(view: DoxViewModelTableSequence) = {
-    val content = new TexRenderingTableSequence(view.tableSequence, view.title, view.hintOption, style).createTableString()
+    val content = new TexRenderingTableSequence(view.tableSequence, view.titleOption, view.hintOption, style).createTableString()
     handleContent(view.label, content)
   }
 

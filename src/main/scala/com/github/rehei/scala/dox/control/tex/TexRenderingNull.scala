@@ -14,6 +14,7 @@ import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.control.DoxBuilderSvg
 import com.github.rehei.scala.dox.model.DoxViewModelEquation
+import com.github.rehei.scala.dox.control.DoxBuilderTableSequenceCondensed
 
 class TexRenderingNull extends TexRendering(null, false, null, null, null, null, null) {
 
@@ -25,7 +26,8 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def pagename(name: String) = this
   
   override def bigskip() = this
-
+  
+  override def tableSequenceCondensed(callback: DoxBuilderTableSequenceCondensed.type => DoxViewModelTableSequence) = this
   override def tableSequence(callback: DoxBuilderTableSequence.type => DoxViewModelTableSequence) = this
   override def table(callback: DoxBuilderTable.type => DoxViewModelTable[_]): this.type = this
   override def equation(callback: DoxBuilderEquation.type => DoxViewModelEquation) = this
