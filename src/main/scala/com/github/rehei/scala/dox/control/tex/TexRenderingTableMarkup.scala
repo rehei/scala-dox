@@ -10,12 +10,7 @@ class TexRenderingTableMarkup(protected val model: DoxTableMatrix, markup: TexMa
 
   protected case class InnerTableOn() extends TableMode {
     def toprule() {
-      // nothing
-    }
-    def midrule() {
-      if (model.hasLegend) {
-        renderMidRule()
-      }
+      renderMidRule()
     }
     def bottomrule() {
       renderMidRule()
@@ -26,11 +21,6 @@ class TexRenderingTableMarkup(protected val model: DoxTableMatrix, markup: TexMa
     def toprule() {
       \ toprule
     }
-    def midrule() {
-      if (model.hasLegend) {
-        renderMidRule()
-      }
-    }
     def bottomrule() {
       \ bottomrule
     }
@@ -38,7 +28,6 @@ class TexRenderingTableMarkup(protected val model: DoxTableMatrix, markup: TexMa
 
   trait TableMode {
     def toprule(): Unit
-    def midrule(): Unit
     def bottomrule(): Unit
   }
 
