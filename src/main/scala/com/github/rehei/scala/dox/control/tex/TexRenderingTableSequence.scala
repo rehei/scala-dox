@@ -15,6 +15,9 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, titleOption: Op
   protected val tmpMarkup = new TexMarkupFactory(tmpAST)
   import tmpMarkup._
 
+  val showLine = !titleOption.isDefined
+  val showSpace = titleOption.isDefined
+
   def createTableString() = {
     createTableSequence()
     tmpAST.build()
@@ -28,11 +31,12 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, titleOption: Op
       }
       for (model <- modelSequence.sequence.headOption) {
         \ plain { getTable(model) }
-        verticalSpacing()
+        separationSpace()
 
         for (model <- modelSequence.sequence.tail) {
+          separationLine()
           \ plain { getTable(model) }
-          verticalSpacing()
+          separationSpace()
         }
       }
       appendTableLegend()
@@ -45,18 +49,24 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, titleOption: Op
       \ plain { Text2TEX(false).generate(title) + "\\\\" }
       \ midrule;
     }
-    verticalSpacing()
+    separationSpace()
   }
 
   protected def getTable(model: DoxTableMatrix) = {
     new TexRenderingTable(model, true, false, titleOption.isDefined, style).createTableString()
   }
 
-  protected def verticalSpacing() = {
-    if (titleOption.isDefined) {
+  protected def separationSpace() = {
+    if (showSpace) {
       \ plain { "\n\\vspace*{0.5cm}" + "\n" + "\\\\ \n" }
     } else {
       \ plain { "\\\\ \n" }
+    }
+  }
+
+  protected def separationLine() = {
+    if (showLine) {
+      \ toprule;
     }
   }
 
