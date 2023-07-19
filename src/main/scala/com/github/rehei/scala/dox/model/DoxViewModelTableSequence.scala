@@ -13,5 +13,5 @@ import com.github.rehei.scala.dox.model.table.content.DoxContent.DoxLegend
 case class DoxViewModelTableSequence(
   label:         Option[DoxReferencePersistentTable],
   tableSequence: DoxTableSequence,
-  hintOption:    Option[DoxLegend],
-  titleOption:   Option[TextAST])
+  titleOption:   Option[TextAST],
+  hintOption:    Option[DoxLegend])

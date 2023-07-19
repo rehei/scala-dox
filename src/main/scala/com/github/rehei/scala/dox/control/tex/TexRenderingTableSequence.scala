@@ -31,7 +31,6 @@ class TexRenderingTableSequence(modelSequence: DoxTableSequence, titleOption: Op
         verticalSpacing()
 
         for (model <- modelSequence.sequence.tail) {
-          \ toprule;
           \ plain { getTable(model) }
           verticalSpacing()
         }

@@ -15,7 +15,7 @@ object DoxBuilderTableSequence {
     def data(_tables: Seq[DoxTable[_]]) = new {
       def title(_title: String) = new {
         def annotation(_annotation: Option[DoxLegend]) = {
-          DoxViewModelTableSequence(_labelOption, DoxTableSequence(_tables.map(_.transform())), _annotation, Some(TextFactory.text(_title)))
+          DoxViewModelTableSequence(_labelOption, DoxTableSequence(_tables.map(_.transform())), Some(TextFactory.text(_title)), _annotation)
         }
       }
     }
