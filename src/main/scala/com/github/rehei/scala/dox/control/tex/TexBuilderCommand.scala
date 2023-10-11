@@ -9,6 +9,7 @@ class TexBuilderCommand(ast: TexAST) {
   }
 
   object FloatBarrier extends TexMarkupObject(false)
+  object footnotesize extends TexMarkupObject(false)
   object centering extends TexMarkupObject(false)
   object toprule extends TexMarkupObject(false)
   object midrule extends TexMarkupObject(false)

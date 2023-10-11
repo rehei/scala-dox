@@ -162,7 +162,7 @@ class TexRendering(
   }
 
   protected def tableContent(table: DoxInputFile) = {
-
+    \ footnotesize;
     \ centering;
     \ caption & { escape(table.reference.caption) }
     \ input { table.target.asString() }

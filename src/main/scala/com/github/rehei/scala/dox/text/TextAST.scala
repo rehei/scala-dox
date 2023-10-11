@@ -21,6 +21,10 @@ case class TextAST(sequence: Seq[TextObject]) {
   def text(in: String) = {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
+  
+  def parbox(cm: Double, content: String): TextAST = {
+    this.copy(sequence = sequence :+ TextObjectParbox(cm, content))
+  }
 
   def subscript(in: String): TextAST = {
     this.subscript(TextFactory.text(in))

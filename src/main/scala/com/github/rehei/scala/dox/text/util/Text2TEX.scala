@@ -17,6 +17,7 @@ import com.github.rehei.scala.dox.text.TextObjectNewline
 import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
+import com.github.rehei.scala.dox.text.TextObjectParbox
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -195,6 +196,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
+      base.append(textParbox(next()))
       base.append(textDoubleStruck(next()))
       base.append(textTab(next()))
       base.append(textGreek(next()))
@@ -244,6 +246,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
   protected def textItalic(sequence: Seq[TextObject]): ParseResult = {
     val collection = collect[TextObjectItalic](sequence)
     val resultString = collection.map(text => "\\textit{" + Text2TEX(false).generate(text.in) + "}").mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textParbox(sequence: Seq[TextObject]): ParseResult = {
+    val collection = collect[TextObjectParbox](sequence)
+    val resultString = collection.map(box => "\\parbox{" + box.cm + "cm}{" + box.content + "}").mkString
 
     ParseResult(resultString, collection.size)
   }
