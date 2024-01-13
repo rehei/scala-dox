@@ -5,6 +5,8 @@ import com.github.rehei.scala.dox.util.NormalizeUtils
 import com.github.rehei.scala.dox.model.ex.DoxBibKeyIntegrityException
 import org.jbibtex.Key
 import scala.collection.JavaConversions._
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 case class DoxBibtexParseSingleEntry(protected val bibKeyName: String, protected val database: BibTeXDatabase) {
 
@@ -14,18 +16,22 @@ case class DoxBibtexParseSingleEntry(protected val bibKeyName: String, protected
   def asDatabase = {
     database
   }
-  
+
   def expectNormalized(key: Key, expected: String) = {
     val actual = entry.getField(key).toUserString()
-    if (NormalizeUtils.normalizeBibTex(actual.toLowerCase()) != NormalizeUtils.normalizeString(expected.toLowerCase())) {
-      throw new DoxBibKeyIntegrityException(getExceptionMessage(key, expected, actual))
+
+    val normalizedActual = NormalizeUtils.normalizeBibTex(actual.toLowerCase())
+    val normalizedExpected = NormalizeUtils.normalizeString(URLDecoder.decode(expected.toLowerCase(), StandardCharsets.UTF_8.displayName()))
+
+    if (normalizedActual != normalizedExpected) {
+      throw new DoxBibKeyIntegrityException(getExceptionMessage(key, normalizedExpected, normalizedActual))
     }
   }
 
   def expectAnyWordNormalized(key: Key, expected: String) = {
-    
+
     import NormalizeUtils._
-    
+
     val actual = entry.getField(key).toUserString()
 
     val actualWordSeq = normalizeString(normalizeBibTex(actual)).toLowerCase().split("\\s")
@@ -40,7 +46,5 @@ case class DoxBibtexParseSingleEntry(protected val bibKeyName: String, protected
   protected def getExceptionMessage(key: Key, expected: String, actual: String) = {
     s"Checking integrity for ${bibKeyName} on ${key.getValue} failed, as ${expected} was expected, but actually ${actual} was given."
   }
-  
- 
 
 }
