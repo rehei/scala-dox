@@ -13,19 +13,11 @@ case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRenderingStyle
       Text2TEX(false).generate(value.key.node.textHead())
     }
 
-    val alignmentText = {
-      value.key.node.format.rotateOption.map {
-        degree =>
-          {
-            style.texAlignmentMinipage(value.key.node, ("\\rotatebox{" + degree + "}{" + text + " }"))
-          }
-      } getOrElse {
-        text
-      }
-
+    value.key.node.format.rotateOption.map {
+      degree => rotate(degree, text)
+    } getOrElse {
+      style.texAlignmentMinipage(value.key.node, text)
     }
-
-    style.texAlignmentMinipage(value.key.node, alignmentText)
 
   }
 
@@ -51,6 +43,10 @@ case class TexHead(value: DoxTableHeadRowKeyWithOffset, style: TexRenderingStyle
 
   val content = {
     style.get(expressionDimension, expressionText)
+  }
+
+  protected def rotate(degree: Int, text: String) = {
+    "\\rotatebox{" + degree + "}{" + text + "}"
   }
 
 }
