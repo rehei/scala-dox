@@ -18,6 +18,7 @@ import com.github.rehei.scala.dox.control.tex.TexRenderingTableSequence
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.model.reference.DoxReferenceUtils
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
+import com.github.rehei.scala.dox.model.DoxViewModelTablePlain
 
 case class DoxHandleTable(target: DoxTarget, style: TexRenderingStyle) {
 
@@ -32,6 +33,10 @@ case class DoxHandleTable(target: DoxTarget, style: TexRenderingStyle) {
   def handle(view: DoxViewModelTableSequence) = {
     val content = new TexRenderingTableSequence(view.tableSequence, view.titleOption, view.hintOption, style).createTableString()
     handleContent(view.label, content)
+  }
+
+  def handle(view: DoxViewModelTablePlain) = {
+    handleContent(view.label, view.content)
   }
 
   protected def handleContent(label: Option[DoxReferenceBase], content: String) = {
