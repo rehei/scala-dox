@@ -24,9 +24,10 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def subsection(name: String) = this
   override def subsubsection(name: String) = this
   override def pagename(name: String) = this
-  
+
   override def bigskip() = this
-  
+
+  override def tablePlain(content: String) = this
   override def tableSequenceCondensed(callback: DoxBuilderTableSequenceCondensed.type => DoxViewModelTableSequence) = this
   override def tableSequence(callback: DoxBuilderTableSequence.type => DoxViewModelTableSequence) = this
   override def table(callback: DoxBuilderTable.type => DoxViewModelTable[_]): this.type = this
@@ -43,7 +44,6 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def clearpage() = this
 
   override def nonBreakingSpace = this
-
 
   override protected def internalPlain(in: String) = Unit
 

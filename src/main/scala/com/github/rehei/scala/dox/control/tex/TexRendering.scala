@@ -150,6 +150,14 @@ class TexRendering(
 
   }
 
+  protected def internalTablePlain(content: String) {
+    usingFloatBarrier {
+      $ { _ table & { ###("H") } } {
+        \ plain { content }
+      }
+    }
+  }
+
   protected def internalTable(table: DoxViewModelTable[_]) {
 
     val input = tableHandle.handle(table)

@@ -138,6 +138,11 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def ref(reference: DoxReferenceBase): this.type
 
+  def tablePlain(content: String): this.type = {
+    internalTablePlain(content)
+    this
+  }
+
   def table(callback: DoxBuilderTable.type => DoxViewModelTable[_]): this.type = {
     val data = callback(DoxBuilderTable)
     internalTable(data)
@@ -175,6 +180,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
   protected def internalSvg(imageSet: DoxViewModelSvg): Unit
+  protected def internalTablePlain(content: String): Unit
   protected def internalTable(table: DoxViewModelTableSequence): Unit
   protected def internalTable(table: DoxViewModelTable[_]): Unit
   protected def internalEquation(table: DoxViewModelEquation): Unit
