@@ -17,6 +17,7 @@ import com.github.rehei.scala.dox.model.DoxEquation
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.DoxViewModelEquation
+import com.github.rehei.scala.dox.model.DoxViewModelTablePlain
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -138,8 +139,8 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
 
   def ref(reference: DoxReferenceBase): this.type
 
-  def tablePlain(content: String): this.type = {
-    internalTablePlain(content)
+  def tablePlain(callback: DoxBuilderTablePlain.type => DoxViewModelTablePlain): this.type = {
+    internalTablePlain(callback(DoxBuilderTablePlain))
     this
   }
 
@@ -180,7 +181,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalCiteP(key: String): Unit
   protected def internalCite(key: String): Unit
   protected def internalSvg(imageSet: DoxViewModelSvg): Unit
-  protected def internalTablePlain(content: String): Unit
+  protected def internalTablePlain(table: DoxViewModelTablePlain): Unit
   protected def internalTable(table: DoxViewModelTableSequence): Unit
   protected def internalTable(table: DoxViewModelTable[_]): Unit
   protected def internalEquation(table: DoxViewModelEquation): Unit

@@ -17,6 +17,7 @@ import com.github.rehei.scala.dox.model.reference.DoxReferenceText
 import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.DoxInputFile
+import com.github.rehei.scala.dox.model.DoxViewModelTablePlain
 
 class TexRendering(
   baseAST:        TexAST,
@@ -150,10 +151,10 @@ class TexRendering(
 
   }
 
-  protected def internalTablePlain(content: String) {
+  protected def internalTablePlain(table: DoxViewModelTablePlain) {
     usingFloatBarrier {
       $ { _ table & { ###("H") } } {
-        \ plain { content }
+        \ plain { table.content }
       }
     }
   }
