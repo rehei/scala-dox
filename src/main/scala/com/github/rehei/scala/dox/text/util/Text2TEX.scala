@@ -18,6 +18,7 @@ import com.github.rehei.scala.dox.text.TextObjectSpaceSmall
 import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
 import com.github.rehei.scala.dox.text.TextObjectParbox
+import com.github.rehei.scala.dox.text.TextObjectPlain
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -201,6 +202,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textTab(next()))
       base.append(textGreek(next()))
       base.append(textCite(next()))
+      base.append(textPlain(next()))
 
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
@@ -273,6 +275,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
       val resultString = mode.subscript(mergedSubscriptArgs)
       ParseResult(resultString, collection.size)
     }
+  }
+
+  protected def textPlain(sequence: Seq[TextObject]): ParseResult = {
+    val collection = collect[TextObjectPlain](sequence)
+    val resultString = collection.map(_.in).mkString
+
+    ParseResult(resultString, collection.size)
   }
 
   protected def collect[T](sequence: Seq[TextObject])(implicit classTag: ClassTag[T]) = {

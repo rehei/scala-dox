@@ -44,6 +44,7 @@ class TexRenderingNull extends TexRendering(null, false, null, null, null, null,
   override def ref(reference: DoxReferenceBase) = this
 
   override def clearpage() = this
+  override def newpage() = this
 
   override def nonBreakingSpace = this
 
