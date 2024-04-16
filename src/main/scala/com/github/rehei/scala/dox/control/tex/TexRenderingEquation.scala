@@ -14,8 +14,19 @@ class TexRenderingEquation(equation: DoxEquation) {
   }
 
   protected def create() {
-    $ { _ eqnarray } {
-      \ plain { equation.equation }
+    equation.tag.map {
+      tagName =>
+        {
+          $ { _ equation } {
+            \ tag { tagName }
+            \ plain { equation.equation }
+          }
+        }
+    } getOrElse {
+      $ { _ eqnarray } {
+        \ plain { equation.equation }
+      }
     }
+
   }
 }

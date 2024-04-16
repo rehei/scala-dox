@@ -40,6 +40,7 @@ class TexBuilderEnvironment(markup: TexMarkupFactory) {
     object tabular extends SomeTexEnvironment
     object tabular$ extends SomeTexEnvironment
     object eqnarray extends SomeTexEnvironment
+    object equation extends SomeTexEnvironment
     object align extends SomeTexEnvironment
 
   }

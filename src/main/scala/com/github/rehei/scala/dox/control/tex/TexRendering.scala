@@ -131,12 +131,12 @@ class TexRendering(
   protected def internalEquation(equation: DoxViewModelEquation) = {
     val input = equationHandle.handle(equation)
 
-    $ { _ mdframed } {
+//    $ { _ mdframed } {
       $ { _ figure & { ###("H") } } {
         \ input { input.target.asString() }
         \ caption & { escape(input.reference.caption) }
       }
-    }
+//    }
 
   }
 

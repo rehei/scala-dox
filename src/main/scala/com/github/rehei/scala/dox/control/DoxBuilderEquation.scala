@@ -10,11 +10,13 @@ import com.github.rehei.scala.dox.model.DoxViewModelEquation
 
 object DoxBuilderEquation {
   def label(_labelOption: Option[DoxReferencePersistentEquation]) = new {
-    def data(_equation: String) = {
-      DoxViewModelEquation(DoxEquation(_equation), _labelOption)
-    }
-    def data(_equation: TextAST) = {
-      DoxViewModelEquation(DoxEquation(Text2TEX(true).generate(_equation)), _labelOption)
+    def tag(_tagOption: Option[String]) = new {
+      def data(_equation: String) = {
+        DoxViewModelEquation(DoxEquation(_tagOption, _equation), _labelOption)
+      }
+      def data(_equation: TextAST) = {
+        DoxViewModelEquation(DoxEquation(_tagOption, Text2TEX(true).generate(_equation)), _labelOption)
+      }
     }
   }
 }

@@ -60,6 +60,7 @@ class TexBuilderCommand(ast: TexAST) {
 
   object input extends TexMarkupObject(false)
   object includesvgImage extends TexMarkupObject(false)
+  object tag extends TexMarkupObject(true)
 
   object plain {
     def apply(_name: String) = {
