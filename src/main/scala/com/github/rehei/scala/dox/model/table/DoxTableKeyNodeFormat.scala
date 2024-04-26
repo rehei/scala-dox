@@ -12,7 +12,6 @@ object DoxTableKeyNodeFormat {
       DoxTableKeyNodeFormat(this.alignment, Some(45))
     }
 
-    
   }
 
   val LEFT = new DoxTableKeyNodeFormat(DoxTableKeyNodeAlignment.AlignLeft, None) with Writeable
