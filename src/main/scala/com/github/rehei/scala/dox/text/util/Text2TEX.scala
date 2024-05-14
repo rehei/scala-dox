@@ -19,12 +19,15 @@ import com.github.rehei.scala.dox.text.TextObjectSubscript
 import com.github.rehei.scala.dox.text.TextObjectTab
 import com.github.rehei.scala.dox.text.TextObjectParbox
 import com.github.rehei.scala.dox.text.TextObjectPlain
+import com.github.rehei.scala.dox.text.TextObjectMath
+import com.github.rehei.scala.dox.text.TextObjectTick
 
 object Text2TEX extends Text2TEX(false) {
 
   protected trait MathSensitiveParsing {
     def mathEnvironment(text: String): String
     def subscript(text: String): String
+    def superscript(text: String): String
     def newline: String
   }
 }
@@ -37,6 +40,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
     def mathEnvironment(text: String) = { text }
     def subscript(text: String) = "_{" + text + "}"
+    def superscript(text: String) = "^{" + text + "}"
     def newline = "\\\\"
 
   }
@@ -44,6 +48,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
   case class InTextMode() extends Text2TEX.MathSensitiveParsing {
     def mathEnvironment(text: String) = "$" + text + "$"
     def subscript(text: String) = "\\textsubscript{" + text + "}"
+    def superscript(text: String) = "^{" + text + "}"
     def newline = "\\newline{}"
   }
 
@@ -96,6 +101,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
   }
 
   SpecialSignParser[TextObjectSpaceSmall]("\\,")
+  SpecialSignParser[TextObjectTick]("'")
   SpecialSignParser[TextObjectNewline](mode.newline)
   SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
 
@@ -197,8 +203,10 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
+      base.append(textMath(next()))
       base.append(textParbox(next()))
       base.append(textDoubleStruck(next()))
+      base.append(textTick(next()))
       base.append(textTab(next()))
       base.append(textGreek(next()))
       base.append(textCite(next()))
@@ -238,6 +246,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
     ParseResult(resultString, collection.size)
   }
 
+  protected def textTick(sequence: Seq[TextObject]) = {
+    val collection = collect[TextObjectTick](sequence)
+    val resultString = collection.map(text => "'").mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
   protected def textTab(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectTab](sequence)
     val resultString = collection.map(text => "\\hspace{5mm}").mkString
@@ -248,6 +263,20 @@ case class Text2TEX protected (isMathMode: Boolean) {
   protected def textItalic(sequence: Seq[TextObject]): ParseResult = {
     val collection = collect[TextObjectItalic](sequence)
     val resultString = collection.map(text => "\\textit{" + Text2TEX(false).generate(text.in) + "}").mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textMath(sequence: Seq[TextObject]): ParseResult = {
+    val collection = collect[TextObjectMath](sequence)
+
+    val resultString = {
+      if (isMathMode) {
+        collection.map(text => Text2TEX(true).generate(text.in)).mkString
+      } else {
+        collection.map(text => "$" + Text2TEX(true).generate(text.in) + "$").mkString
+      }
+    }
 
     ParseResult(resultString, collection.size)
   }
@@ -271,8 +300,8 @@ case class Text2TEX protected (isMathMode: Boolean) {
     if (collection.isEmpty) {
       ParseResult("", 0)
     } else {
-      val mergedSubscriptArgs = collection.map(text => Text2TEX(isMathMode).generate(text.textAST)).mkString
-      val resultString = mode.subscript(mergedSubscriptArgs)
+      val args = collection.map(text => Text2TEX(isMathMode).generate(text.textAST)).mkString
+      val resultString = mode.subscript(args)
       ParseResult(resultString, collection.size)
     }
   }

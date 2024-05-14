@@ -10,8 +10,16 @@ case class TextAST(sequence: Seq[TextObject]) {
     this.copy(sequence = sequence ++ in.sequence)
   }
 
+  def extend(value: String) = {
+    space().text("(").text(value).text(")")
+  }
+
   def space() = {
     text(" ")
+  }
+
+  def math(in: TextAST) = {
+    this.copy(sequence = sequence :+ TextObjectMath(in))
   }
 
   def plain(in: String) = {
@@ -24,6 +32,10 @@ case class TextAST(sequence: Seq[TextObject]) {
 
   def text(in: String) = {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
+  }
+
+  def tick() = {
+    this.copy(sequence = sequence :+ TextObjectTick())
   }
 
   def parbox(cm: Double, content: String): TextAST = {
