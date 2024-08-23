@@ -103,7 +103,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
   SpecialSignParser[TextObjectSpaceSmall]("\\,")
   SpecialSignParser[TextObjectTick]("'")
   SpecialSignParser[TextObjectNewline](mode.newline)
-  SpecialSignParser[TextObjectArrowRight](mode.mathEnvironment("\\rightarrow"))
+  SpecialSignParser[TextObjectArrowRight]("$\\relbar\\joinrel\\mathrel{\\vcenter{\\hbox{\\scalebox{0.75}{$\\RHD$}}}}$")
 
   protected val GREEK_LOOKUP = {
     Map(

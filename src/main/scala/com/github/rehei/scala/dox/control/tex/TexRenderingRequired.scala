@@ -31,7 +31,9 @@ class TexRenderingRequired(baseAST: TexAST) {
 
     \ usepackage { "amsmath" }
     \ usepackage { "amssymb" }
-
+    \ usepackage { "wasysym" }
+    \ usepackage { "graphicx" }
+    
   }
 
   protected def requireTable() = {
