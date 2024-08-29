@@ -8,7 +8,7 @@ import org.apache.commons.io.FilenameUtils
 
 import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
-import com.github.rehei.scala.dox.util.InkscapeUtils
+import com.github.rehei.scala.dox.util.ConvertSvgUsingInkscape
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.util.SvgMode
 import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
@@ -16,10 +16,13 @@ import com.github.rehei.scala.dox.model.reference.DoxReferenceUtils
 import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.model.DoxInputTarget
 import java.nio.file.Files
+import com.github.rehei.scala.dox.util.ConvertSvgUsingRSVG
 
 case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
 
-  protected val inkscape = new InkscapeUtils(mode, target.directory)
+  //  protected val convertSvgToX = new ConvertSvgUsingInkscape(mode, target.directory)
+  protected val convertSvgToX = new ConvertSvgUsingRSVG(mode, target.directory)
+
   protected val serialize = SerializeUtils(target, ".svg")
 
   protected val includeTarget = target.updateSubDirectory(mode.directory)
@@ -35,7 +38,7 @@ case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
 
   def transform() = {
     Files.createDirectories(includeTarget.directory)
-    inkscape.transform()
+    convertSvgToX.transform()
   }
 
 }

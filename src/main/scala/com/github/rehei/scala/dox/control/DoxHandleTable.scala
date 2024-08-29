@@ -5,7 +5,7 @@ import java.nio.file.Path
 import org.apache.commons.io.FilenameUtils
 
 import com.github.rehei.scala.dox.model.DoxViewModelSvg
-import com.github.rehei.scala.dox.util.InkscapeUtils
+import com.github.rehei.scala.dox.util.ConvertSvgUsingInkscape
 import com.github.rehei.scala.dox.util.SvgMode
 import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.DoxInputFile
