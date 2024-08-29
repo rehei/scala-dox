@@ -20,7 +20,7 @@ import com.github.rehei.scala.dox.text.TextObjectTab
 import com.github.rehei.scala.dox.text.TextObjectParbox
 import com.github.rehei.scala.dox.text.TextObjectPlain
 import com.github.rehei.scala.dox.text.TextObjectMath
-import com.github.rehei.scala.dox.text.TextObjectTick
+import com.github.rehei.scala.dox.text.TextObjectOverline
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -101,7 +101,6 @@ case class Text2TEX protected (isMathMode: Boolean) {
   }
 
   SpecialSignParser[TextObjectSpaceSmall]("\\,")
-  SpecialSignParser[TextObjectTick]("'")
   SpecialSignParser[TextObjectNewline](mode.newline)
   SpecialSignParser[TextObjectArrowRight]("$\\relbar\\joinrel\\mathrel{\\vcenter{\\hbox{\\scalebox{0.75}{$\\RHD$}}}}$")
 
@@ -203,10 +202,10 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
+      base.append(textOverline(next()))
       base.append(textMath(next()))
       base.append(textParbox(next()))
       base.append(textDoubleStruck(next()))
-      base.append(textTick(next()))
       base.append(textTab(next()))
       base.append(textGreek(next()))
       base.append(textCite(next()))
@@ -246,13 +245,6 @@ case class Text2TEX protected (isMathMode: Boolean) {
     ParseResult(resultString, collection.size)
   }
 
-  protected def textTick(sequence: Seq[TextObject]) = {
-    val collection = collect[TextObjectTick](sequence)
-    val resultString = collection.map(text => "'").mkString
-
-    ParseResult(resultString, collection.size)
-  }
-
   protected def textTab(sequence: Seq[TextObject]) = {
     val collection = collect[TextObjectTab](sequence)
     val resultString = collection.map(text => "\\hspace{5mm}").mkString
@@ -263,6 +255,13 @@ case class Text2TEX protected (isMathMode: Boolean) {
   protected def textItalic(sequence: Seq[TextObject]): ParseResult = {
     val collection = collect[TextObjectItalic](sequence)
     val resultString = collection.map(text => "\\textit{" + Text2TEX(false).generate(text.in) + "}").mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textOverline(sequence: Seq[TextObject]): ParseResult = {
+    val collection = collect[TextObjectOverline](sequence)
+    val resultString = collection.map(text => mode.mathEnvironment("\\overline{" + Text2TEX(true).generate(text.in) + "}")).mkString
 
     ParseResult(resultString, collection.size)
   }

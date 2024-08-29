@@ -34,10 +34,6 @@ case class TextAST(sequence: Seq[TextObject]) {
     this.copy(sequence = sequence :+ TextObjectDefault(in))
   }
 
-  def tick() = {
-    this.copy(sequence = sequence :+ TextObjectTick())
-  }
-
   def parbox(cm: Double, content: String): TextAST = {
     this.copy(sequence = sequence :+ TextObjectParbox(cm, content))
   }
@@ -48,6 +44,10 @@ case class TextAST(sequence: Seq[TextObject]) {
 
   def subscript(in: TextAST): TextAST = {
     this.copy(sequence = sequence :+ TextObjectSubscript(in))
+  }
+
+  def overline(in: TextAST) = {
+    this.copy(sequence = sequence :+ TextObjectOverline(in))
   }
 
   def italic(in: TextAST) = {
