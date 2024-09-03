@@ -20,7 +20,7 @@ import com.github.rehei.scala.dox.util.ConvertSvgUsingRSVG
 
 case class DoxHandleSvg(target: DoxTarget, mode: SvgMode) {
 
-  //  protected val convertSvgToX = new ConvertSvgUsingInkscape(mode, target.directory)
+//    protected val convertSvgToX = new ConvertSvgUsingInkscape(mode, target.directory)
   protected val convertSvgToX = new ConvertSvgUsingRSVG(mode, target.directory)
 
   protected val serialize = SerializeUtils(target, ".svg")

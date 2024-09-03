@@ -5,11 +5,11 @@ object SvgMode {
   object PNG extends SvgMode {
 
     def commandInkscape(variable: String) = {
-      "--export-png=../" + directory + "/${" + variable + "%.*}.png"
+      "--export-png=../" + directory + "/${" + variable + "}.png"
     }
 
     def commandRSVG(variable: String) = {
-      "-f png -o ../" + directory + "/${f}.png ${f}"
+      "-f png -o ../" + directory + "/${" + variable + "}.png"
     }
 
     def directory = "tex-svg-png"
@@ -23,11 +23,11 @@ object SvgMode {
   object PDF extends SvgMode {
 
     def commandInkscape(variable: String) = {
-      "--export-pdf=../" + directory + "/${" + variable + "%.*}.pdf"
+      "--export-pdf=../" + directory + "/${" + variable + "}.pdf"
     }
 
     def commandRSVG(variable: String) = {
-      "-f pdf -o ../" + directory + "/${f}.pdf ${f}"
+      "-f pdf -o ../" + directory + "/${" + variable + "}.pdf"
     }
 
     def directory = "tex-svg-pdf"
@@ -41,11 +41,11 @@ object SvgMode {
   object EPS extends SvgMode {
 
     def commandInkscape(variable: String) = {
-      "--export-eps=../" + directory + "/${" + variable + "%.*}.eps"
+      "--export-eps=../" + directory + "/${" + variable + "}.eps"
     }
 
     def commandRSVG(variable: String) = {
-      "-f eps -o ../" + directory + "/${f}.pdf ${f}"
+      "-f eps -o ../" + directory + "/${" + variable + "}.pdf"
     }
 
     def directory = "tex-svg-eps"

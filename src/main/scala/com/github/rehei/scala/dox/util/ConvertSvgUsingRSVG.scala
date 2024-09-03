@@ -13,22 +13,14 @@ class ConvertSvgUsingRSVG(protected val mode: SvgMode, protected val baseDirecto
 
   protected def executable = {
     val commandFile = baseDirectory.resolve("shellscript.sh")
-    IOUtils.writeString(commandFile, commandNew)
+    IOUtils.writeString(commandFile, command)
     commandFile.toFile().setExecutable(true, true)
     commandFile.toAbsolutePath().toString()
   }
 
   protected def command = {
-    Seq(
-      "for f in *.svg; do rsvg-convert " + mode.commandRSVG("f"),
-      "done").mkString("\n")
-  }
-
-  protected def commandNew = {
-
     val processors = Math.max((Runtime.getRuntime().availableProcessors() * 0.7).toInt, 1)
-
-    "for f in *.svg; do echo rsvg-convert " + mode.commandRSVG("f") + "; done | xargs -P" + processors + " -i sh -c {}"
+    "for f in *.svg; do echo rsvg-convert " + mode.commandRSVG("f") + " ${f}; done | xargs -P" + processors + " -i sh -c {}"
   }
 
 }
