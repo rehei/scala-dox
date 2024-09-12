@@ -3,9 +3,15 @@ package com.github.rehei.scala.dox.text
 import scala.xml.NodeSeq
 import com.github.rehei.scala.dox.control.DoxRenderingBase
 import com.github.rehei.scala.dox.model.bibliography.DoxBibKey
+import com.github.rehei.scala.dox.text.util.Text2TEX
 
 case class TextAST(sequence: Seq[TextObject]) {
 
+  def asPlainTex() = {
+    Text2TEX.generate(this)
+  }
+  
+  
   def append(in: TextAST) = {
     this.copy(sequence = sequence ++ in.sequence)
   }
