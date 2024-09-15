@@ -7,6 +7,13 @@ import scala.sys.process.Process
 
 class ConvertSvgUsingRSVG(protected val mode: SvgMode, protected val baseDirectory: Path) {
 
+  init()
+  
+  protected def init() {
+    val version = Process("rsvg-convert -version").!!
+    assume(version.stripLineEnd == "rsvg-convert version 2.58.0")
+  }
+
   def transform() {
     Process(executable, baseDirectory.toFile()).!
   }
