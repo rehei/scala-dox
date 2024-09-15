@@ -261,7 +261,7 @@ case class Text2TEX protected (isMathMode: Boolean) {
 
   protected def textOverline(sequence: Seq[TextObject]): ParseResult = {
     val collection = collect[TextObjectOverline](sequence)
-    val resultString = collection.map(text => mode.mathEnvironment("\\overline{" + Text2TEX(true).generate(text.in) + "}")).mkString
+    val resultString = collection.map(text => mode.mathEnvironment("\\overline{\\vphantom{\\text{\\small{A}}}" + Text2TEX(true).generate(text.in) + "}")).mkString
 
     ParseResult(resultString, collection.size)
   }
