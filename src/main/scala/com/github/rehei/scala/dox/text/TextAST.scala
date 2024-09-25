@@ -53,7 +53,11 @@ case class TextAST(sequence: Seq[TextObject]) {
   }
 
   def overline(in: TextAST) = {
-    this.copy(sequence = sequence :+ TextObjectOverline(in))
+    this.copy(sequence = sequence :+ TextObjectDecorateOverline(in))
+  }
+  
+  def underline(in: TextAST) = {
+    this.copy(sequence = sequence :+ TextObjectDecorateUnderline(in))
   }
 
   def italic(in: TextAST) = {

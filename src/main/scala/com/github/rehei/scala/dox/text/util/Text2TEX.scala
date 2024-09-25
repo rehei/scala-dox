@@ -20,7 +20,8 @@ import com.github.rehei.scala.dox.text.TextObjectTab
 import com.github.rehei.scala.dox.text.TextObjectParbox
 import com.github.rehei.scala.dox.text.TextObjectPlain
 import com.github.rehei.scala.dox.text.TextObjectMath
-import com.github.rehei.scala.dox.text.TextObjectOverline
+import com.github.rehei.scala.dox.text.TextObjectDecorateOverline
+import com.github.rehei.scala.dox.text.TextObjectDecorateUnderline
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -202,7 +203,8 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textDefault(next()))
       base.append(textSubscript(next()))
       base.append(textItalic(next()))
-      base.append(textOverline(next()))
+      base.append(textDecorateOverline(next()))
+      base.append(textDecorateUnderline(next()))
       base.append(textMath(next()))
       base.append(textParbox(next()))
       base.append(textDoubleStruck(next()))
@@ -259,9 +261,16 @@ case class Text2TEX protected (isMathMode: Boolean) {
     ParseResult(resultString, collection.size)
   }
 
-  protected def textOverline(sequence: Seq[TextObject]): ParseResult = {
-    val collection = collect[TextObjectOverline](sequence)
+  protected def textDecorateOverline(sequence: Seq[TextObject]): ParseResult = {
+    val collection = collect[TextObjectDecorateOverline](sequence)
     val resultString = collection.map(text => mode.mathEnvironment("\\overline{\\vphantom{\\text{\\small{A}}}" + Text2TEX(true).generate(text.in) + "}")).mkString
+
+    ParseResult(resultString, collection.size)
+  }
+
+  protected def textDecorateUnderline(sequence: Seq[TextObject]): ParseResult = {
+    val collection = collect[TextObjectDecorateUnderline](sequence)
+    val resultString = collection.map(text => mode.mathEnvironment("\\underline{" + Text2TEX(true).generate(text.in) + "}")).mkString
 
     ParseResult(resultString, collection.size)
   }
