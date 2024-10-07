@@ -18,6 +18,7 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.DoxInputFile
 import com.github.rehei.scala.dox.model.DoxViewModelTablePlain
+import com.github.rehei.scala.dox.model.DoxViewModelEquationPlain
 
 class TexRendering(
   baseAST:        TexAST,
@@ -131,12 +132,24 @@ class TexRendering(
   protected def internalEquation(equation: DoxViewModelEquation) = {
     val input = equationHandle.handle(equation)
 
-//    $ { _ mdframed } {
-      $ { _ figure & { ###("H") } } {
-        \ input { input.target.asString() }
-        \ caption & { escape(input.reference.caption) }
-      }
-//    }
+    //    $ { _ mdframed } {
+    $ { _ figure & { ###("H") } } {
+      \ input { input.target.asString() }
+      \ caption & { escape(input.reference.caption) }
+    }
+    //    }
+
+  }
+
+  protected def internalEquationPlain(equation: DoxViewModelEquationPlain) = {
+    val input = equationHandle.handle(equation)
+
+    //    $ { _ mdframed } {
+    $ { _ figure & { ###("H") } } {
+      \ input { input.target.asString() }
+      \ caption & { escape(input.reference.caption) }
+    }
+    //    }
 
   }
 

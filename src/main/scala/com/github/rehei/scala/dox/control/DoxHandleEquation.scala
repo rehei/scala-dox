@@ -8,6 +8,8 @@ import com.github.rehei.scala.dox.model.DoxInputData
 import com.github.rehei.scala.dox.model.DoxViewModelEquation
 import com.github.rehei.scala.dox.util.SerializeUtils
 import com.github.rehei.scala.dox.model.reference.DoxReferenceUtils
+import com.github.rehei.scala.dox.model.DoxViewModelEquationPlain
+import com.github.rehei.scala.dox.model.reference.DoxReferenceBase
 
 case class DoxHandleEquation(target: DoxTarget) {
 
@@ -16,8 +18,16 @@ case class DoxHandleEquation(target: DoxTarget) {
 
   def handle(view: DoxViewModelEquation) = {
     val content = new TexRenderingEquation(view.equation).createEquationString()
-    val input = DoxInputData(resolve.transform(view.label), content)
-    serialize.write(input)
+    handleContent(view.label, content)
+  }
+
+  def handle(view: DoxViewModelEquationPlain) = {
+    handleContent(view.label, view.plain)
+  }
+
+  protected def handleContent(label: Option[DoxReferenceBase], content: String) = {
+    val file = DoxInputData(resolve.transform(label), content)
+    serialize.write(file)
   }
 
 }

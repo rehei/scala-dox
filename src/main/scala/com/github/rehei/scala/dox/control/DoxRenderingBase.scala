@@ -18,6 +18,7 @@ import com.github.rehei.scala.dox.text.TextAST
 import com.github.rehei.scala.dox.text.util.Text2TEX
 import com.github.rehei.scala.dox.model.DoxViewModelEquation
 import com.github.rehei.scala.dox.model.DoxViewModelTablePlain
+import com.github.rehei.scala.dox.model.DoxViewModelEquationPlain
 
 abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRendering) {
 
@@ -168,6 +169,12 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
     this
   }
 
+  def equationPlain(callback: DoxBuilderEquationPlain.type => DoxViewModelEquationPlain) = {
+    val data = callback(DoxBuilderEquationPlain)
+    internalEquationPlain(data)
+    this
+  }
+
   def clearpage(): this.type
 
   def svg(callback: DoxBuilderSvg.type => DoxViewModelSvg): this.type = {
@@ -185,6 +192,7 @@ abstract class DoxRenderingBase(val i18n: DoxI18N, val bibliography: DoxBibKeyRe
   protected def internalTable(table: DoxViewModelTableSequence): Unit
   protected def internalTable(table: DoxViewModelTable[_]): Unit
   protected def internalEquation(table: DoxViewModelEquation): Unit
+  protected def internalEquationPlain(table: DoxViewModelEquationPlain): Unit
   protected def internalList(itemSeq: Seq[String]): Unit
 
 }

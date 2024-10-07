@@ -10,8 +10,11 @@ case class TextAST(sequence: Seq[TextObject]) {
   def asPlainTex() = {
     Text2TEX.generate(this)
   }
-  
-  
+
+  def asPlainTexInMath() = {
+    Text2TEX(true).generate(this)
+  }
+
   def append(in: TextAST) = {
     this.copy(sequence = sequence ++ in.sequence)
   }
@@ -22,6 +25,10 @@ case class TextAST(sequence: Seq[TextObject]) {
 
   def space() = {
     text(" ")
+  }
+
+  def spaceSVG(offset: Double) = {
+    this.copy(sequence = sequence :+ TextObjectSpaceSVG(offset))
   }
 
   def math(in: TextAST) = {
@@ -55,7 +62,7 @@ case class TextAST(sequence: Seq[TextObject]) {
   def overline(in: TextAST) = {
     this.copy(sequence = sequence :+ TextObjectDecorateOverline(in))
   }
-  
+
   def underline(in: TextAST) = {
     this.copy(sequence = sequence :+ TextObjectDecorateUnderline(in))
   }

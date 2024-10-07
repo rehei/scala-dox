@@ -22,6 +22,7 @@ import com.github.rehei.scala.dox.text.TextObjectPlain
 import com.github.rehei.scala.dox.text.TextObjectMath
 import com.github.rehei.scala.dox.text.TextObjectDecorateOverline
 import com.github.rehei.scala.dox.text.TextObjectDecorateUnderline
+import com.github.rehei.scala.dox.text.TextObjectSpaceSVG
 
 object Text2TEX extends Text2TEX(false) {
 
@@ -213,6 +214,8 @@ case class Text2TEX protected (isMathMode: Boolean) {
       base.append(textCite(next()))
       base.append(textPlain(next()))
 
+      base.append(skip[TextObjectSpaceSVG](next()))
+
       for (parser <- SpecialSignParser.all) {
         base.append(parser.parse(next()))
       }
@@ -224,6 +227,12 @@ case class Text2TEX protected (isMathMode: Boolean) {
     }
 
     base.totalText
+  }
+
+  protected def skip[T](sequence: Seq[TextObject])(implicit clazz: ClassTag[T]) = {
+    val collection = collect[T](sequence)
+    // do nothing
+    ParseResult("", collection.size)
   }
 
   protected def textCite(sequence: Seq[TextObject]) = {
